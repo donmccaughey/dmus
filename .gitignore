@@ -1,2 +1,5 @@
 .DS_Store
 tmp
+xcuserdata/
+build/
+DerivedData/
