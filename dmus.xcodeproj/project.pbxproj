@@ -6,14 +6,26 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		D41DFEB2308C305900FEA684 /* CLAUDE.md in Resources */ = {isa = PBXBuildFile; fileRef = D41DFEB0308C305900FEA684 /* CLAUDE.md */; };
+		D41DFEB3308C305900FEA684 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = D41DFEB1308C305900FEA684 /* README.md */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		D3A5000000000000000000A2 /* dmus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = dmus.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D41DFEB0308C305900FEA684 /* CLAUDE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CLAUDE.md; sourceTree = "<group>"; };
+		D41DFEB1308C305900FEA684 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		D3A5000000000000000000A3 /* dmus */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = dmus;
+			sourceTree = "<group>";
+		};
+		D41DFEB6308C307E00FEA684 /* docs */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = docs;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -32,6 +44,9 @@
 		D3A5000000000000000000A0 = {
 			isa = PBXGroup;
 			children = (
+				D41DFEB0308C305900FEA684 /* CLAUDE.md */,
+				D41DFEB1308C305900FEA684 /* README.md */,
+				D41DFEB6308C307E00FEA684 /* docs */,
 				D3A5000000000000000000A3 /* dmus */,
 				D3A5000000000000000000A1 /* Products */,
 			);
@@ -62,6 +77,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				D3A5000000000000000000A3 /* dmus */,
+				D41DFEB6308C307E00FEA684 /* docs */,
 			);
 			name = dmus;
 			packageProductDependencies = (
@@ -109,6 +125,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D41DFEB2308C305900FEA684 /* CLAUDE.md in Resources */,
+				D41DFEB3308C305900FEA684 /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
