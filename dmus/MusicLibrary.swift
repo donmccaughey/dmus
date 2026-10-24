@@ -100,7 +100,7 @@ nonisolated struct MusicLibrary: Sendable {
         do {
             contents = try FileManager.default.contentsOfDirectory(
                 at: directory,
-                includingPropertiesForKeys: [.isRegularFileKey, .isDirectoryKey],
+                includingPropertiesForKeys: [.isRegularFileKey, .isDirectoryKey, .isPackageKey],
                 options: .skipsHiddenFiles
             )
         } catch {
@@ -112,11 +112,14 @@ nonisolated struct MusicLibrary: Sendable {
         for url in contents {
             let resourceValues: URLResourceValues
             do {
-                resourceValues = try url.resourceValues(forKeys: [.isRegularFileKey, .isDirectoryKey])
+                resourceValues = try url.resourceValues(forKeys: [.isRegularFileKey, .isDirectoryKey, .isPackageKey])
             } catch {
                 postLoadDidFail(error)
                 continue
             }
+            // Packages such as Apple Music's `Music Library.musiclibrary` are
+            // directories on disk but not music folders.
+            if resourceValues.isPackage == true { continue }
             let name = url.lastPathComponent
             if resourceValues.isDirectory == true {
                 let grandchildren = loadChildren(of: url, folderName: name, parentFolderName: folderName)

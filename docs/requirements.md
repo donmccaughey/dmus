@@ -83,6 +83,11 @@ music directory. The load method shall create a root folder with folders and
 tracks created by walking the given music directory and return a new music
 library initialized with the root folder.
 
+When walking the music directory, the load method shall skip directories that
+are packages (directories that the Finder presents as a single file, such as
+application bundles and Apple Music's `Music Library.musiclibrary`), neither
+creating a folder for them nor walking their contents.
+
 If the load method encounters an error, the music library shall send a **music
 library load did fail** notification.
 
