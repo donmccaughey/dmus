@@ -134,15 +134,18 @@ background, passing it the path of the music root directory.
 
 # User interface
 
-Dmus shall use "Dmus" (not "dmus") where ever the app name name is displayed:
+Dmus shall use "Dmus" (not "dmus") wherever the app name name is displayed:
 window title, app icon, menus, etc.
 
 On macOS, dmus shall show a main window on launch.
 
-On iOS, dmus shall show a main view on launch.
-
 On macOS, dmus shall show two equally-sized panels in the main window: the files
 panel on the left side and the queue panel on the right side.
+
+On macOS, dmus shall only allow one main window without tabs, and shall quit the
+app when the main window is closed.
+
+On iOS, dmus shall show a main view on launch.
 
 On iOS, while the screen is in right-side-up portrait orientation, dmus shall
 show two equally-sized panels in the main view: the files panel shall be on the
