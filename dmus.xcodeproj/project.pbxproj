@@ -6,12 +6,6 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		D41DFEB2308C305900FEA684 /* CLAUDE.md in Resources */ = {isa = PBXBuildFile; fileRef = D41DFEB0308C305900FEA684 /* CLAUDE.md */; };
-		D41DFEB3308C305900FEA684 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = D41DFEB1308C305900FEA684 /* README.md */; };
-		D4A78315308D0B4000325F1E /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = D4A78314308D0B4000325F1E /* .gitignore */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXFileReference section */
 		D3A5000000000000000000A2 /* Dmus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dmus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D41DFEB0308C305900FEA684 /* CLAUDE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CLAUDE.md; sourceTree = "<group>"; };
@@ -86,8 +80,6 @@
 			);
 			fileSystemSynchronizedGroups = (
 				D3A5000000000000000000A3 /* dmus */,
-				D41DFEB6308C307E00FEA684 /* docs */,
-				D4A78311308D0B2500325F1E /* .claude */,
 			);
 			name = dmus;
 			packageProductDependencies = (
@@ -135,9 +127,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D4A78315308D0B4000325F1E /* .gitignore in Resources */,
-				D41DFEB2308C305900FEA684 /* CLAUDE.md in Resources */,
-				D41DFEB3308C305900FEA684 /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
