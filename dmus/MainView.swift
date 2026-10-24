@@ -1,10 +1,5 @@
 import SwiftUI
 
-/// The main window (macOS) or main view (iOS): two equally-sized panels,
-/// the files panel and the queue panel.
-///
-/// On macOS the panels are always side by side. On iOS the arrangement follows
-/// the screen orientation: side by side in landscape, stacked in portrait.
 struct MainView: View {
     var body: some View {
         #if os(macOS)

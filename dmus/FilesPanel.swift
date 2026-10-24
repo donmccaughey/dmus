@@ -1,6 +1,5 @@
 import SwiftUI
 
-/// The files panel displays the music library.
 struct FilesPanel: View {
     var body: some View {
         Panel(title: "Files") {

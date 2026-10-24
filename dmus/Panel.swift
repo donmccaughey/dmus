@@ -1,6 +1,5 @@
 import SwiftUI
 
-/// A titled panel that fills the space it is given.
 struct Panel<Content: View>: View {
     let title: LocalizedStringKey
     @ViewBuilder let content: () -> Content
