@@ -4,9 +4,9 @@ struct QueuePanel: View {
     var body: some View {
         Panel(title: "Queue") {
             ContentUnavailableView(
-                "Queue Is Empty",
+                "No tracks",
                 systemImage: "list.bullet",
-                description: Text("Add tracks from the files panel to play them.")
+                description: Text("The queue is empty.")
             )
         }
     }
