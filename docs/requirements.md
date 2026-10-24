@@ -31,6 +31,9 @@ Dmus shall use Swift language and the SwiftUI framework.
 
 On macOS, dmus shall use AppKit rather than Mac Catalyst.
 
+On macOS, dmus shall not use the App Sandbox, since dmus is not distributed
+through the App Store.
+
 Dmus shall use only APIs available on the minimum deployment targets.
 
 On iOS, dmus shall declare support for all four interface orientations:
