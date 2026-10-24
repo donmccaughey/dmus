@@ -40,6 +40,14 @@ On iOS, dmus shall declare support for all four interface orientations:
 portrait, portrait upside-down, landscape left and landscape right.
 
 
+# General definitions
+
+A **localized display name** is the name of a directory or file obtained from
+macOS or iOS API calls like `FileManager.displayName(atPath:)`, which may differ
+from the actual filesystem name of the directory or file. See the [Localized
+Display Name](localized_display_name.md) document for details.
+
+
 # Model
 
 The **music root directory** is the directory on the local filesystem that dmus
@@ -98,9 +106,9 @@ thread.
 
 A **folder** is a branch node of the music library that corresponds to a
 directory. A folder has these properties: **path** is the absolute path of the
-corresponding directory or `nil` for an empty folder; **name** is the filename
-of the directory or "Music Library" for the root folder; **children** is the
-list of folders and tracks that belong to the folder.
+corresponding directory or `nil` for an empty folder; **name** is the localized
+display name of the directory or "Music Library" for the root folder;
+**children** is the list of folders and tracks that belong to the folder.
 
 An **empty folder** is a folder with a path value of `nil`, a name value of
 "Music Library" and an empty children list.
@@ -109,12 +117,12 @@ An **empty folder** is a folder with a path value of `nil`, a name value of
 ## Track
 
 A **track** is a leaf node of the music library that corresponds to a music
-file. A track exposes these properties: **track name** is the filename of the
-music file with the extension removed; **album name** is the name of the parent
-folder or "(no album)" if the track is a child of the root folder; **artist
-name** is the name of the grandparent folder or "(no artist)" if the track is a
-child or grandchild of the root folder; **path** is the absolute path to the
-music file.
+file. A track exposes these properties: **track name** is the localized display
+name of the music file with the extension removed; **album name** is the
+localized display name of the parent folder or "(no album)" if the track is a
+child of the root folder; **artist name** is the localized display name of the
+grandparent folder or "(no artist)" if the track is a child or grandchild of the
+root folder; **path** is the absolute path to the music file.
 
 
 # Launch behavior

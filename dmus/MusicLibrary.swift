@@ -100,7 +100,7 @@ nonisolated struct MusicLibrary: Sendable {
         do {
             contents = try FileManager.default.contentsOfDirectory(
                 at: directory,
-                includingPropertiesForKeys: [.isRegularFileKey, .isDirectoryKey, .isPackageKey],
+                includingPropertiesForKeys: [.isRegularFileKey, .isDirectoryKey, .isPackageKey, .localizedNameKey],
                 options: .skipsHiddenFiles
             )
         } catch {
@@ -112,7 +112,7 @@ nonisolated struct MusicLibrary: Sendable {
         for url in contents {
             let resourceValues: URLResourceValues
             do {
-                resourceValues = try url.resourceValues(forKeys: [.isRegularFileKey, .isDirectoryKey, .isPackageKey])
+                resourceValues = try url.resourceValues(forKeys: [.isRegularFileKey, .isDirectoryKey, .isPackageKey, .localizedNameKey])
             } catch {
                 postLoadDidFail(error)
                 continue
@@ -120,14 +120,14 @@ nonisolated struct MusicLibrary: Sendable {
             // Packages such as Apple Music's `Music Library.musiclibrary` are
             // directories on disk but not music directories.
             if resourceValues.isPackage == true { continue }
-            let name = url.lastPathComponent
+            let name = resourceValues.localizedName ?? url.lastPathComponent
             if resourceValues.isDirectory == true {
                 let grandchildren = loadChildren(of: url, folderName: name, parentFolderName: folderName)
                 children.append(.folder(Folder(path: url.path, name: name, children: grandchildren)))
             } else if resourceValues.isRegularFile == true,
                       musicFileExtensions.contains(url.pathExtension.lowercased()) {
                 let track = Track(
-                    trackName: url.deletingPathExtension().lastPathComponent,
+                    trackName: trackName(displayName: name, url: url),
                     albumName: folderName ?? Track.noAlbum,
                     artistName: parentFolderName ?? Track.noArtist,
                     path: url.path
@@ -138,6 +138,16 @@ nonisolated struct MusicLibrary: Sendable {
         return children.sorted {
             $0.name.localizedStandardCompare($1.name) == .orderedAscending
         }
+    }
+
+    // The display name already omits the extension when the Finder hides it,
+    // so only strip an extension that is still present.
+    private static func trackName(displayName: String, url: URL) -> String {
+        let suffix = "." + url.pathExtension
+        guard !url.pathExtension.isEmpty,
+              displayName.lowercased().hasSuffix(suffix.lowercased())
+        else { return displayName }
+        return String(displayName.dropLast(suffix.count))
     }
 
     private static func postOnMain(_ name: Notification.Name, object: (any Sendable)?) {
