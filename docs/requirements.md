@@ -48,16 +48,14 @@ On iOS, dmus shall show a main view on launch.
 On macOS, dmus shall show two equally-sized panels in the main window: the files
 panel on the left side and the queue panel on the right side.
 
-On iOS, when the device is rotated to an orientation that the operating system
-supports on that device, dmus shall rotate the main view to match.
+On iOS, while the screen is in right-side-up portrait orientation, dmus shall
+show two equally-sized panels in the main view: the files panel shall be on the
+top and the queue panel on the bottom.
 
-Note: iOS does not rotate to portrait upside-down on iPhones with Face ID
-(iPhone X and later, including iPhone 16e), regardless of what the app
-declares. iPads and home-button iPhones rotate to all four orientations.
-
-On iOS, while the screen is in either portrait orientation (upright or
-upside-down), dmus shall show two equally-sized panels in the main view: the
-files panel shall be on the top and the queue panel on the bottom.
+On iOS, where the device supports upside-down portrait orientation, while the
+screen is in upside-down portrait orientation, dmus shall show two equally-sized
+panels in the main view: the files panel shall be on the top and the queue panel
+on the bottom.
 
 On iOS, while the screen is in landscape orientation, dmus shall show two
 equally-sized panels in the main view: the files panel shall be on the left side
