@@ -60,7 +60,7 @@ macOS:
 
 ```bash
 xcodebuild -scheme dmus -configuration Debug -destination 'platform=macOS' build 2>&1 | tail -20
-APP="$(xcodebuild -scheme dmus -configuration Debug -destination 'platform=macOS' -showBuildSettings 2>/dev/null | awk '/ BUILT_PRODUCTS_DIR =/{print $3}')/dmus.app"
+APP="$(xcodebuild -scheme dmus -configuration Debug -destination 'platform=macOS' -showBuildSettings 2>/dev/null | awk '/ BUILT_PRODUCTS_DIR =/{print $3}')/Dmus.app"
 open "$APP"
 ```
 
@@ -83,7 +83,7 @@ iOS Simulator:
 ```bash
 xcrun simctl boot "iPhone 15" 2>/dev/null; open -a Simulator
 xcodebuild -scheme dmus -configuration Debug -destination 'platform=iOS Simulator,name=iPhone 15' build 2>&1 | tail -20
-APP="$(xcodebuild -scheme dmus -configuration Debug -destination 'platform=iOS Simulator,name=iPhone 15' -showBuildSettings 2>/dev/null | awk '/ BUILT_PRODUCTS_DIR =/{print $3}')/dmus.app"
+APP="$(xcodebuild -scheme dmus -configuration Debug -destination 'platform=iOS Simulator,name=iPhone 15' -showBuildSettings 2>/dev/null | awk '/ BUILT_PRODUCTS_DIR =/{print $3}')/Dmus.app"
 xcrun simctl install booted "$APP"
 xcrun simctl launch booted cc.donm.dmus
 xcrun simctl io booted screenshot "$SCRATCHPAD/issue-$ARGUMENTS-ios.png"
