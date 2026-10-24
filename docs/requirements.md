@@ -42,17 +42,20 @@ portrait, portrait upside-down, landscape left and landscape right.
 
 # Model
 
-The **music directory** is the directory on the local filesystem that dmus
+The **music root directory** is the directory on the local filesystem that dmus
 searches for music files.
 
-On macOS, dmus shall use the current user's default music directory as the music
-directory, creating it on launch if it does not exist.
+On macOS, dmus shall use the system's music directory for the current user as
+the music root directory, creating it on launch if it does not exist.
 
 On iOS, dmus shall use the `Music/` subdirectory of the standard application
-support directory as the music directory, creating it on launch if it does not
-exist.
+support directory as the music root directory, creating it on launch if it does
+not exist.
 
-On iOS, dmus shall exclude the music directory from backup.
+On iOS, dmus shall exclude the music root directory from backup.
+
+A **music directory** is a directory under the music root directory that is not
+hidden and is not a package.
 
 A **music file** is a regular file with an `.mp3` or `.m4a` extension (case
 insensitive) that is not hidden.
@@ -61,10 +64,10 @@ insensitive) that is not hidden.
 ## Music library
 
 A **music library** is an in-memory tree data structure consisting of folders
-(branch nodes) and tracks (leaf nodes) that correspond to directories and music
-files in the music directory, with a root folder for the music directory itself,
-one folder for each directory and one track for each music file. A music library
-has one property: **root folder**.
+(branch nodes) and tracks (leaf nodes) that correspond to music directories and
+music files in the music root directory, with a root folder for the music root
+directory itself, one folder for each music directory and one track for each
+music file. A music library has one property: **root folder**.
 
 An **empty music library** is a music library where the root folder is an empty
 folder.
@@ -78,15 +81,10 @@ as the root folder.
 A music library shall have an **is empty** read-only calculated property that is
 true when the root folder has no children and false otherwise.
 
-A music library shall have a static **load** method that is called with a given
-music directory. The load method shall create a root folder with folders and
-tracks created by walking the given music directory and return a new music
-library initialized with the root folder.
-
-When walking the music directory, the load method shall skip directories that
-are packages (directories that the Finder presents as a single file, such as
-application bundles and Apple Music's `Music Library.musiclibrary`), neither
-creating a folder for them nor walking their contents.
+A music library shall have a static **load** method that is called with the path
+of the music root directory. The load method shall create a root folder with
+folders and tracks created by walking the given music root directory and return
+a new music library initialized with the root folder.
 
 If the load method encounters an error, the music library shall send a **music
 library load did fail** notification.
@@ -131,7 +129,7 @@ When it receives a "music library did load" notification, the app shall replace
 the app music library with the one in the notification when received.
 
 When the app launches, dmus shall call the music library load method in the
-background, passing it the music directory.
+background, passing it the path of the music root directory.
 
 
 # User interface

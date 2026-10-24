@@ -74,9 +74,9 @@ nonisolated struct MusicLibrary: Sendable {
         rootFolder.children.isEmpty
     }
 
-    static func load(musicDirectory: URL) -> MusicLibrary {
-        let children = loadChildren(of: musicDirectory, folderName: nil, parentFolderName: nil)
-        let rootFolder = Folder(path: musicDirectory.path, name: Folder.rootName, children: children)
+    static func load(musicRootDirectory: URL) -> MusicLibrary {
+        let children = loadChildren(of: musicRootDirectory, folderName: nil, parentFolderName: nil)
+        let rootFolder = Folder(path: musicRootDirectory.path, name: Folder.rootName, children: children)
         let library = MusicLibrary(rootFolder: rootFolder)
         postOnMain(.musicLibraryDidLoad, object: library)
         return library
@@ -118,7 +118,7 @@ nonisolated struct MusicLibrary: Sendable {
                 continue
             }
             // Packages such as Apple Music's `Music Library.musiclibrary` are
-            // directories on disk but not music folders.
+            // directories on disk but not music directories.
             if resourceValues.isPackage == true { continue }
             let name = url.lastPathComponent
             if resourceValues.isDirectory == true {

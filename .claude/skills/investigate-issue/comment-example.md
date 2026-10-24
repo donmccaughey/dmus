@@ -10,7 +10,7 @@ Confirmed in code.
 
 Environment: macOS 15.7, Xcode 26.3, commit `d3e4e0c` (clean tree).
 
-The music directory on this machine contains `Media.localized` and
+The music root directory on this machine contains `Media.localized` and
 `Previous Libraries.localized`, which the Finder shows as "Media" and
 "Previous Libraries". Checked with:
 

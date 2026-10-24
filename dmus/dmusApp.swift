@@ -13,8 +13,8 @@ struct DmusApp: App {
         // if macOS opens more than one window.
         Task.detached(priority: .utility) {
             do {
-                let musicDirectory = try MusicDirectory.locate()
-                _ = MusicLibrary.load(musicDirectory: musicDirectory)
+                let musicRootDirectory = try MusicRootDirectory.locate()
+                _ = MusicLibrary.load(musicRootDirectory: musicRootDirectory)
             } catch {
                 MusicLibrary.postLoadDidFail(error)
             }
