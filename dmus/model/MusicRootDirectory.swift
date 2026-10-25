@@ -1,27 +1,14 @@
 import Foundation
 
 nonisolated enum MusicRootDirectory {
-    static func locate() throws -> URL {
-        let fileManager = FileManager.default
+    static func locate(fileSystem: any FileSystem = RealFileSystem()) throws -> URL {
         #if os(macOS)
-        return try fileManager.url(
-            for: .musicDirectory,
-            in: .userDomainMask,
-            appropriateFor: nil,
-            create: true
-        )
+        return try fileSystem.getMusicDirectoryURL()
         #else
-        let applicationSupport = try fileManager.url(
-            for: .applicationSupportDirectory,
-            in: .userDomainMask,
-            appropriateFor: nil,
-            create: true
-        )
-        var musicRootDirectory = applicationSupport.appendingPathComponent("Music", isDirectory: true)
-        try fileManager.createDirectory(at: musicRootDirectory, withIntermediateDirectories: true)
-        var resourceValues = URLResourceValues()
-        resourceValues.isExcludedFromBackup = true
-        try musicRootDirectory.setResourceValues(resourceValues)
+        let applicationSupport = try fileSystem.getApplicationSupportDirectoryURL()
+        let musicRootDirectory = applicationSupport.appendingPathComponent("Music", isDirectory: true)
+        try fileSystem.createDirectory(at: musicRootDirectory)
+        try fileSystem.excludeFromBackup(musicRootDirectory)
         return musicRootDirectory
         #endif
     }
