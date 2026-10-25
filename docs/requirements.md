@@ -45,7 +45,7 @@ portrait, portrait upside-down, landscape left and landscape right.
 A **localized display name** is the name of a directory or file obtained from
 macOS or iOS API calls like `FileManager.displayName(atPath:)`, which may differ
 from the actual filesystem name of the directory or file. See the [Localized
-Display Name](localized_display_name.md) document for details.
+Display Name](localized-display-name-2026-10.md) document for details.
 
 
 # Project organization
