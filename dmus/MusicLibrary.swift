@@ -82,11 +82,45 @@ nonisolated struct MusicLibrary: Sendable {
         return library
     }
 
+    static func loadDemo() -> MusicLibrary {
+        let rootEntry: DemoEntry
+        do {
+            guard let url = Bundle.main.url(forResource: "demo-data", withExtension: "json") else {
+                throw LoadDemoError.missingResource
+            }
+            let entries = try JSONDecoder().decode([DemoEntry].self, from: Data(contentsOf: url))
+            guard let entry = entries.first(where: { $0.type == "directory" }) else {
+                throw LoadDemoError.noDirectoryEntry
+            }
+            rootEntry = entry
+        } catch {
+            postLoadDidFail(error)
+            return MusicLibrary()
+        }
+        let rootPath = rootEntry.name ?? "/"
+        let children = demoChildren(of: rootEntry, path: rootPath, folderName: nil, parentFolderName: nil)
+        let rootFolder = Folder(path: rootPath, name: Folder.rootName, children: children)
+        let library = MusicLibrary(rootFolder: rootFolder)
+        postOnMain(.musicLibraryDidLoad, object: library)
+        return library
+    }
+
     static func postLoadDidFail(_ error: any Error) {
         postOnMain(.musicLibraryLoadDidFail, object: error)
     }
 
     private static let musicFileExtensions: Set<String> = ["mp3", "m4a"]
+
+    private struct DemoEntry: Decodable {
+        let type: String
+        let name: String?
+        let contents: [DemoEntry]?
+    }
+
+    private enum LoadDemoError: Error {
+        case missingResource
+        case noDirectoryEntry
+    }
 
     // folderName and parentFolderName are nil for the root folder and its
     // children respectively, which is how tracks fall back to "(no album)" and
@@ -125,26 +159,75 @@ nonisolated struct MusicLibrary: Sendable {
                 let grandchildren = loadChildren(of: url, folderName: name, parentFolderName: folderName)
                 children.append(.folder(Folder(path: url.path, name: name, children: grandchildren)))
             } else if resourceValues.isRegularFile == true,
-                      musicFileExtensions.contains(url.pathExtension.lowercased()) {
-                let track = Track(
-                    trackName: trackName(displayName: name, url: url),
-                    albumName: folderName ?? Track.noAlbum,
-                    artistName: parentFolderName ?? Track.noArtist,
-                    path: url.path
-                )
+                      let track = track(
+                        displayName: name,
+                        pathExtension: url.pathExtension,
+                        path: url.path,
+                        folderName: folderName,
+                        parentFolderName: parentFolderName
+                      ) {
                 children.append(.track(track))
             }
         }
-        return children.sorted {
+        return sortedByName(children)
+    }
+
+    // The demo data has only names, so the localized display name and package
+    // rules cannot apply; the hidden file rule is applied by leading dot.
+    private static func demoChildren(
+        of entry: DemoEntry,
+        path: String,
+        folderName: String?,
+        parentFolderName: String?
+    ) -> [LibraryNode] {
+        var children: [LibraryNode] = []
+        for child in entry.contents ?? [] {
+            guard let name = child.name, !name.hasPrefix(".") else { continue }
+            let childPath = path + "/" + name
+            if child.type == "directory" {
+                let grandchildren = demoChildren(of: child, path: childPath, folderName: name, parentFolderName: folderName)
+                children.append(.folder(Folder(path: childPath, name: name, children: grandchildren)))
+            } else if child.type == "file",
+                      let track = track(
+                        displayName: name,
+                        pathExtension: (name as NSString).pathExtension,
+                        path: childPath,
+                        folderName: folderName,
+                        parentFolderName: parentFolderName
+                      ) {
+                children.append(.track(track))
+            }
+        }
+        return sortedByName(children)
+    }
+
+    private static func track(
+        displayName: String,
+        pathExtension: String,
+        path: String,
+        folderName: String?,
+        parentFolderName: String?
+    ) -> Track? {
+        guard musicFileExtensions.contains(pathExtension.lowercased()) else { return nil }
+        return Track(
+            trackName: trackName(displayName: displayName, pathExtension: pathExtension),
+            albumName: folderName ?? Track.noAlbum,
+            artistName: parentFolderName ?? Track.noArtist,
+            path: path
+        )
+    }
+
+    private static func sortedByName(_ nodes: [LibraryNode]) -> [LibraryNode] {
+        nodes.sorted {
             $0.name.localizedStandardCompare($1.name) == .orderedAscending
         }
     }
 
     // The display name already omits the extension when the Finder hides it,
     // so only strip an extension that is still present.
-    private static func trackName(displayName: String, url: URL) -> String {
-        let suffix = "." + url.pathExtension
-        guard !url.pathExtension.isEmpty,
+    private static func trackName(displayName: String, pathExtension: String) -> String {
+        let suffix = "." + pathExtension
+        guard !pathExtension.isEmpty,
               displayName.lowercased().hasSuffix(suffix.lowercased())
         else { return displayName }
         return String(displayName.dropLast(suffix.count))

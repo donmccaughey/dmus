@@ -101,6 +101,21 @@ When the load method completes, the music library shall send a **music
 library did load** notification containing the new music library on the main
 thread.
 
+A music library shall have a static **load demo** method that is called without
+arguments. The load demo method shall read the `demo-data.json` file from the
+app bundle then create a root folder with folders and tracks created by walking
+the first JSON object in the file with member `"type"="directory"`. The load
+demo method shall use all applicable rules on the file and directory names when
+creating folders and tracks, ignoring rules that only apply to real directories
+and files.
+
+If the load demo method encounters an error, the music library shall send a
+**music library load did fail** notification.
+
+When the load demo method completes, the music library shall send a **music
+library did load** notification containing the new music library on the main
+thread.
+
 
 ## Folder
 
@@ -136,8 +151,12 @@ notifications.
 When it receives a "music library did load" notification, the app shall replace
 the app music library with the one in the notification when received.
 
-When the app launches, dmus shall call the music library load method in the
-background, passing it the path of the music root directory.
+When the app launches and the `--demo` command line option is not given, dmus
+shall call the music library load method in the background, passing it the path
+of the music root directory.
+
+When the app launches and the `--demo` command line option is given, dmus shall
+call the music library load demo method in the background.
 
 
 # User interface

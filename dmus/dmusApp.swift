@@ -26,7 +26,12 @@ struct DmusApp: App {
     init() {
         // Started at launch rather than in a view's .task so loading is
         // independent of view lifecycle.
+        let isDemo = CommandLine.arguments.contains("--demo")
         Task.detached(priority: .utility) {
+            if isDemo {
+                _ = MusicLibrary.loadDemo()
+                return
+            }
             do {
                 let musicRootDirectory = try MusicRootDirectory.locate()
                 _ = MusicLibrary.load(musicRootDirectory: musicRootDirectory)
