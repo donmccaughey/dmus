@@ -2,16 +2,19 @@ import SwiftUI
 
 struct Panel<Content: View>: View {
     let title: LocalizedStringKey
+    var showsTitle = true
     @ViewBuilder let content: () -> Content
 
     var body: some View {
         VStack(spacing: 0) {
-            Text(title)
-                .font(.headline)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 8)
-                .background(.bar)
-            Divider()
+            if showsTitle {
+                Text(title)
+                    .font(.headline)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 8)
+                    .background(.bar)
+                Divider()
+            }
             content()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         }

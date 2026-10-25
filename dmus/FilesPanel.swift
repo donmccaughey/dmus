@@ -5,8 +5,18 @@ struct FilesPanel: View {
     @State private var musicLibrary = MusicLibrary()
     @State private var loadDidFail = false
 
+    // On iOS the root folder table's navigation title already reads "Files",
+    // so the panel title would duplicate it once the library is loaded.
+    private var showsTitle: Bool {
+        #if os(macOS)
+        true
+        #else
+        musicLibrary.isEmpty
+        #endif
+    }
+
     var body: some View {
-        Panel(title: "Files") {
+        Panel(title: "Files", showsTitle: showsTitle) {
             if musicLibrary.isEmpty {
                 ContentUnavailableView(
                     "No music",

@@ -24,7 +24,7 @@ nonisolated struct Folder: Hashable, Sendable {
         self.children = children
     }
 
-    static let rootName = "Music Library"
+    static let rootName = "Files"
 }
 
 nonisolated enum LibraryNode: Hashable, Sendable, Identifiable {

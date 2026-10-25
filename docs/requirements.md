@@ -126,11 +126,11 @@ thread.
 A **folder** is a branch node of the music library that corresponds to a
 directory. A folder has these properties: **path** is the absolute path of the
 corresponding directory or `nil` for an empty folder; **name** is the localized
-display name of the directory or "Music Library" for the root folder;
-**children** is the list of folders and tracks that belong to the folder.
+display name of the directory or "Files" for the root folder; **children** is
+the list of folders and tracks that belong to the folder.
 
 An **empty folder** is a folder with a path value of `nil`, a name value of
-"Music Library" and an empty children list.
+"Files" and an empty children list.
 
 
 ## Track
@@ -207,7 +207,12 @@ and the queue panel on the right side.
 
 ## Files panel
 
-The files panel shall show the title "Files" at the top of the panel.
+On macOS, the files panel shall show the title "Files" at the top of the panel.
+
+On iOS, while its music library is empty, the files panel shall show the title "Files" at the top of the panel.
+
+On iOS, while its music library is not empty, the files panel shall hide the
+title "Files" at the top of the panel.
 
 When it loads, the files panel shall listen for the "music library did load"
 notifications.
