@@ -48,6 +48,19 @@ from the actual filesystem name of the directory or file. See the [Localized
 Display Name](localized_display_name.md) document for details.
 
 
+# Project organization
+
+The dmus project shall place model code in the `dmus/model/` subdirectory.
+
+The dmus project shall place user interface (UI) code in the `dmus/ui/`
+subdirectory.
+
+The dmus project shall place all other code, app configuration and app asset
+files in the `dmus/` subdirectory.
+
+The dmus project shall place documentation files in the `docs/` subdirectory.
+
+
 # Model
 
 The **music root directory** is the directory on the local filesystem that dmus
