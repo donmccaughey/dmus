@@ -172,8 +172,9 @@ nonisolated struct MusicLibrary: Sendable {
         return sortedByName(children)
     }
 
-    // The demo data has only names, so the localized display name and package
-    // rules cannot apply; the hidden file rule is applied by leading dot.
+    // The demo data has only names, so the localized display name rule cannot
+    // apply. The hidden file rule is applied by leading dot and the package
+    // rule by discarding `.itlp` directories, the only package in the data.
     private static func demoChildren(
         of entry: DemoEntry,
         path: String,
@@ -185,6 +186,7 @@ nonisolated struct MusicLibrary: Sendable {
             guard let name = child.name, !name.hasPrefix(".") else { continue }
             let childPath = path + "/" + name
             if child.type == "directory" {
+                if (name as NSString).pathExtension.lowercased() == "itlp" { continue }
                 let grandchildren = demoChildren(of: child, path: childPath, folderName: name, parentFolderName: folderName)
                 children.append(.folder(Folder(path: childPath, name: name, children: grandchildren)))
             } else if child.type == "file",

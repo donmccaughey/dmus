@@ -104,10 +104,14 @@ thread.
 A music library shall have a static **load demo** method that is called without
 arguments. The load demo method shall read the `demo-data.json` file from the
 app bundle then create a root folder with folders and tracks created by walking
-the first JSON object in the file with member `"type"="directory"`. The load
-demo method shall use all applicable rules on the file and directory names when
-creating folders and tracks, ignoring rules that only apply to real directories
-and files.
+the first JSON object in the file with member `"type"="directory"`.
+
+The load demo method shall use all applicable rules on the file and directory
+names when creating folders and tracks, ignoring rules that only apply to real
+directories and files.
+
+The load demo method shall discard directories that end with the `.itlp`
+extension, as these directories are packages.
 
 If the load demo method encounters an error, the music library shall send a
 **music library load did fail** notification.
