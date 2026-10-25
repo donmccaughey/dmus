@@ -170,6 +170,19 @@ window title, app icon, menus, etc.
 
 On macOS, dmus shall show a main window on launch.
 
+The **main window content area** is the part of the main window below the title
+bar; it excludes the title bar and any window border. Main window widths and
+heights in this document are content area dimensions.
+
+On macOS, dmus shall give the main window content area a width of 900 and a
+height of 600 the first time the app launches.
+
+On macOS, dmus shall give the main window content area a minimum width of 640
+and a minimum height of 480.
+
+On macOS, dmus shall retain the previous main window width and height between
+subsequent launches.
+
 On macOS, dmus shall show two equally-sized panels in the main window: the files
 panel on the left side and the queue panel on the right side.
 
