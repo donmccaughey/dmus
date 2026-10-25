@@ -1,51 +1,5 @@
-# Requirements
+# Draft requirements
 
-This document contains requirements for "dmus" (capitalized "Dmus"), a
-cross-platform, offline music player application. Requirements in this document
-are written in [EARS][], the "easy approach to requirements syntax".
-
-[EARS]: https://github.com/donmccaughey/ears/blob/main/ears-cheat-sheet.md
-
-This document uses the additional pattern ON for requirements that vary
-according to operating system.
-
-    On <operating system>,
-    the <system name> shall <system response>.
-
-# Overview
-
-Dmus shall run on macOS and iOS; where "iOS" includes both iPhone and iPad form
-factors.
-
-Dmus shall play music files from the local filesystem.
-
-Dmus shall support `.mp3` and `.m4a` music files without DRM.
-
-
-# Model
-
-The **music directory** is the directory on the local filesystem that dmus
-searches for music files.
-
-The **music library** is an in-memory tree data structure consisting of folders
-(branch nodes) and tracks (leaf nodes) that correspond to directories and music
-files in the music directory, with a root folder for the music directory itself,
-one folder for each non-empty directory and one track for each music file. The
-music library exposes these properties: **root folder** and **music directory
-path**. An empty music library contains only the root folder.
-
-A **track** is a leaf node of the music library that corresponds to a music
-file. A track exposes these properties: **track name** is the filename of the
-music file with the extension removed; **album name** is the name of the parent
-folder or "(no album)" if the track is a child of the root folder; **artist
-name** is the name of the grandparent folder or "(no artist)" if the track is a
-grandchild of the root folder; **file path** is the absolute path to the music
-file.
-
-A **folder** is a branch node of the music library that corresponds to a
-directory, including the root folder for the music directory itself. A folder
-exposes one property: **name** is the filename of the directory or "(music
-library)" for the root folder.
 
 The **queue** is an in-memory data structure consisting of the list of tracks
 being played. The queue exposes one property: **tracks** is the list of tracks
@@ -60,12 +14,6 @@ the queue is empty.
 
 
 # Model commands and notifications
-
-When given the **reload** command, the music library shall walk the music
-directory, creating the corresponding folders and tracks.
-
-When the reload command complete, the music library shall send the **music
-library did reload** notification containing the music library.
 
 When given the **add track** command, the queue shall append the given track.
 
@@ -105,57 +53,6 @@ it contains the track and the time index.
 The **clear queue** notification is sent to stop playing and clear all tracks
 from the queue.
 
-
-# Music storage
-
-Dmus shall have one filesystem directory designated as the music directory.
-
-On macOS, dmus shall use the users `~/Music/` directory as the default music
-directory.
-
-On macOS, dmus shall allow the music directory to be changed in settings.
-
-On iOS, dmus shall use the `Music/` subdirectory of the standard application
-support directory as the music directory, creating it on launch if it does not
-exist.
-
-On iOS, dmus shall exclude the music directory from backup.
-
-
-# Launch behavior
-
-When the app launches, dmus shall walk the music directory in the background and
-build the music library.
-
-When the music library is built, dmus shall send a "reload music library"
-notification containing the music library.
-
-
-# User interface
-
-The **files panel** is a view that displays the music library.
-
-The **queue panel** is a view that displays the queue and player controls.
-
-Dmus shall have a main window or view that shows the files panel and the queue
-panel.
-
-On macOS, the files panel shall be on the left side and the queue panel on the
-right side of the main window.
-
-On macOS, the files panel and queue panel shall occupy equal amounts of space.
-
-On iOS, while the screen is in portrait orientation, the files panel shall be on
-the top and the queue panel on the bottom of the main view.
-
-On iOS, while the screen is in portrait orientation, the files panel and queue
-panel shall occupy equal amounts of space.
-
-On iOS, while the screen is in landscape orientation, the files panel shall be
-on the left side and the queue panel on the right side of the main view.
-
-On iOS, while the screen is in landscape orientation, the files panel and queue
-panel shall occupy equal amounts of space.
 
 
 ## Files panel
