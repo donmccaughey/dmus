@@ -31,13 +31,8 @@ nonisolated enum LibraryNode: Hashable, Sendable, Identifiable {
     case folder(Folder)
     case track(Track)
 
-    // The root folder is never a node, so every node has a non-nil path.
-    var id: String {
-        switch self {
-        case .folder(let folder): folder.path ?? ""
-        case .track(let track): track.path
-        }
-    }
+    // Demo tracks all share one path, so path alone is not a usable identity.
+    var id: Self { self }
 
     var name: String {
         switch self {
@@ -84,21 +79,32 @@ nonisolated struct MusicLibrary: Sendable {
 
     static func loadDemo() -> MusicLibrary {
         let rootEntry: DemoEntry
+        let trackPath: String
         do {
             guard let url = Bundle.main.url(forResource: "demo-data", withExtension: "json") else {
-                throw LoadDemoError.missingResource
+                throw LoadDemoError.missingResource("demo-data.json")
+            }
+            guard let trackURL = Bundle.main.url(forResource: "demo-track", withExtension: "mp3") else {
+                throw LoadDemoError.missingResource("demo-track.mp3")
             }
             let entries = try JSONDecoder().decode([DemoEntry].self, from: Data(contentsOf: url))
             guard let entry = entries.first(where: { $0.type == "directory" }) else {
                 throw LoadDemoError.noDirectoryEntry
             }
             rootEntry = entry
+            trackPath = trackURL.path
         } catch {
             postLoadDidFail(error)
             return MusicLibrary()
         }
         let rootPath = rootEntry.name ?? "/"
-        let children = demoChildren(of: rootEntry, path: rootPath, folderName: nil, parentFolderName: nil)
+        let children = demoChildren(
+            of: rootEntry,
+            path: rootPath,
+            trackPath: trackPath,
+            folderName: nil,
+            parentFolderName: nil
+        )
         let rootFolder = Folder(path: rootPath, name: Folder.rootName, children: children)
         let library = MusicLibrary(rootFolder: rootFolder)
         postOnMain(.musicLibraryDidLoad, object: library)
@@ -118,7 +124,7 @@ nonisolated struct MusicLibrary: Sendable {
     }
 
     private enum LoadDemoError: Error {
-        case missingResource
+        case missingResource(String)
         case noDirectoryEntry
     }
 
@@ -175,9 +181,11 @@ nonisolated struct MusicLibrary: Sendable {
     // The demo data has only names, so the localized display name rule cannot
     // apply. The hidden file rule is applied by leading dot and the package
     // rule by discarding `.itlp` directories, the only package in the data.
+    // Every track points at the bundled demo file so it is playable.
     private static func demoChildren(
         of entry: DemoEntry,
         path: String,
+        trackPath: String,
         folderName: String?,
         parentFolderName: String?
     ) -> [LibraryNode] {
@@ -187,13 +195,19 @@ nonisolated struct MusicLibrary: Sendable {
             let childPath = path + "/" + name
             if child.type == "directory" {
                 if (name as NSString).pathExtension.lowercased() == "itlp" { continue }
-                let grandchildren = demoChildren(of: child, path: childPath, folderName: name, parentFolderName: folderName)
+                let grandchildren = demoChildren(
+                    of: child,
+                    path: childPath,
+                    trackPath: trackPath,
+                    folderName: name,
+                    parentFolderName: folderName
+                )
                 children.append(.folder(Folder(path: childPath, name: name, children: grandchildren)))
             } else if child.type == "file",
                       let track = track(
                         displayName: name,
                         pathExtension: (name as NSString).pathExtension,
-                        path: childPath,
+                        path: trackPath,
                         folderName: folderName,
                         parentFolderName: parentFolderName
                       ) {

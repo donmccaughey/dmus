@@ -31,7 +31,7 @@ Dmus shall use Swift language and the SwiftUI framework.
 
 On macOS, dmus shall use AppKit rather than Mac Catalyst.
 
-On macOS, dmus shall not use the App Sandbox, since dmus is not distributed
+On macOS, dmus shall **not** use the App Sandbox, since dmus is not distributed
 through the App Store.
 
 Dmus shall use only APIs available on the minimum deployment targets.
@@ -106,6 +106,10 @@ arguments. The load demo method shall read the `demo-data.json` file from the
 app bundle then create a root folder with folders and tracks created by walking
 the first JSON object in the file with member `"type"="directory"`.
 
+The load demo method shall set the path property of each track to the path of
+the `demo-track.mp3` file from the app bundle instead of calculating the path
+from `demo-data.json`.
+
 The load demo method shall use all applicable rules on the file and directory
 names when creating folders and tracks, ignoring rules that only apply to real
 directories and files.
@@ -155,9 +159,9 @@ notifications.
 When it receives a "music library did load" notification, the app shall replace
 the app music library with the one in the notification when received.
 
-When the app launches and the `--demo` command line option is not given, dmus
-shall call the music library load method in the background, passing it the path
-of the music root directory.
+When the app launches and the `--demo` command line option is **not** given,
+dmus shall call the music library load method in the background, passing it the
+path of the music root directory.
 
 When the app launches and the `--demo` command line option is given, dmus shall
 call the music library load demo method in the background.
@@ -211,7 +215,7 @@ On macOS, the files panel shall show the title "Files" at the top of the panel.
 
 On iOS, while its music library is empty, the files panel shall show the title "Files" at the top of the panel.
 
-On iOS, while its music library is not empty, the files panel shall hide the
+On iOS, while its music library is **not** empty, the files panel shall hide the
 title "Files" at the top of the panel.
 
 When it loads, the files panel shall listen for the "music library did load"
@@ -226,7 +230,7 @@ While its music library is empty, the files panel shall show a content
 unavailable view with title "No music", description "The music library is
 empty." and a folder system icon.
 
-While its music library is not empty, the files panel shall hide the content
+While its music library is **not** empty, the files panel shall hide the content
 unavailable view.
 
 When it receives the "music library did load" notification, the files panel
@@ -251,7 +255,7 @@ the track name.
 On macOS, while its music library is empty, the files panel shall hide the files
 tree.
 
-On macOS, while its music library is not empty, the files panel shall show a
+On macOS, while its music library is **not** empty, the files panel shall show a
 files tree backed by its music library.
 
 
@@ -273,13 +277,13 @@ corresponding track and contains a "+" button on the right side of the row.
 On iOS, while its music library is empty, the files panel shall hide the files
 table stack.
 
-On iOS, while its music library is not empty, the files panel shall show a files
-table stack backed by its music library.
+On iOS, while its music library is **not** empty, the files panel shall show a
+files table stack backed by its music library.
 
 On iOS, while the visible folder table is empty, the folder table shall disable
 the "+" button in the navigation bar.
 
-On iOS, while the visible folder table is not empty, the folder table shall
+On iOS, while the visible folder table is **not** empty, the folder table shall
 enable the "+" button in the navigation bar.
 
 On iOS, when the user taps a folder row, the files table stack shall push a new
