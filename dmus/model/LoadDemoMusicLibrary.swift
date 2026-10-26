@@ -1,21 +1,13 @@
 import Foundation
 
-nonisolated func loadDemoMusicLibrary() -> MusicLibrary {
+nonisolated func loadDemoMusicLibrary(demoData: Data, trackPath: String) -> MusicLibrary {
     let rootEntry: DemoEntry
-    let trackPath: String
     do {
-        guard let url = Bundle.main.url(forResource: "demo-data", withExtension: "json") else {
-            throw LoadDemoError.missingResource("demo-data.json")
-        }
-        guard let trackURL = Bundle.main.url(forResource: "demo-track", withExtension: "mp3") else {
-            throw LoadDemoError.missingResource("demo-track.mp3")
-        }
-        let entries = try JSONDecoder().decode([DemoEntry].self, from: Data(contentsOf: url))
+        let entries = try JSONDecoder().decode([DemoEntry].self, from: demoData)
         guard let entry = entries.first(where: { $0.type == "directory" }) else {
             throw LoadDemoError.noDirectoryEntry
         }
         rootEntry = entry
-        trackPath = trackURL.path
     } catch {
         postMusicLibraryLoadDidFail(error)
         return MusicLibrary()
@@ -41,7 +33,6 @@ private struct DemoEntry: Decodable {
 }
 
 private enum LoadDemoError: Error {
-    case missingResource(String)
     case noDirectoryEntry
 }
 

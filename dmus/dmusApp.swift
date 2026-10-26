@@ -29,7 +29,7 @@ struct DmusApp: App {
         let isDemo = CommandLine.arguments.contains("--demo")
         Task.detached(priority: .utility) {
             if isDemo {
-                _ = loadDemoMusicLibrary()
+                _ = Self.loadDemoMusicLibraryFromBundle()
                 return
             }
             do {
@@ -39,6 +39,25 @@ struct DmusApp: App {
                 postMusicLibraryLoadDidFail(error)
             }
         }
+    }
+
+    private nonisolated static func loadDemoMusicLibraryFromBundle() -> MusicLibrary {
+        let demoData: Data
+        let trackPath: String
+        do {
+            guard let url = Bundle.main.url(forResource: "demo-data", withExtension: "json") else {
+                throw MissingDemoResource(name: "demo-data.json")
+            }
+            guard let trackURL = Bundle.main.url(forResource: "demo-track", withExtension: "mp3") else {
+                throw MissingDemoResource(name: "demo-track.mp3")
+            }
+            demoData = try Data(contentsOf: url)
+            trackPath = trackURL.path
+        } catch {
+            postMusicLibraryLoadDidFail(error)
+            return MusicLibrary()
+        }
+        return loadDemoMusicLibrary(demoData: demoData, trackPath: trackPath)
     }
 
     var body: some Scene {
@@ -64,4 +83,8 @@ struct DmusApp: App {
                 }
             }
     }
+}
+
+private struct MissingDemoResource: Error {
+    let name: String
 }
