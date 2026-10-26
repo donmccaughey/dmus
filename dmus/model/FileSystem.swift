@@ -1,13 +1,28 @@
 import Foundation
 
+nonisolated struct FileInfo: Sendable {
+    let isDirectory: Bool
+    let isRegularFile: Bool
+    let isPackage: Bool
+    let localizedName: String?
+}
+
 nonisolated protocol FileSystem: Sendable {
     func getMusicDirectoryURL() throws -> URL
     func getApplicationSupportDirectoryURL() throws -> URL
     func createDirectory(at url: URL) throws
     func excludeFromBackup(_ url: URL) throws
+    func listDirectory(_ directory: URL) throws -> [URL]
+    func getFileInfo(_ url: URL) throws -> FileInfo
 }
 
 nonisolated struct RealFileSystem: FileSystem {
+    // Prefetched by listDirectory so getFileInfo reads from the URL's cache
+    // instead of going back to disk for each entry.
+    private static let fileInfoKeys: Set<URLResourceKey> = [
+        .isDirectoryKey, .isRegularFileKey, .isPackageKey, .localizedNameKey
+    ]
+
     func getMusicDirectoryURL() throws -> URL {
         try FileManager.default.url(
             for: .musicDirectory,
@@ -35,5 +50,23 @@ nonisolated struct RealFileSystem: FileSystem {
         var resourceValues = URLResourceValues()
         resourceValues.isExcludedFromBackup = true
         try url.setResourceValues(resourceValues)
+    }
+
+    func listDirectory(_ directory: URL) throws -> [URL] {
+        try FileManager.default.contentsOfDirectory(
+            at: directory,
+            includingPropertiesForKeys: Array(Self.fileInfoKeys),
+            options: .skipsHiddenFiles
+        )
+    }
+
+    func getFileInfo(_ url: URL) throws -> FileInfo {
+        let values = try url.resourceValues(forKeys: Self.fileInfoKeys)
+        return FileInfo(
+            isDirectory: values.isDirectory == true,
+            isRegularFile: values.isRegularFile == true,
+            isPackage: values.isPackage == true,
+            localizedName: values.localizedName
+        )
     }
 }

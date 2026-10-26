@@ -1,7 +1,15 @@
 import Foundation
 
-nonisolated func loadMusicLibrary(musicRootDirectory: URL) -> MusicLibrary {
-    let children = loadChildren(of: musicRootDirectory, folderName: nil, parentFolderName: nil)
+nonisolated func loadMusicLibrary(
+    musicRootDirectory: URL,
+    fileSystem: any FileSystem = RealFileSystem()
+) -> MusicLibrary {
+    let children = loadChildren(
+        of: musicRootDirectory,
+        folderName: nil,
+        parentFolderName: nil,
+        fileSystem: fileSystem
+    )
     let rootFolder = Folder(path: musicRootDirectory.path, name: Folder.rootName, children: children)
     let library = MusicLibrary(rootFolder: rootFolder)
     postMusicLibraryDidLoad(library)
@@ -14,15 +22,12 @@ nonisolated func loadMusicLibrary(musicRootDirectory: URL) -> MusicLibrary {
 nonisolated private func loadChildren(
     of directory: URL,
     folderName: String?,
-    parentFolderName: String?
+    parentFolderName: String?,
+    fileSystem: any FileSystem
 ) -> [FolderChild] {
     let contents: [URL]
     do {
-        contents = try FileManager.default.contentsOfDirectory(
-            at: directory,
-            includingPropertiesForKeys: [.isRegularFileKey, .isDirectoryKey, .isPackageKey, .localizedNameKey],
-            options: .skipsHiddenFiles
-        )
+        contents = try fileSystem.listDirectory(directory)
     } catch {
         postMusicLibraryLoadDidFail(error)
         return []
@@ -30,21 +35,26 @@ nonisolated private func loadChildren(
 
     var children: [FolderChild] = []
     for url in contents {
-        let resourceValues: URLResourceValues
+        let info: FileInfo
         do {
-            resourceValues = try url.resourceValues(forKeys: [.isRegularFileKey, .isDirectoryKey, .isPackageKey, .localizedNameKey])
+            info = try fileSystem.getFileInfo(url)
         } catch {
             postMusicLibraryLoadDidFail(error)
             continue
         }
         // Packages such as Apple Music's `Music Library.musiclibrary` are
         // directories on disk but not music directories.
-        if resourceValues.isPackage == true { continue }
-        let name = resourceValues.localizedName ?? url.lastPathComponent
-        if resourceValues.isDirectory == true {
-            let grandchildren = loadChildren(of: url, folderName: name, parentFolderName: folderName)
+        if info.isPackage { continue }
+        let name = info.localizedName ?? url.lastPathComponent
+        if info.isDirectory {
+            let grandchildren = loadChildren(
+                of: url,
+                folderName: name,
+                parentFolderName: folderName,
+                fileSystem: fileSystem
+            )
             children.append(.folder(Folder(path: url.path, name: name, children: grandchildren)))
-        } else if resourceValues.isRegularFile == true,
+        } else if info.isRegularFile,
                   let track = Track(
                     displayName: name,
                     pathExtension: url.pathExtension,
