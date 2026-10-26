@@ -44,27 +44,16 @@ struct DmusApp: App {
     var body: some Scene {
         #if os(macOS)
         Window("Dmus", id: "main") {
-            mainView
-                .frame(minWidth: 640, minHeight: 480)
+            // set min content area size
+            mainView.frame(minWidth: 640, minHeight: 480)
         }
-        // defaultSize measures the whole window frame while the frame modifier
-        // above measures the content area below the title bar, so add the
-        // title bar height to keep both in content area terms.
-        .defaultSize(width: 900, height: 600 + Self.titleBarHeight)
+        .defaultContentAreaSize(width: 900, height: 600)
         #else
         WindowGroup("Dmus") {
             mainView
         }
         #endif
     }
-
-    #if os(macOS)
-    private static let titleBarHeight: CGFloat = {
-        let contentRect = NSRect(x: 0, y: 0, width: 100, height: 100)
-        let frameRect = NSWindow.frameRect(forContentRect: contentRect, styleMask: .titled)
-        return frameRect.height - contentRect.height
-    }()
-    #endif
 
     private var mainView: some View {
         MainView()
