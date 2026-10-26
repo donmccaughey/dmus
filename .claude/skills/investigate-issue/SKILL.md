@@ -53,8 +53,16 @@ A build failure is itself a finding. Report it rather than working around it.
 ## 4. Build and launch recipes
 
 In these recipes `$SCRATCHPAD` is the session scratchpad directory from the system
-prompt; set it before running them. There is one scheme, `dmus`, and no test
-target. The bundle identifier is `cc.donm.dmus`.
+prompt; set it before running them. The schemes are `dmus` and `dmus-demo`
+(the latter launches with `--demo`). `dmusTests` is a Swift Testing logic test
+bundle with no host app; the `dmus` scheme runs it. The bundle identifier is
+`cc.donm.dmus`.
+
+Unit tests:
+
+```bash
+xcodebuild -scheme dmus -destination 'platform=macOS' test 2>&1 | tail -20
+```
 
 macOS:
 

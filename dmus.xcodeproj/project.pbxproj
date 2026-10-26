@@ -8,15 +8,42 @@
 
 /* Begin PBXFileReference section */
 		D3A5000000000000000000A2 /* Dmus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dmus.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3A5000000000000000000F1 /* dmusTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = dmusTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D41DFEB0308C305900FEA684 /* CLAUDE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CLAUDE.md; sourceTree = "<group>"; };
 		D41DFEB1308C305900FEA684 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		D4A78314308D0B4000325F1E /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		D3A5000000000000000000F9 /* Exceptions for "dmus" folder in "dmusTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				model/FileSystem.swift,
+				model/Folder.swift,
+				model/FolderChild.swift,
+				model/LoadDemoMusicLibrary.swift,
+				model/LoadMusicLibrary.swift,
+				model/MusicLibrary.swift,
+				model/MusicLibraryNotifications.swift,
+				model/MusicRootDirectory.swift,
+				model/Track.swift,
+			);
+			target = D3A5000000000000000000F2 /* dmusTests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		D3A5000000000000000000A3 /* dmus */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				D3A5000000000000000000F9 /* Exceptions for "dmus" folder in "dmusTests" target */,
+			);
 			path = dmus;
+			sourceTree = "<group>";
+		};
+		D3A5000000000000000000F0 /* dmusTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = dmusTests;
 			sourceTree = "<group>";
 		};
 		D41DFEB6308C307E00FEA684 /* docs */ = {
@@ -39,6 +66,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D3A5000000000000000000F4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -51,6 +85,7 @@
 				D4A78311308D0B2500325F1E /* .claude */,
 				D41DFEB6308C307E00FEA684 /* docs */,
 				D3A5000000000000000000A3 /* dmus */,
+				D3A5000000000000000000F0 /* dmusTests */,
 				D3A5000000000000000000A1 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -59,6 +94,7 @@
 			isa = PBXGroup;
 			children = (
 				D3A5000000000000000000A2 /* Dmus.app */,
+				D3A5000000000000000000F1 /* dmusTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -88,6 +124,28 @@
 			productReference = D3A5000000000000000000A2 /* Dmus.app */;
 			productType = "com.apple.product-type.application";
 		};
+		D3A5000000000000000000F2 /* dmusTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D3A5000000000000000000F6 /* Build configuration list for PBXNativeTarget "dmusTests" */;
+			buildPhases = (
+				D3A5000000000000000000F3 /* Sources */,
+				D3A5000000000000000000F4 /* Frameworks */,
+				D3A5000000000000000000F5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				D3A5000000000000000000F0 /* dmusTests */,
+			);
+			name = dmusTests;
+			packageProductDependencies = (
+			);
+			productName = dmusTests;
+			productReference = D3A5000000000000000000F1 /* dmusTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -99,6 +157,9 @@
 				LastUpgradeCheck = 2630;
 				TargetAttributes = {
 					D3A5000000000000000000C0 = {
+						CreatedOnToolsVersion = 26.3;
+					};
+					D3A5000000000000000000F2 = {
 						CreatedOnToolsVersion = 26.3;
 					};
 				};
@@ -118,6 +179,7 @@
 			projectRoot = "";
 			targets = (
 				D3A5000000000000000000C0 /* dmus */,
+				D3A5000000000000000000F2 /* dmusTests */,
 			);
 		};
 /* End PBXProject section */
@@ -130,10 +192,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D3A5000000000000000000F5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		D3A5000000000000000000B1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3A5000000000000000000F3 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -343,6 +419,70 @@
 			};
 			name = Release;
 		};
+		D3A5000000000000000000F7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = K39VF43BJL;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = (
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = cc.donm.dmusTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D3A5000000000000000000F8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = K39VF43BJL;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = (
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = cc.donm.dmusTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -360,6 +500,15 @@
 			buildConfigurations = (
 				D3A5000000000000000000E2 /* Debug */,
 				D3A5000000000000000000E3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D3A5000000000000000000F6 /* Build configuration list for PBXNativeTarget "dmusTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D3A5000000000000000000F7 /* Debug */,
+				D3A5000000000000000000F8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
