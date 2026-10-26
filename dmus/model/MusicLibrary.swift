@@ -86,7 +86,7 @@ nonisolated struct MusicLibrary: Sendable {
         of directory: URL,
         folderName: String?,
         parentFolderName: String?
-    ) -> [LibraryNode] {
+    ) -> [FolderChild] {
         let contents: [URL]
         do {
             contents = try FileManager.default.contentsOfDirectory(
@@ -99,7 +99,7 @@ nonisolated struct MusicLibrary: Sendable {
             return []
         }
 
-        var children: [LibraryNode] = []
+        var children: [FolderChild] = []
         for url in contents {
             let resourceValues: URLResourceValues
             do {
@@ -139,8 +139,8 @@ nonisolated struct MusicLibrary: Sendable {
         trackPath: String,
         folderName: String?,
         parentFolderName: String?
-    ) -> [LibraryNode] {
-        var children: [LibraryNode] = []
+    ) -> [FolderChild] {
+        var children: [FolderChild] = []
         for child in entry.contents ?? [] {
             guard let name = child.name, !name.hasPrefix(".") else { continue }
             let childPath = path + "/" + name
@@ -184,7 +184,7 @@ nonisolated struct MusicLibrary: Sendable {
         )
     }
 
-    private static func sortedByName(_ nodes: [LibraryNode]) -> [LibraryNode] {
+    private static func sortedByName(_ nodes: [FolderChild]) -> [FolderChild] {
         nodes.sorted {
             $0.name.localizedStandardCompare($1.name) == .orderedAscending
         }

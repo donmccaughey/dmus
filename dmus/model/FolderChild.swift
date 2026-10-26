@@ -1,6 +1,6 @@
 import Foundation
 
-nonisolated enum LibraryNode: Hashable, Sendable, Identifiable {
+nonisolated enum FolderChild: Hashable, Sendable, Identifiable {
     case folder(Folder)
     case track(Track)
 
@@ -13,7 +13,7 @@ nonisolated enum LibraryNode: Hashable, Sendable, Identifiable {
         }
     }
 
-    var children: [LibraryNode]? {
+    var children: [FolderChild]? {
         switch self {
         case .folder(let folder): folder.children
         case .track: nil
