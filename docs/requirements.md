@@ -50,6 +50,14 @@ Display Name](localized-display-name-2026-10.md) document for details.
 
 # Project organization
 
+The dmus project shall place app code, configuration and assets in the `dmus/`
+subdirectory.
+
+The dmus project shall place documentation files in the `docs/` subdirectory.
+
+
+## Code organization
+
 The dmus project shall place model code in the `dmus/model/` subdirectory.
 
 The dmus project shall place user interface (UI) code in the `dmus/ui/`
@@ -58,7 +66,11 @@ subdirectory.
 The dmus project shall place all other code, app configuration and app asset
 files in the `dmus/` subdirectory.
 
-The dmus project shall place documentation files in the `docs/` subdirectory.
+The dmus project shall place each class or struct representing a significant
+application concept in its own code file; [wrapper
+interfaces](wrappers-for-testing.md) and their implementations may share the
+same code file; extensions and small classes and structs may share a code file
+when they have a single consumer.
 
 
 # Model
