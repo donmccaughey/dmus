@@ -29,14 +29,14 @@ struct DmusApp: App {
         let isDemo = CommandLine.arguments.contains("--demo")
         Task.detached(priority: .utility) {
             if isDemo {
-                _ = MusicLibrary.loadDemo()
+                _ = loadDemoMusicLibrary()
                 return
             }
             do {
                 let musicRootDirectory = try MusicRootDirectory.locate()
-                _ = MusicLibrary.load(musicRootDirectory: musicRootDirectory)
+                _ = loadMusicLibrary(musicRootDirectory: musicRootDirectory)
             } catch {
-                MusicLibrary.postLoadDidFail(error)
+                postMusicLibraryLoadDidFail(error)
             }
         }
     }

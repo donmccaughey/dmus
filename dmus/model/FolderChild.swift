@@ -20,3 +20,11 @@ nonisolated enum FolderChild: Hashable, Sendable, Identifiable {
         }
     }
 }
+
+nonisolated extension Array where Element == FolderChild {
+    func sortedByName() -> [FolderChild] {
+        sorted {
+            $0.name.localizedStandardCompare($1.name) == .orderedAscending
+        }
+    }
+}

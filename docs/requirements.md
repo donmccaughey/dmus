@@ -114,38 +114,38 @@ as the root folder.
 A music library shall have an **is empty** read-only calculated property that is
 true when the root folder has no children and false otherwise.
 
-A music library shall have a static **load** method that is called with the path
-of the music root directory. The load method shall create a root folder with
-folders and tracks created by walking the given music root directory and return
-a new music library initialized with the root folder.
+Dmus shall have a **load music library** function that is called with the path
+of the music root directory. The load music library function shall create a root
+folder with folders and tracks created by walking the given music root directory
+and return a new music library initialized with the root folder.
 
-If the load method encounters an error, the music library shall send a **music
+If it encounters an error, the load music library function shall send a **music
 library load did fail** notification.
 
-When the load method completes, the music library shall send a **music
-library did load** notification containing the new music library on the main
-thread.
+When it completes, the load music library function shall send a **music library
+did load** notification containing the new music library on the main thread.
 
-A music library shall have a static **load demo** method that is called without
-arguments. The load demo method shall read the `demo-data.json` file from the
-app bundle then create a root folder with folders and tracks created by walking
-the first JSON object in the file with member `"type"="directory"`.
+Dmus shall have a **load demo music library** function that is called without
+arguments. The load demo music library function shall read the `demo-data.json`
+file from the app bundle then create a root folder with folders and tracks
+created by walking the first JSON object in the file with member
+`"type"="directory"`.
 
-The load demo method shall set the path property of each track to the path of
-the `demo-track.mp3` file from the app bundle instead of calculating the path
-from `demo-data.json`.
+The load demo music library function shall set the path property of each track
+to the path of the `demo-track.mp3` file from the app bundle instead of
+calculating the path from `demo-data.json`.
 
-The load demo method shall use all applicable rules on the file and directory
-names when creating folders and tracks, ignoring rules that only apply to real
-directories and files.
+The load demo music library function shall use all applicable rules on the file
+and directory names when creating folders and tracks, ignoring rules that only
+apply to real directories and files.
 
-The load demo method shall discard directories that end with the `.itlp`
-extension, as these directories are packages.
+The load demo music library function shall discard directories that end with the
+`.itlp` extension, as these directories are packages.
 
-If the load demo method encounters an error, the music library shall send a
+If it encounters an error, the load demo music library function shall send a
 **music library load did fail** notification.
 
-When the load demo method completes, the music library shall send a **music
+When it completes, the load demo music library function shall send a **music
 library did load** notification containing the new music library on the main
 thread.
 
