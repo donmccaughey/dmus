@@ -32,7 +32,7 @@ private struct DemoEntry: Decodable {
     let contents: [DemoEntry]?
 }
 
-private enum LoadDemoError: Error {
+nonisolated enum LoadDemoError: Error, Equatable {
     case noDirectoryEntry
 }
 
