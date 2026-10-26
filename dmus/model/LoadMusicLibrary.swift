@@ -3,17 +3,17 @@ import Foundation
 nonisolated func loadMusicLibrary(
     musicRootDirectory: URL,
     fileSystem: any FileSystem = RealFileSystem()
-) -> MusicLibrary {
+) -> LoadResult {
+    var errors: [any Error] = []
     let children = loadChildren(
         of: musicRootDirectory,
         folderName: nil,
         parentFolderName: nil,
-        fileSystem: fileSystem
+        fileSystem: fileSystem,
+        errors: &errors
     )
     let rootFolder = Folder(path: musicRootDirectory.path, name: Folder.rootName, children: children)
-    let library = MusicLibrary(rootFolder: rootFolder)
-    postMusicLibraryDidLoad(library)
-    return library
+    return LoadResult(library: MusicLibrary(rootFolder: rootFolder), errors: errors)
 }
 
 // folderName and parentFolderName are nil for the root folder and its
@@ -23,13 +23,14 @@ nonisolated private func loadChildren(
     of directory: URL,
     folderName: String?,
     parentFolderName: String?,
-    fileSystem: any FileSystem
+    fileSystem: any FileSystem,
+    errors: inout [any Error]
 ) -> [FolderChild] {
     let contents: [URL]
     do {
         contents = try fileSystem.listDirectory(directory)
     } catch {
-        postMusicLibraryLoadDidFail(error)
+        errors.append(error)
         return []
     }
 
@@ -39,7 +40,7 @@ nonisolated private func loadChildren(
         do {
             info = try fileSystem.getFileInfo(url)
         } catch {
-            postMusicLibraryLoadDidFail(error)
+            errors.append(error)
             continue
         }
         // Packages such as Apple Music's `Music Library.musiclibrary` are
@@ -51,7 +52,8 @@ nonisolated private func loadChildren(
                 of: url,
                 folderName: name,
                 parentFolderName: folderName,
-                fileSystem: fileSystem
+                fileSystem: fileSystem,
+                errors: &errors
             )
             children.append(.folder(Folder(path: url.path, name: name, children: grandchildren)))
         } else if info.isRegularFile,

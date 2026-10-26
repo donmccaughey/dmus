@@ -4,8 +4,12 @@ import Testing
 struct LoadMusicLibraryTests {
     let root = URL(filePath: "/Music", directoryHint: .isDirectory)
 
-    func load(_ fileSystem: FakeFileSystem) -> MusicLibrary {
+    func loadResult(_ fileSystem: FakeFileSystem) -> LoadResult {
         loadMusicLibrary(musicRootDirectory: root, fileSystem: fileSystem)
+    }
+
+    func load(_ fileSystem: FakeFileSystem) -> MusicLibrary {
+        loadResult(fileSystem).library
     }
 
     func track(_ name: String, path: String, album: String? = nil, artist: String? = nil) -> FolderChild {
@@ -17,33 +21,8 @@ struct LoadMusicLibraryTests {
         ))
     }
 
-    // Notifications are posted on the main actor after loadMusicLibrary()
-    // returns, and NotificationCenter.default is shared with tests running in
-    // parallel, so wait for the notification carrying our own object.
-    func nextNotification(
-        from notifications: NotificationCenter.Notifications,
-        where matches: (Notification) -> Bool
-    ) async -> Notification? {
-        for await notification in notifications where matches(notification) {
-            return notification
-        }
-        return nil
-    }
-
-    func didLoad() -> NotificationCenter.Notifications {
-        NotificationCenter.default.notifications(named: .musicLibraryDidLoad)
-    }
-
-    func loadDidFail() -> NotificationCenter.Notifications {
-        NotificationCenter.default.notifications(named: .musicLibraryLoadDidFail)
-    }
-
-    func carries(_ library: MusicLibrary) -> (Notification) -> Bool {
-        { ($0.object as? MusicLibrary)?.rootFolder == library.rootFolder }
-    }
-
-    func carries(_ error: FakeFileSystemError) -> (Notification) -> Bool {
-        { $0.object as? FakeFileSystemError == error }
+    func fakeErrors(in result: LoadResult) -> [FakeFileSystemError] {
+        result.errors.compactMap { $0 as? FakeFileSystemError }
     }
 
     @Test func emptyDirectoryGivesEmptyLibrary() {
@@ -59,11 +38,12 @@ struct LoadMusicLibraryTests {
         var fileSystem = FakeFileSystem()
         fileSystem.add("/Music/Song.mp3")
 
-        let library = load(fileSystem)
+        let result = loadResult(fileSystem)
 
-        #expect(library.rootFolder.children == [
+        #expect(result.library.rootFolder.children == [
             track("Song", path: "/Music/Song.mp3"),
         ])
+        #expect(result.errors.isEmpty)
     }
 
     @Test func folderNamesBecomeAlbumAndArtist() {
@@ -185,67 +165,46 @@ struct LoadMusicLibraryTests {
         ])
     }
 
-    @Test(.timeLimit(.minutes(1)))
-    func unlistableRootGivesEmptyLibraryAndPostsFailure() async {
+    @Test func unlistableRootGivesEmptyLibraryAndReportsFailure() {
         var fileSystem = FakeFileSystem()
         fileSystem.unlistableDirectories = ["/Music"]
-        let failures = loadDidFail()
-        let loads = didLoad()
 
-        let library = load(fileSystem)
+        let result = loadResult(fileSystem)
 
-        #expect(library.isEmpty)
-        #expect(library.rootFolder.path == "/Music")
-        let failure = await nextNotification(from: failures, where: carries(FakeFileSystemError(path: "/Music")))
-        #expect(failure != nil)
-        let loaded = await nextNotification(from: loads, where: carries(library))
-        #expect(loaded != nil)
+        #expect(result.library.isEmpty)
+        #expect(result.library.rootFolder.path == "/Music")
+        #expect(result.errors.count == 1)
+        #expect(fakeErrors(in: result) == [FakeFileSystemError(path: "/Music")])
     }
 
-    @Test(.timeLimit(.minutes(1)))
-    func unlistableSubfolderBecomesEmptyFolder() async {
+    @Test func unlistableSubfolderBecomesEmptyFolderAndReportsFailure() {
         var fileSystem = FakeFileSystem()
         fileSystem.add("/Music/Broken", .directory)
         fileSystem.add("/Music/Song.mp3")
         fileSystem.unlistableDirectories = ["/Music/Broken"]
-        let failures = loadDidFail()
 
-        let library = load(fileSystem)
+        let result = loadResult(fileSystem)
 
-        #expect(library.rootFolder.children == [
+        #expect(result.library.rootFolder.children == [
             .folder(Folder(path: "/Music/Broken", name: "Broken", children: [])),
             track("Song", path: "/Music/Song.mp3"),
         ])
-        let failure = await nextNotification(from: failures, where: carries(FakeFileSystemError(path: "/Music/Broken")))
-        #expect(failure != nil)
+        #expect(result.errors.count == 1)
+        #expect(fakeErrors(in: result) == [FakeFileSystemError(path: "/Music/Broken")])
     }
 
-    @Test(.timeLimit(.minutes(1)))
-    func unreadableEntryIsSkipped() async {
+    @Test func unreadableEntryIsSkippedAndReportsFailure() {
         var fileSystem = FakeFileSystem()
         fileSystem.add("/Music/Bad.mp3")
         fileSystem.add("/Music/Good.mp3")
         fileSystem.unreadableEntries = ["/Music/Bad.mp3"]
-        let failures = loadDidFail()
 
-        let library = load(fileSystem)
+        let result = loadResult(fileSystem)
 
-        #expect(library.rootFolder.children == [
+        #expect(result.library.rootFolder.children == [
             track("Good", path: "/Music/Good.mp3"),
         ])
-        let failure = await nextNotification(from: failures, where: carries(FakeFileSystemError(path: "/Music/Bad.mp3")))
-        #expect(failure != nil)
-    }
-
-    @Test(.timeLimit(.minutes(1)))
-    func postsDidLoadWithLibrary() async {
-        var fileSystem = FakeFileSystem()
-        fileSystem.add("/Music/Song.mp3")
-        let loads = didLoad()
-
-        let library = load(fileSystem)
-
-        let loaded = await nextNotification(from: loads, where: carries(library))
-        #expect(loaded != nil)
+        #expect(result.errors.count == 1)
+        #expect(fakeErrors(in: result) == [FakeFileSystemError(path: "/Music/Bad.mp3")])
     }
 }

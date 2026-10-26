@@ -1,9 +1,5 @@
 import SwiftUI
 
-extension EnvironmentValues {
-    @Entry var musicLibrary = MusicLibrary()
-}
-
 #if os(macOS)
 final class DmusAppDelegate: NSObject, NSApplicationDelegate {
     func applicationWillFinishLaunching(_ notification: Notification) {
@@ -21,43 +17,12 @@ struct DmusApp: App {
     #if os(macOS)
     @NSApplicationDelegateAdaptor private var appDelegate: DmusAppDelegate
     #endif
-    @State private var musicLibrary = MusicLibrary()
+    private let store = MusicLibraryStore()
 
     init() {
         // Started at launch rather than in a view's .task so loading is
         // independent of view lifecycle.
-        let isDemo = CommandLine.arguments.contains("--demo")
-        Task.detached(priority: .utility) {
-            if isDemo {
-                _ = Self.loadDemoMusicLibraryFromBundle()
-                return
-            }
-            do {
-                let musicRootDirectory = try MusicRootDirectory.locate()
-                _ = loadMusicLibrary(musicRootDirectory: musicRootDirectory)
-            } catch {
-                postMusicLibraryLoadDidFail(error)
-            }
-        }
-    }
-
-    private nonisolated static func loadDemoMusicLibraryFromBundle() -> MusicLibrary {
-        let demoData: Data
-        let trackPath: String
-        do {
-            guard let url = Bundle.main.url(forResource: "demo-data", withExtension: "json") else {
-                throw MissingDemoResource(name: "demo-data.json")
-            }
-            guard let trackURL = Bundle.main.url(forResource: "demo-track", withExtension: "mp3") else {
-                throw MissingDemoResource(name: "demo-track.mp3")
-            }
-            demoData = try Data(contentsOf: url)
-            trackPath = trackURL.path
-        } catch {
-            postMusicLibraryLoadDidFail(error)
-            return MusicLibrary()
-        }
-        return loadDemoMusicLibrary(demoData: demoData, trackPath: trackPath)
+        store.loadInBackground(isDemo: CommandLine.arguments.contains("--demo"))
     }
 
     var body: some Scene {
@@ -75,16 +40,6 @@ struct DmusApp: App {
     }
 
     private var mainView: some View {
-        MainView()
-            .environment(\.musicLibrary, musicLibrary)
-            .onReceive(NotificationCenter.default.publisher(for: .musicLibraryDidLoad)) { notification in
-                if let library = notification.object as? MusicLibrary {
-                    musicLibrary = library
-                }
-            }
+        MainView().environment(store)
     }
-}
-
-private struct MissingDemoResource: Error {
-    let name: String
 }

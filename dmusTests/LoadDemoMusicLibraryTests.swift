@@ -4,8 +4,12 @@ import Testing
 struct LoadDemoMusicLibraryTests {
     let trackPath = "/Bundle/demo-track.mp3"
 
-    func load(_ json: String) -> MusicLibrary {
+    func loadResult(_ json: String) -> LoadResult {
         loadDemoMusicLibrary(demoData: Data(json.utf8), trackPath: trackPath)
+    }
+
+    func load(_ json: String) -> MusicLibrary {
+        loadResult(json).library
     }
 
     func track(_ name: String, album: String? = nil, artist: String? = nil) -> FolderChild {
@@ -15,31 +19,6 @@ struct LoadDemoMusicLibraryTests {
             artistName: artist ?? Track.noArtist,
             path: trackPath
         ))
-    }
-
-    // Notifications are posted on the main actor after loadDemoMusicLibrary()
-    // returns, and NotificationCenter.default is shared with tests running in
-    // parallel, so wait for the notification carrying our own object.
-    func nextNotification(
-        from notifications: NotificationCenter.Notifications,
-        where matches: (Notification) -> Bool
-    ) async -> Notification? {
-        for await notification in notifications where matches(notification) {
-            return notification
-        }
-        return nil
-    }
-
-    func didLoad() -> NotificationCenter.Notifications {
-        NotificationCenter.default.notifications(named: .musicLibraryDidLoad)
-    }
-
-    func loadDidFail() -> NotificationCenter.Notifications {
-        NotificationCenter.default.notifications(named: .musicLibraryLoadDidFail)
-    }
-
-    func carries(_ library: MusicLibrary) -> (Notification) -> Bool {
-        { ($0.object as? MusicLibrary)?.rootFolder == library.rootFolder }
     }
 
     @Test func rootDirectoryNameBecomesRootPath() {
@@ -53,12 +32,13 @@ struct LoadDemoMusicLibraryTests {
     }
 
     @Test func rootDirectoryWithoutNameUsesSlash() {
-        let library = load("""
+        let result = loadResult("""
         [{"type":"directory","contents":[{"type":"file","name":"Song.mp3"}]}]
         """)
 
-        #expect(library.rootFolder.path == "/")
-        #expect(library.rootFolder.children == [track("Song")])
+        #expect(result.library.rootFolder.path == "/")
+        #expect(result.library.rootFolder.children == [track("Song")])
+        #expect(result.errors.isEmpty)
     }
 
     @Test func rootDirectoryWithoutContentsGivesEmptyLibrary() {
@@ -224,43 +204,23 @@ struct LoadDemoMusicLibraryTests {
         ])
     }
 
-    @Test(.timeLimit(.minutes(1)))
-    func invalidJSONGivesEmptyLibraryAndPostsFailure() async {
-        let failures = loadDidFail()
+    @Test func invalidJSONGivesEmptyLibraryAndReportsFailure() {
+        let result = loadResult("not json")
 
-        let library = load("not json")
-
-        #expect(library.isEmpty)
-        #expect(library.rootFolder.path == nil)
-        let failure = await nextNotification(from: failures, where: { $0.object is DecodingError })
-        #expect(failure != nil)
+        #expect(result.library.isEmpty)
+        #expect(result.library.rootFolder.path == nil)
+        #expect(result.errors.count == 1)
+        #expect(result.errors.first is DecodingError)
     }
 
-    @Test(.timeLimit(.minutes(1)))
-    func missingDirectoryEntryGivesEmptyLibraryAndPostsFailure() async {
-        let failures = loadDidFail()
-
-        let library = load("""
+    @Test func missingDirectoryEntryGivesEmptyLibraryAndReportsFailure() {
+        let result = loadResult("""
         [{"type":"report","directories":0,"files":0}]
         """)
 
-        #expect(library.isEmpty)
-        #expect(library.rootFolder.path == nil)
-        let failure = await nextNotification(from: failures, where: {
-            $0.object as? LoadDemoError == .noDirectoryEntry
-        })
-        #expect(failure != nil)
-    }
-
-    @Test(.timeLimit(.minutes(1)))
-    func postsDidLoadWithLibrary() async {
-        let loads = didLoad()
-
-        let library = load("""
-        [{"type":"directory","name":"/Music","contents":[{"type":"file","name":"Song.mp3"}]}]
-        """)
-
-        let loaded = await nextNotification(from: loads, where: carries(library))
-        #expect(loaded != nil)
+        #expect(result.library.isEmpty)
+        #expect(result.library.rootFolder.path == nil)
+        #expect(result.errors.count == 1)
+        #expect(result.errors.first as? LoadDemoError == .noDirectoryEntry)
     }
 }

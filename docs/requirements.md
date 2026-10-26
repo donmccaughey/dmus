@@ -114,16 +114,22 @@ as the root folder.
 A music library shall have an **is empty** read-only calculated property that is
 true when the root folder has no children and false otherwise.
 
+A **load result** is the value returned by a load function. A load result has
+these properties: **library** is the music library that was loaded; **errors**
+is the list of errors encountered while loading, which is empty when loading
+succeeded completely.
+
 Dmus shall have a **load music library** function that is called with the path
 of the music root directory. The load music library function shall create a root
 folder with folders and tracks created by walking the given music root directory
-and return a new music library initialized with the root folder.
+and return a load result containing a new music library initialized with the
+root folder.
 
-If it encounters an error, the load music library function shall send a **music
-library load did fail** notification.
+If it cannot list the music root directory, the load music library function
+shall return a load result containing an empty music library and the error.
 
-When it completes, the load music library function shall send a **music library
-did load** notification containing the new music library on the main thread.
+If it encounters an error while walking a subdirectory or file, the load music
+library function shall add the error to the load result and continue walking.
 
 Dmus shall have a **load demo music library** function that is called without
 arguments. The load demo music library function shall read the `demo-data.json`
@@ -142,12 +148,11 @@ apply to real directories and files.
 The load demo music library function shall discard directories that end with the
 `.itlp` extension, as these directories are packages.
 
-If it encounters an error, the load demo music library function shall send a
-**music library load did fail** notification.
+If it encounters an error, the load demo music library function shall return a
+load result containing an empty music library and the error.
 
-When it completes, the load demo music library function shall send a **music
-library did load** notification containing the new music library on the main
-thread.
+When it completes, the load demo music library function shall return a load
+result containing the new music library and no errors.
 
 
 ## Folder
@@ -175,21 +180,29 @@ root folder; **path** is the absolute path to the music file.
 
 # Launch behavior
 
-When the app launches, dmus shall create an empty music library owned by the app
-and shared with other views.
+The **music library store** is the object owned by the app that holds the app
+music library and the errors from the most recent load. The music library store
+has these properties: **library** is the app music library, initially an empty
+music library; **load errors** is the list of errors from the most recent load,
+initially empty; **load did fail** is a read-only calculated property that is
+true when load errors is not empty.
 
-When the app launches, dmus shall listen for "music library did load"
-notifications.
-
-When it receives a "music library did load" notification, the app shall replace
-the app music library with the one in the notification when received.
+When the app launches, dmus shall create a music library store and share it with
+other views.
 
 When the app launches and the `--demo` command line option is **not** given,
-dmus shall call the music library load method in the background, passing it the
-path of the music root directory.
+dmus shall call the load music library function in the background, passing it
+the path of the music root directory.
 
 When the app launches and the `--demo` command line option is given, dmus shall
-call the music library load demo method in the background.
+call the load demo music library function in the background.
+
+If locating the music root directory or reading the demo files from the app
+bundle fails, dmus shall treat the failure as a load result containing an empty
+music library and the error.
+
+When a background load completes, dmus shall apply its load result to the music
+library store on the main thread, replacing the library and the load errors.
 
 
 # User interface
@@ -243,13 +256,8 @@ On iOS, while its music library is empty, the files panel shall show the title "
 On iOS, while its music library is **not** empty, the files panel shall hide the
 title "Files" at the top of the panel.
 
-When it loads, the files panel shall listen for the "music library did load"
-notifications.
-
-When it loads, the files panel shall listen for the "music library load did
-fail" notification.
-
-When it loads, the files panel shall get its music library from the app.
+The files panel shall get its music library and load did fail state from the
+app's music library store.
 
 While its music library is empty, the files panel shall show a content
 unavailable view with title "No music", description "The music library is
@@ -258,10 +266,7 @@ empty." and a folder system icon.
 While its music library is **not** empty, the files panel shall hide the content
 unavailable view.
 
-When it receives the "music library did load" notification, the files panel
-shall replace its music library with the music library from the notification.
-
-When it receives the "music library load did fail" notification, the files panel
+While its music library is empty and load did fail is true, the files panel
 shall set the description of the content unavailable view to "The music library
 did not load.".
 

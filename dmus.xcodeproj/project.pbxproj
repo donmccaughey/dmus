@@ -23,10 +23,11 @@
 				model/FolderChild.swift,
 				model/LoadDemoMusicLibrary.swift,
 				model/LoadMusicLibrary.swift,
+				model/LoadResult.swift,
 				model/MusicLibrary.swift,
-				model/MusicLibraryNotifications.swift,
 				model/MusicRootDirectory.swift,
 				model/Track.swift,
+				MusicLibraryStore.swift,
 			);
 			target = D3A5000000000000000000F2 /* dmusTests */;
 		};

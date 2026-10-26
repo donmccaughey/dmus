@@ -58,7 +58,7 @@ script in ways that reintroduce them.
 - Demo mode: the Files panel lists artist folders from the bundled
   `demo-data.json` (starting with "3 Doors Down").
 - Either mode with an empty Files panel after a few seconds means the load
-  posted `musicLibraryLoadDidFail`; check the log path the script prints.
+  result carried an error; check the log path the script prints.
 
 If the user already has Dmus open, leave it alone. The script only ever
 signals the PID it launched.

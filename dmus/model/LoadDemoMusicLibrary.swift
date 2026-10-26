@@ -1,6 +1,6 @@
 import Foundation
 
-nonisolated func loadDemoMusicLibrary(demoData: Data, trackPath: String) -> MusicLibrary {
+nonisolated func loadDemoMusicLibrary(demoData: Data, trackPath: String) -> LoadResult {
     let rootEntry: DemoEntry
     do {
         let entries = try JSONDecoder().decode([DemoEntry].self, from: demoData)
@@ -9,8 +9,7 @@ nonisolated func loadDemoMusicLibrary(demoData: Data, trackPath: String) -> Musi
         }
         rootEntry = entry
     } catch {
-        postMusicLibraryLoadDidFail(error)
-        return MusicLibrary()
+        return LoadResult(library: MusicLibrary(), errors: [error])
     }
     let rootPath = rootEntry.name ?? "/"
     let children = demoChildren(
@@ -21,9 +20,7 @@ nonisolated func loadDemoMusicLibrary(demoData: Data, trackPath: String) -> Musi
         parentFolderName: nil
     )
     let rootFolder = Folder(path: rootPath, name: Folder.rootName, children: children)
-    let library = MusicLibrary(rootFolder: rootFolder)
-    postMusicLibraryDidLoad(library)
-    return library
+    return LoadResult(library: MusicLibrary(rootFolder: rootFolder), errors: [])
 }
 
 private struct DemoEntry: Decodable {
