@@ -77,6 +77,9 @@ system, network, clock and random number generator.
 The dmus project shall place wrapper interfaces and their real and fake
 implementations in the `dmus/wrappers/` subdirectory.
 
+The dmus project shall place unit test files in the same folder as the code file
+under test.
+
 
 # Model
 

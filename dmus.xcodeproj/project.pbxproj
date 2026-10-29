@@ -21,10 +21,14 @@
 				model/Folder.swift,
 				model/FolderChild.swift,
 				model/LoadDemoMusicLibrary.swift,
+				model/LoadDemoMusicLibraryTests.swift,
 				model/LoadMusicLibrary.swift,
+				model/LoadMusicLibraryTests.swift,
 				model/LoadResult.swift,
 				model/MusicLibrary.swift,
+				model/MusicLibraryStoreTests.swift,
 				model/MusicRootDirectory.swift,
+				model/MusicRootDirectoryTests.swift,
 				model/Track.swift,
 				MusicLibraryStore.swift,
 				wrappers/FileSystem.swift,
@@ -39,6 +43,10 @@
 		D4FF6D343092CDFA00FE2C42 /* Exceptions for "dmus" folder in "dmus" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				model/LoadDemoMusicLibraryTests.swift,
+				model/LoadMusicLibraryTests.swift,
+				model/MusicLibraryStoreTests.swift,
+				model/MusicRootDirectoryTests.swift,
 				wrappers/FileSystemFake.swift,
 				wrappers/PreferencesFake.swift,
 			);
@@ -54,11 +62,6 @@
 				D3A5000000000000000000F9 /* Exceptions for "dmus" folder in "dmusTests" target */,
 			);
 			path = dmus;
-			sourceTree = "<group>";
-		};
-		D3A5000000000000000000F0 /* dmusTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = dmusTests;
 			sourceTree = "<group>";
 		};
 		D41DFEB6308C307E00FEA684 /* docs */ = {
@@ -100,7 +103,6 @@
 				D4A78311308D0B2500325F1E /* .claude */,
 				D41DFEB6308C307E00FEA684 /* docs */,
 				D3A5000000000000000000A3 /* dmus */,
-				D3A5000000000000000000F0 /* dmusTests */,
 				D3A5000000000000000000A1 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -150,9 +152,6 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				D3A5000000000000000000F0 /* dmusTests */,
 			);
 			name = dmusTests;
 			packageProductDependencies = (
