@@ -8,9 +8,11 @@ struct SettingsView: View {
 
     var body: some View {
         Form {
-            HStack {
-                TextField("Music Files:", text: .constant(musicRootDirectoryPath))
-                Button("Choose…", action: chooseMusicRootDirectory)
+            LabeledContent("Music Files:") {
+                HStack {
+                    ReadOnlyTextField(text: musicRootDirectoryPath)
+                    Button("Choose…", action: chooseMusicRootDirectory)
+                }
             }
         }
         .padding()

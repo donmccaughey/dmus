@@ -359,6 +359,12 @@ The music files setting shall consist of the **music files text box**, the label
 music root directory, and the **choose music files button**, a button with label
 "Choose…".
 
+The music files text box shall **not** accept keyboard focus; the tab order of
+the settings dialog shall skip it.
+
+The music files text box shall allow the user to select and copy its text but
+shall **not** allow the user to edit it.
+
 When a user clicks the choose music files button, the settings dialog shall open
 the system file chooser, initialized to the current path in the music files text
 box, and configured to allow the user to choose a directory and with allowed
