@@ -1,6 +1,6 @@
 import Foundation
 
-nonisolated struct Track: Hashable, Sendable {
+nonisolated struct Track: Hashable, Sendable, Codable {
     let trackName: String
     let albumName: String
     let artistName: String

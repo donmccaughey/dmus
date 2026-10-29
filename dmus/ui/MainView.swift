@@ -33,5 +33,5 @@ struct MainView: View {
 }
 
 #Preview {
-    MainView().environment(MusicLibraryStore())
+    MainView().environment(MusicLibraryStore()).environment(Queue())
 }

@@ -6,12 +6,20 @@ struct FilesTree: View {
 
     var body: some View {
         List(musicLibrary.rootFolder.children, children: \.children) { node in
-            switch node {
-            case .folder(let folder):
-                Label(folder.name, systemImage: "folder")
-            case .track(let track):
-                Label(track.trackName, systemImage: "music.note")
-            }
+            label(for: node)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .contentShape(Rectangle())
+                .draggable(node)
+        }
+    }
+
+    @ViewBuilder
+    private func label(for node: FolderChild) -> some View {
+        switch node {
+        case .folder(let folder):
+            Label(folder.name, systemImage: "folder")
+        case .track(let track):
+            Label(track.trackName, systemImage: "music.note")
         }
     }
 }

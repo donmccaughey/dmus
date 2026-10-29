@@ -190,6 +190,21 @@ grandparent folder or "(no artist)" if the track is a child or grandchild of the
 root folder; **path** is the absolute path to the music file.
 
 
+## Queue
+
+The **queue** is an in-memory list of tracks to play. The queue has one
+property: **tracks** is the list of tracks in the queue, in play order. The same
+track may appear in the queue more than once.
+
+An **empty queue** is a queue with an empty tracks list.
+
+When given the **add track** command, the queue shall append the given track to
+its tracks.
+
+When given the **add folder** command, the queue shall append the track
+descendants of the given folder to its tracks in preorder.
+
+
 # Launch behavior
 
 The **music library store** is the object owned by the app that holds the app
@@ -201,6 +216,9 @@ true when load errors is not empty.
 
 When the app launches, dmus shall create a music library store and share it with
 other views.
+
+When the app launches, dmus shall create an empty queue and share it with other
+views.
 
 When the app launches and the `--demo` command line option is **not** given,
 dmus shall call the load music library function in the background, passing it
@@ -300,6 +318,12 @@ tree.
 On macOS, while its music library is **not** empty, the files panel shall show a
 files tree backed by its music library.
 
+On macOS, when the user drags a folder item, the files tree shall start a drag
+carrying the folder of the item.
+
+On macOS, when the user drags a track item, the files tree shall start a drag
+carrying the track of the item.
+
 
 ### Files table stack
 
@@ -336,8 +360,26 @@ folder table onto the navigation stack backed by the folder of the tapped row.
 
 The queue panel shall show the title "Queue" at the top of the panel.
 
-The queue panel shall show a content unavailable view with title "No tracks",
-description "The queue is empty." and a bullet list system icon.
+The queue panel shall get its tracks from the app's queue.
+
+While the queue is empty, the queue panel shall show a content unavailable view
+with title "No tracks", description "The queue is empty." and a bullet list
+system icon.
+
+While the queue is **not** empty, the queue panel shall hide the content
+unavailable view and show a queue table.
+
+A **queue table** is a table view with one row for each track in the queue, in
+queue order, and the columns "Track", "Album" and "Artist" showing the track
+name, album name and artist name of the corresponding track.
+
+On macOS, when a track item from the files tree is dropped on the queue panel,
+the queue panel shall give the queue the add track command with the track of the
+item.
+
+On macOS, when a folder item from the files tree is dropped on the queue panel,
+the queue panel shall give the queue the add folder command with the folder of
+the item.
 
 
 ## Menus

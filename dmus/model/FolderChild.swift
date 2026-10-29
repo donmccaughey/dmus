@@ -1,6 +1,6 @@
 import Foundation
 
-nonisolated enum FolderChild: Hashable, Sendable, Identifiable {
+nonisolated enum FolderChild: Hashable, Sendable, Identifiable, Codable {
     case folder(Folder)
     case track(Track)
 

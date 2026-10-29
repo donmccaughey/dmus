@@ -20,6 +20,8 @@
 			membershipExceptions = (
 				model/Folder.swift,
 				model/FolderChild.swift,
+				model/FolderChildTests.swift,
+				model/FolderTests.swift,
 				model/LoadDemoMusicLibrary.swift,
 				model/LoadDemoMusicLibraryTests.swift,
 				model/LoadMusicLibrary.swift,
@@ -29,6 +31,9 @@
 				model/MusicLibraryStoreTests.swift,
 				model/MusicRootDirectory.swift,
 				model/MusicRootDirectoryTests.swift,
+				model/Queue.swift,
+				model/QueuedTrack.swift,
+				model/QueueTests.swift,
 				model/Track.swift,
 				MusicLibraryStore.swift,
 				wrappers/FileSystem.swift,
@@ -43,10 +48,14 @@
 		D4FF6D343092CDFA00FE2C42 /* Exceptions for "dmus" folder in "dmus" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Info.plist,
+				model/FolderChildTests.swift,
+				model/FolderTests.swift,
 				model/LoadDemoMusicLibraryTests.swift,
 				model/LoadMusicLibraryTests.swift,
 				model/MusicLibraryStoreTests.swift,
 				model/MusicRootDirectoryTests.swift,
+				model/QueueTests.swift,
 				wrappers/FileSystemFake.swift,
 				wrappers/PreferencesFake.swift,
 			);
@@ -245,6 +254,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = dmus/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Dmus;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -288,6 +298,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = dmus/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Dmus;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
