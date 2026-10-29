@@ -26,6 +26,7 @@
 				model/LoadResult.swift,
 				model/MusicLibrary.swift,
 				model/MusicRootDirectory.swift,
+				model/Preferences.swift,
 				model/Track.swift,
 				MusicLibraryStore.swift,
 			);

@@ -78,8 +78,12 @@ when they have a single consumer.
 The **music root directory** is the directory on the local filesystem that dmus
 searches for music files.
 
-On macOS, dmus shall use the system's music directory for the current user as
-the music root directory, creating it on launch if it does not exist.
+On macOS, dmus shall read the music root directory from user defaults,
+initializing it to the system music directory for the current user if not
+present.
+
+On macOS, dmus shall create the music root directory on launch if it does not
+exist.
 
 On iOS, dmus shall use the `Music/` subdirectory of the standard application
 support directory as the music root directory, creating it on launch if it does
@@ -326,3 +330,37 @@ The queue panel shall show the title "Queue" at the top of the panel.
 
 The queue panel shall show a content unavailable view with title "No tracks",
 description "The queue is empty." and a bullet list system icon.
+
+
+## Menus
+
+### Settings menu
+
+On macOS, dmus shall have a "Settings…" menu item under the app ("Dmus") menu.
+
+On macOS, when the "Settings…" menu item is selected, dmus shall present the
+setting dialog.
+
+
+## Settings dialog
+
+The settings dialog shall display one setting: **Music files**.
+
+The music files setting shall consist of the **music files text box**, the label
+"Music Files:", a read-only text box that displays the current value of the
+music root directory, and the **choose music files button**, a button with label
+"Choose…".
+
+When a user clicks the choose music files button, the settings dialog shall open
+the system file chooser, initialized to the current path in the music files text
+box, and configured to allow the user to choose a directory and with allowed
+content types set to `.mp3` and `.m4a` files so that other file types are
+dimmed.
+
+When the user chooses a directory in the file chooser, the settings dialog shall
+update the music files text box.
+
+When the user chooses a different music root directory in the settings dialog,
+dmus shall save the new music root directory to user defaults, load the new
+music library in the background and update the app when the new music library
+has loaded.

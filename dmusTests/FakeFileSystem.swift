@@ -22,13 +22,18 @@ nonisolated struct FakeFileSystem: FileSystem {
     var entries: [Entry] = []
     var unlistableDirectories: Set<String> = []
     var unreadableEntries: Set<String> = []
+    var uncreatableDirectories: Set<String> = []
+    var musicDirectoryURL: URL?
 
     mutating func add(_ path: String, _ kind: Kind = .file, localizedName: String? = nil) {
         entries.append(Entry(path: path, kind: kind, localizedName: localizedName))
     }
 
     func getMusicDirectoryURL() throws -> URL {
-        throw FakeFileSystemError(path: "getMusicDirectoryURL")
+        guard let musicDirectoryURL else {
+            throw FakeFileSystemError(path: "getMusicDirectoryURL")
+        }
+        return musicDirectoryURL
     }
 
     func getApplicationSupportDirectoryURL() throws -> URL {
@@ -36,7 +41,9 @@ nonisolated struct FakeFileSystem: FileSystem {
     }
 
     func createDirectory(at url: URL) throws {
-        throw FakeFileSystemError(path: url.path)
+        if uncreatableDirectories.contains(url.path) {
+            throw FakeFileSystemError(path: url.path)
+        }
     }
 
     func excludeFromBackup(_ url: URL) throws {

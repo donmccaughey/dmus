@@ -5,6 +5,19 @@ import Observation
 final class MusicLibraryStore {
     private(set) var library = MusicLibrary()
     private(set) var loadErrors: [any Error] = []
+    private(set) var musicRootDirectory: URL?
+    private(set) var loadTask: Task<Void, Never>?
+
+    private let fileSystem: any FileSystem
+    private let preferences: any Preferences
+
+    init(
+        fileSystem: any FileSystem = RealFileSystem(),
+        preferences: any Preferences = RealPreferences()
+    ) {
+        self.fileSystem = fileSystem
+        self.preferences = preferences
+    }
 
     var loadDidFail: Bool { !loadErrors.isEmpty }
 
@@ -14,17 +27,55 @@ final class MusicLibraryStore {
     }
 
     func loadInBackground(isDemo: Bool) {
-        Task.detached(priority: .utility) {
-            let result = isDemo ? Self.loadDemo() : Self.loadFromMusicRootDirectory()
-            await self.apply(result)
+        let fileSystem = fileSystem
+        let preferences = preferences
+        loadTask?.cancel()
+        loadTask = Task.detached(priority: .utility) {
+            // Located even in demo mode so the settings dialog can show it.
+            let located = Result {
+                try MusicRootDirectory.locate(fileSystem: fileSystem, preferences: preferences)
+            }
+            await self.setMusicRootDirectory(try? located.get())
+            let result = Self.load(located, isDemo: isDemo, fileSystem: fileSystem)
+            await self.applyUnlessCancelled(result)
         }
     }
 
-    private nonisolated static func loadFromMusicRootDirectory() -> LoadResult {
-        do {
-            let musicRootDirectory = try MusicRootDirectory.locate()
-            return loadMusicLibrary(musicRootDirectory: musicRootDirectory)
-        } catch {
+    func changeMusicRootDirectory(to url: URL) {
+        guard url.path != musicRootDirectory?.path else { return }
+        preferences.setMusicRootDirectoryPath(url.path)
+        musicRootDirectory = url
+        let fileSystem = fileSystem
+        loadTask?.cancel()
+        loadTask = Task.detached(priority: .utility) {
+            let result = loadMusicLibrary(musicRootDirectory: url, fileSystem: fileSystem)
+            await self.applyUnlessCancelled(result)
+        }
+    }
+
+    private func setMusicRootDirectory(_ url: URL?) {
+        musicRootDirectory = url
+    }
+
+    // A superseded load still walks to completion since loadMusicLibrary does
+    // not check for cancellation, so its result is dropped here instead.
+    private func applyUnlessCancelled(_ result: LoadResult) {
+        guard !Task.isCancelled else { return }
+        apply(result)
+    }
+
+    private nonisolated static func load(
+        _ located: Result<URL, any Error>,
+        isDemo: Bool,
+        fileSystem: any FileSystem
+    ) -> LoadResult {
+        if isDemo {
+            return loadDemo()
+        }
+        switch located {
+        case .success(let musicRootDirectory):
+            return loadMusicLibrary(musicRootDirectory: musicRootDirectory, fileSystem: fileSystem)
+        case .failure(let error):
             return LoadResult(library: MusicLibrary(), errors: [error])
         }
     }

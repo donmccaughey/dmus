@@ -32,6 +32,9 @@ struct DmusApp: App {
             mainView.frame(minWidth: 640, minHeight: 480)
         }
         .defaultContentAreaSize(width: 900, height: 600)
+        Settings {
+            SettingsView().environment(store)
+        }
         #else
         WindowGroup("Dmus") {
             mainView
