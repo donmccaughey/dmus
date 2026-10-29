@@ -1,11 +1,6 @@
 import Foundation
 
-nonisolated protocol Preferences: Sendable {
-    func getMusicRootDirectoryPath() -> String?
-    func setMusicRootDirectoryPath(_ path: String)
-}
-
-nonisolated struct RealPreferences: Preferences {
+nonisolated struct PreferencesReal: Preferences {
     private static let musicRootDirectoryKey = "musicRootDirectory"
 
     func getMusicRootDirectoryPath() -> String? {

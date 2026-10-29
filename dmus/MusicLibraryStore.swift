@@ -12,8 +12,8 @@ final class MusicLibraryStore {
     private let preferences: any Preferences
 
     init(
-        fileSystem: any FileSystem = RealFileSystem(),
-        preferences: any Preferences = RealPreferences()
+        fileSystem: any FileSystem = FileSystemReal(),
+        preferences: any Preferences = PreferencesReal()
     ) {
         self.fileSystem = fileSystem
         self.preferences = preferences

@@ -50,9 +50,9 @@ struct MusicLibraryStoreTests {
     }
 
     @Test func backgroundLoadLocatesRootAndLoadsLibrary() async {
-        var fileSystem = FakeFileSystem()
+        var fileSystem = FileSystemFake()
         fileSystem.add("/Saved/Music/Song.mp3")
-        let preferences = FakePreferences(musicRootDirectoryPath: "/Saved/Music")
+        let preferences = PreferencesFake(musicRootDirectoryPath: "/Saved/Music")
         let store = MusicLibraryStore(fileSystem: fileSystem, preferences: preferences)
 
         store.loadInBackground(isDemo: false)
@@ -64,7 +64,7 @@ struct MusicLibraryStoreTests {
     }
 
     @Test func backgroundLoadReportsLocateFailure() async {
-        let store = MusicLibraryStore(fileSystem: FakeFileSystem(), preferences: FakePreferences())
+        let store = MusicLibraryStore(fileSystem: FileSystemFake(), preferences: PreferencesFake())
 
         store.loadInBackground(isDemo: false)
         await store.loadTask?.value
@@ -75,10 +75,10 @@ struct MusicLibraryStoreTests {
     }
 
     @Test func changingRootSavesPreferenceAndReloads() async {
-        var fileSystem = FakeFileSystem()
+        var fileSystem = FileSystemFake()
         fileSystem.add("/Saved/Music/Old.mp3")
         fileSystem.add("/Other/Music/New.mp3")
-        let preferences = FakePreferences(musicRootDirectoryPath: "/Saved/Music")
+        let preferences = PreferencesFake(musicRootDirectoryPath: "/Saved/Music")
         let store = MusicLibraryStore(fileSystem: fileSystem, preferences: preferences)
         store.loadInBackground(isDemo: false)
         await store.loadTask?.value
@@ -95,8 +95,8 @@ struct MusicLibraryStoreTests {
     }
 
     @Test func choosingCurrentRootAgainDoesNothing() async {
-        let preferences = FakePreferences(musicRootDirectoryPath: "/Saved/Music")
-        let store = MusicLibraryStore(fileSystem: FakeFileSystem(), preferences: preferences)
+        let preferences = PreferencesFake(musicRootDirectoryPath: "/Saved/Music")
+        let store = MusicLibraryStore(fileSystem: FileSystemFake(), preferences: preferences)
         store.loadInBackground(isDemo: false)
         await store.loadTask?.value
         let loadTask = store.loadTask

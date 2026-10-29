@@ -2,8 +2,8 @@ import Foundation
 
 nonisolated enum MusicRootDirectory {
     static func locate(
-        fileSystem: any FileSystem = RealFileSystem(),
-        preferences: any Preferences = RealPreferences()
+        fileSystem: any FileSystem = FileSystemReal(),
+        preferences: any Preferences = PreferencesReal()
     ) throws -> URL {
         #if os(macOS)
         let musicRootDirectory: URL

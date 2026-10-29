@@ -1,6 +1,6 @@
 import Foundation
 
-nonisolated final class FakePreferences: Preferences, @unchecked Sendable {
+nonisolated final class PreferencesFake: Preferences, @unchecked Sendable {
     var musicRootDirectoryPath: String?
 
     init(musicRootDirectoryPath: String? = nil) {

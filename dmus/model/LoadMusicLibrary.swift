@@ -2,7 +2,7 @@ import Foundation
 
 nonisolated func loadMusicLibrary(
     musicRootDirectory: URL,
-    fileSystem: any FileSystem = RealFileSystem()
+    fileSystem: any FileSystem = FileSystemReal()
 ) -> LoadResult {
     var errors: [any Error] = []
     let children = loadChildren(

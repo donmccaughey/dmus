@@ -1,10 +1,10 @@
 import Foundation
 
-nonisolated struct FakeFileSystemError: Error, Equatable {
+nonisolated struct FileSystemFakeError: Error, Equatable {
     let path: String
 }
 
-nonisolated struct FakeFileSystem: FileSystem {
+nonisolated struct FileSystemFake: FileSystem {
     enum Kind {
         case directory
         case file
@@ -31,29 +31,29 @@ nonisolated struct FakeFileSystem: FileSystem {
 
     func getMusicDirectoryURL() throws -> URL {
         guard let musicDirectoryURL else {
-            throw FakeFileSystemError(path: "getMusicDirectoryURL")
+            throw FileSystemFakeError(path: "getMusicDirectoryURL")
         }
         return musicDirectoryURL
     }
 
     func getApplicationSupportDirectoryURL() throws -> URL {
-        throw FakeFileSystemError(path: "getApplicationSupportDirectoryURL")
+        throw FileSystemFakeError(path: "getApplicationSupportDirectoryURL")
     }
 
     func createDirectory(at url: URL) throws {
         if uncreatableDirectories.contains(url.path) {
-            throw FakeFileSystemError(path: url.path)
+            throw FileSystemFakeError(path: url.path)
         }
     }
 
     func excludeFromBackup(_ url: URL) throws {
-        throw FakeFileSystemError(path: url.path)
+        throw FileSystemFakeError(path: url.path)
     }
 
     // Entries come back in insertion order so tests can see the loader sort.
     func listDirectory(_ directory: URL) throws -> [URL] {
         if unlistableDirectories.contains(directory.path) {
-            throw FakeFileSystemError(path: directory.path)
+            throw FileSystemFakeError(path: directory.path)
         }
         return entries
             .filter { ($0.path as NSString).deletingLastPathComponent == directory.path }
@@ -69,7 +69,7 @@ nonisolated struct FakeFileSystem: FileSystem {
     func getFileInfo(_ url: URL) throws -> FileInfo {
         guard !unreadableEntries.contains(url.path),
               let entry = entries.first(where: { $0.path == url.path })
-        else { throw FakeFileSystemError(path: url.path) }
+        else { throw FileSystemFakeError(path: url.path) }
         return FileInfo(
             isDirectory: entry.kind == .directory || entry.kind == .package,
             isRegularFile: entry.kind == .file,

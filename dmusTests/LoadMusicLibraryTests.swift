@@ -4,11 +4,11 @@ import Testing
 struct LoadMusicLibraryTests {
     let root = URL(filePath: "/Music", directoryHint: .isDirectory)
 
-    func loadResult(_ fileSystem: FakeFileSystem) -> LoadResult {
+    func loadResult(_ fileSystem: FileSystemFake) -> LoadResult {
         loadMusicLibrary(musicRootDirectory: root, fileSystem: fileSystem)
     }
 
-    func load(_ fileSystem: FakeFileSystem) -> MusicLibrary {
+    func load(_ fileSystem: FileSystemFake) -> MusicLibrary {
         loadResult(fileSystem).library
     }
 
@@ -21,12 +21,12 @@ struct LoadMusicLibraryTests {
         ))
     }
 
-    func fakeErrors(in result: LoadResult) -> [FakeFileSystemError] {
-        result.errors.compactMap { $0 as? FakeFileSystemError }
+    func fakeErrors(in result: LoadResult) -> [FileSystemFakeError] {
+        result.errors.compactMap { $0 as? FileSystemFakeError }
     }
 
     @Test func emptyDirectoryGivesEmptyLibrary() {
-        let library = load(FakeFileSystem())
+        let library = load(FileSystemFake())
 
         #expect(library.isEmpty)
         #expect(library.rootFolder.path == "/Music")
@@ -35,7 +35,7 @@ struct LoadMusicLibraryTests {
     }
 
     @Test func tracksInRootHaveNoAlbumOrArtist() {
-        var fileSystem = FakeFileSystem()
+        var fileSystem = FileSystemFake()
         fileSystem.add("/Music/Song.mp3")
 
         let result = loadResult(fileSystem)
@@ -47,7 +47,7 @@ struct LoadMusicLibraryTests {
     }
 
     @Test func folderNamesBecomeAlbumAndArtist() {
-        var fileSystem = FakeFileSystem()
+        var fileSystem = FileSystemFake()
         fileSystem.add("/Music/Artist", .directory)
         fileSystem.add("/Music/Artist/Album", .directory)
         fileSystem.add("/Music/Artist/Album/01 Song.mp3")
@@ -64,7 +64,7 @@ struct LoadMusicLibraryTests {
     }
 
     @Test func trackInTopLevelFolderHasAlbumButNoArtist() {
-        var fileSystem = FakeFileSystem()
+        var fileSystem = FileSystemFake()
         fileSystem.add("/Music/Album", .directory)
         fileSystem.add("/Music/Album/Song.m4a")
 
@@ -78,7 +78,7 @@ struct LoadMusicLibraryTests {
     }
 
     @Test func deeperFoldersUseNearestTwoAncestors() throws {
-        var fileSystem = FakeFileSystem()
+        var fileSystem = FileSystemFake()
         fileSystem.add("/Music/Genre", .directory)
         fileSystem.add("/Music/Genre/Artist", .directory)
         fileSystem.add("/Music/Genre/Artist/Album", .directory)
@@ -95,7 +95,7 @@ struct LoadMusicLibraryTests {
     }
 
     @Test func onlyMusicFilesBecomeTracks() {
-        var fileSystem = FakeFileSystem()
+        var fileSystem = FileSystemFake()
         fileSystem.add("/Music/cover.jpg")
         fileSystem.add("/Music/notes.txt")
         fileSystem.add("/Music/README")
@@ -111,7 +111,7 @@ struct LoadMusicLibraryTests {
     }
 
     @Test func packagesAreSkipped() {
-        var fileSystem = FakeFileSystem()
+        var fileSystem = FileSystemFake()
         fileSystem.add("/Music/Music Library.musiclibrary", .package)
         fileSystem.add("/Music/Music Library.musiclibrary/Song.mp3")
         fileSystem.add("/Music/Song.mp3")
@@ -124,7 +124,7 @@ struct LoadMusicLibraryTests {
     }
 
     @Test func entriesThatAreNeitherFilesNorDirectoriesAreSkipped() {
-        var fileSystem = FakeFileSystem()
+        var fileSystem = FileSystemFake()
         fileSystem.add("/Music/Link.mp3", .other)
         fileSystem.add("/Music/Song.mp3")
 
@@ -136,7 +136,7 @@ struct LoadMusicLibraryTests {
     }
 
     @Test func localizedNamesAreUsedForDisplay() {
-        var fileSystem = FakeFileSystem()
+        var fileSystem = FileSystemFake()
         fileSystem.add("/Music/Musica", .directory, localizedName: "Música")
         fileSystem.add("/Music/Musica/Hidden.mp3", localizedName: "Hidden")
         fileSystem.add("/Music/Musica/Shown.mp3", localizedName: "Shown.mp3")
@@ -152,7 +152,7 @@ struct LoadMusicLibraryTests {
     }
 
     @Test func childrenAreSortedNaturallyByName() {
-        var fileSystem = FakeFileSystem()
+        var fileSystem = FileSystemFake()
         fileSystem.add("/Music/Track 10.mp3")
         fileSystem.add("/Music/track 2.mp3")
         fileSystem.add("/Music/B folder", .directory)
@@ -166,7 +166,7 @@ struct LoadMusicLibraryTests {
     }
 
     @Test func unlistableRootGivesEmptyLibraryAndReportsFailure() {
-        var fileSystem = FakeFileSystem()
+        var fileSystem = FileSystemFake()
         fileSystem.unlistableDirectories = ["/Music"]
 
         let result = loadResult(fileSystem)
@@ -174,11 +174,11 @@ struct LoadMusicLibraryTests {
         #expect(result.library.isEmpty)
         #expect(result.library.rootFolder.path == "/Music")
         #expect(result.errors.count == 1)
-        #expect(fakeErrors(in: result) == [FakeFileSystemError(path: "/Music")])
+        #expect(fakeErrors(in: result) == [FileSystemFakeError(path: "/Music")])
     }
 
     @Test func unlistableSubfolderBecomesEmptyFolderAndReportsFailure() {
-        var fileSystem = FakeFileSystem()
+        var fileSystem = FileSystemFake()
         fileSystem.add("/Music/Broken", .directory)
         fileSystem.add("/Music/Song.mp3")
         fileSystem.unlistableDirectories = ["/Music/Broken"]
@@ -190,11 +190,11 @@ struct LoadMusicLibraryTests {
             track("Song", path: "/Music/Song.mp3"),
         ])
         #expect(result.errors.count == 1)
-        #expect(fakeErrors(in: result) == [FakeFileSystemError(path: "/Music/Broken")])
+        #expect(fakeErrors(in: result) == [FileSystemFakeError(path: "/Music/Broken")])
     }
 
     @Test func unreadableEntryIsSkippedAndReportsFailure() {
-        var fileSystem = FakeFileSystem()
+        var fileSystem = FileSystemFake()
         fileSystem.add("/Music/Bad.mp3")
         fileSystem.add("/Music/Good.mp3")
         fileSystem.unreadableEntries = ["/Music/Bad.mp3"]
@@ -205,6 +205,6 @@ struct LoadMusicLibraryTests {
             track("Good", path: "/Music/Good.mp3"),
         ])
         #expect(result.errors.count == 1)
-        #expect(fakeErrors(in: result) == [FakeFileSystemError(path: "/Music/Bad.mp3")])
+        #expect(fakeErrors(in: result) == [FileSystemFakeError(path: "/Music/Bad.mp3")])
     }
 }

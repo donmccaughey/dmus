@@ -67,10 +67,15 @@ The dmus project shall place all other code, app configuration and app asset
 files in the `dmus/` subdirectory.
 
 The dmus project shall place each class or struct representing a significant
-application concept in its own code file; [wrapper
-interfaces](wrappers-for-testing.md) and their implementations may share the
-same code file; extensions and small classes and structs may share a code file
-when they have a single consumer.
+application concept in its own code file; extensions and small classes and
+structs may share a code file when they have a single consumer.
+
+The dmus project shall create [wrapper interfaces](wrappers-for-testing.md) for
+system services that are difficult to test in isolation, such as the file
+system, network, clock and random number generator.
+
+The dmus project shall place wrapper interfaces and their real and fake
+implementations in the `dmus/wrappers/` subdirectory.
 
 
 # Model

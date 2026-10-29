@@ -4,9 +4,9 @@ import Testing
 #if os(macOS)
 struct MusicRootDirectoryTests {
     @Test func usesSavedPathWhenPresent() throws {
-        let preferences = FakePreferences(musicRootDirectoryPath: "/Saved/Music")
+        let preferences = PreferencesFake(musicRootDirectoryPath: "/Saved/Music")
 
-        let url = try MusicRootDirectory.locate(fileSystem: FakeFileSystem(), preferences: preferences)
+        let url = try MusicRootDirectory.locate(fileSystem: FileSystemFake(), preferences: preferences)
 
         #expect(url.path == "/Saved/Music")
         #expect(url.hasDirectoryPath)
@@ -14,8 +14,8 @@ struct MusicRootDirectoryTests {
     }
 
     @Test func initializesToSystemMusicDirectoryWhenAbsent() throws {
-        let preferences = FakePreferences()
-        var fileSystem = FakeFileSystem()
+        let preferences = PreferencesFake()
+        var fileSystem = FileSystemFake()
         fileSystem.musicDirectoryURL = URL(filePath: "/Users/me/Music", directoryHint: .isDirectory)
 
         let url = try MusicRootDirectory.locate(fileSystem: fileSystem, preferences: preferences)
@@ -25,20 +25,20 @@ struct MusicRootDirectoryTests {
     }
 
     @Test func failsWhenSystemMusicDirectoryIsUnavailable() {
-        let preferences = FakePreferences()
+        let preferences = PreferencesFake()
 
-        #expect(throws: FakeFileSystemError(path: "getMusicDirectoryURL")) {
-            try MusicRootDirectory.locate(fileSystem: FakeFileSystem(), preferences: preferences)
+        #expect(throws: FileSystemFakeError(path: "getMusicDirectoryURL")) {
+            try MusicRootDirectory.locate(fileSystem: FileSystemFake(), preferences: preferences)
         }
         #expect(preferences.musicRootDirectoryPath == nil)
     }
 
     @Test func createsSavedDirectory() {
-        let preferences = FakePreferences(musicRootDirectoryPath: "/Saved/Music")
-        var fileSystem = FakeFileSystem()
+        let preferences = PreferencesFake(musicRootDirectoryPath: "/Saved/Music")
+        var fileSystem = FileSystemFake()
         fileSystem.uncreatableDirectories = ["/Saved/Music"]
 
-        #expect(throws: FakeFileSystemError(path: "/Saved/Music")) {
+        #expect(throws: FileSystemFakeError(path: "/Saved/Music")) {
             try MusicRootDirectory.locate(fileSystem: fileSystem, preferences: preferences)
         }
     }
