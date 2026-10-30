@@ -332,21 +332,22 @@ on iOS.
 
 A **folder table** is a table view that shows one row for each folder or track
 child of the corresponding folder, sets the title to the name of the folder and
-adds a "+" button in the navigation bar.
-
-On iOS, when the user taps the "+" button in the navigation bar, dmus shall add
-the current folder to the queue.
+adds a search button showing the standard search icon in the navigation bar.
 
 A **folder row** is a folder table row that shows the name of the corresponding
-folder and contains a "+" button on the right side of the row.
+folder and contains a "[+]" button (SF Symbol `plus.square`) and a ">" button
+(standard disclosure chevron) on the right side of the row.
 
-On iOS, when the user taps the "+" button on a folder row, dmus shall add that
-folder to the queue.
+When the user taps the "[+]" button on a folder row, dmus shall add that folder
+to the queue.
+
+When the user taps the ">" button  on a folder row, dmus shall push .
 
 A **track row** is a folder table row that shows the track name of the
-corresponding track and contains a "+" button on the right side of the row.
+corresponding track and contains a "(+)" (SF Symbol `plus.circle`) button on the
+right side of the row.
 
-On iOS, when the user taps the "+" button on a track row, dmus shall add that
+On iOS, when the user taps the "(+)" button on a track row, dmus shall add that
 track to the queue.
 
 On iOS, while its music library is empty, the files panel shall hide the files
@@ -356,10 +357,10 @@ On iOS, while its music library is **not** empty, the files panel shall show a
 files table stack backed by its music library.
 
 On iOS, while the visible folder table is empty, the folder table shall disable
-the "+" button in the navigation bar.
+the search button in the navigation bar.
 
 On iOS, while the visible folder table is **not** empty, the folder table shall
-enable the "+" button in the navigation bar.
+enable the search button in the navigation bar.
 
 On iOS, when the user taps a folder row, the files table stack shall push a new
 folder table onto the navigation stack backed by the folder of the tapped row.

@@ -3,26 +3,31 @@ import SwiftUI
 
 struct FilesTableStack: View {
     let musicLibrary: MusicLibrary
+    @State private var path: [Folder] = []
 
     var body: some View {
-        NavigationStack {
-            FolderTable(folder: musicLibrary.rootFolder)
+        NavigationStack(path: $path) {
+            FolderTable(folder: musicLibrary.rootFolder, push: push)
                 .navigationDestination(for: Folder.self) { folder in
-                    FolderTable(folder: folder)
+                    FolderTable(folder: folder, push: push)
                 }
         }
+    }
+
+    private func push(_ folder: Folder) {
+        path.append(folder)
     }
 }
 
 struct FolderTable: View {
-    @Environment(Queue.self) private var queue
     let folder: Folder
+    let push: (Folder) -> Void
 
     var body: some View {
         List(folder.children) { node in
             switch node {
             case .folder(let folder):
-                FolderRow(folder: folder)
+                FolderRow(folder: folder, push: push)
             case .track(let track):
                 TrackRow(track: track)
             }
@@ -30,7 +35,7 @@ struct FolderTable: View {
         .navigationTitle(folder.name)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            AddButton { queue.add(folder) }
+            SearchButton()
                 .disabled(folder.children.isEmpty)
         }
     }
@@ -39,16 +44,20 @@ struct FolderTable: View {
 struct FolderRow: View {
     @Environment(Queue.self) private var queue
     let folder: Folder
+    let push: (Folder) -> Void
 
     var body: some View {
         HStack {
-            // A button inside the link's label never gets the tap on iOS;
-            // the link takes it and pushes the folder instead.
-            NavigationLink(value: folder) {
-                Text(folder.name)
-            }
-            AddButton { queue.add(folder) }
+            Text(folder.name)
+            Spacer()
+            RowButton("Add", systemImage: "plus.square") { queue.add(folder) }
+            RowButton("Open", systemImage: "chevron.right") { push(folder) }
+                .foregroundStyle(.tertiary)
         }
+        // A visible NavigationLink draws its own chevron next to ours and
+        // swallows taps on buttons inside its label, so hide it behind the row
+        // to keep the whole row tappable without the duplicate chevron.
+        .background(NavigationLink(value: folder) { EmptyView() }.opacity(0))
     }
 }
 
@@ -60,16 +69,31 @@ struct TrackRow: View {
         HStack {
             Text(track.trackName)
             Spacer()
-            AddButton { queue.add(track) }
+            RowButton("Add", systemImage: "plus.circle") { queue.add(track) }
         }
     }
 }
 
-private struct AddButton: View {
+private struct SearchButton: View {
+    var body: some View {
+        Button("Search", systemImage: "magnifyingglass") {}
+            .labelStyle(.iconOnly)
+    }
+}
+
+private struct RowButton: View {
+    let title: String
+    let systemImage: String
     let action: () -> Void
 
+    init(_ title: String, systemImage: String, action: @escaping () -> Void) {
+        self.title = title
+        self.systemImage = systemImage
+        self.action = action
+    }
+
     var body: some View {
-        Button("Add", systemImage: "plus", action: action)
+        Button(title, systemImage: systemImage, action: action)
             .labelStyle(.iconOnly)
             // In a List row the default style makes the whole row fire the
             // button; borderless limits it to the button itself.
