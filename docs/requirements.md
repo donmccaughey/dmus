@@ -379,9 +379,29 @@ system icon.
 While the queue is **not** empty, the queue panel shall hide the content
 unavailable view and show a queue table.
 
-A **queue table** is a table view with one row for each track in the queue, in
-queue order, and the columns "Track", "Album" and "Artist" showing the track
-name, album name and artist name of the corresponding track.
+The **queue table** is a table view with one queued track row for each track in
+the queue, in queue order.
+
+A **queued track row** is a table view row in the queue table.
+
+The queue table shall show a queued track row for each track in the queue, in
+the same order as the queue.
+
+A queued track row shall show the track name, album name and artist name in the
+same table cell. The table cell shall contain two text lines. The upper text
+line shall show the track name. The lower text line shall show the album name
+and artist name in smaller, dimmer text. The album name shall occupy up to 60%
+of the lower text line, inclusive of padding, starting from the left. The artist
+name shall occupy the remaining 40% of the lower text line. All text is
+left-justified and shall use elision to fit withing its bounding box. The ASCII
+schematic below shows the arrangement of text in the table cell.
+
+    +--------------------------------------------------+
+    | <track name .................................. > |
+    | <album name .............. > <artist name .... > |
+    +--------------------------------------------------+
+    ^                             ^                    ^
+    +------------- 60% -----------+-------- 40% -------+
 
 On macOS, when a track item from the files tree is dropped on the queue panel,
 the queue panel shall give the queue the add track command with the track of the

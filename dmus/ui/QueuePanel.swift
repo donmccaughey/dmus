@@ -23,11 +23,17 @@ struct QueuePanel: View {
                 description: Text("The queue is empty.")
             )
         } else {
+            #if os(macOS)
             Table(queue.queuedTracks) {
                 TableColumn("Track", value: \.track.trackName)
                 TableColumn("Album", value: \.track.albumName)
                 TableColumn("Artist", value: \.track.artistName)
             }
+            #else
+            List(queue.queuedTracks) { queuedTrack in
+                QueuedTrackRow(track: queuedTrack.track)
+            }
+            #endif
         }
     }
 }
@@ -44,6 +50,12 @@ struct QueuePanel: View {
             .track(Track(trackName: "Another Song", albumName: "Album", artistName: "Artist", path: "/Music/Artist/Album/Another Song.mp3")),
         ])),
         .track(Track(trackName: "Single", albumName: "Artist", artistName: Track.noArtist, path: "/Music/Artist/Single.m4a")),
+        .track(Track(
+            trackName: "A Track Name Long Enough That It Must Be Elided To Fit The Row",
+            albumName: "An Album Name Long Enough That It Must Be Elided To Fit",
+            artistName: "An Artist Name Long Enough That It Must Be Elided",
+            path: "/Music/Artist/Long.mp3"
+        )),
     ]))
     return QueuePanel().environment(queue)
 }
