@@ -13,6 +13,7 @@ struct QueuedTrackRow: View {
                     .padding(.trailing, 8)
                 Text(track.artistName)
                     .lineLimit(1)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
             }
             .font(.subheadline)
             .foregroundStyle(.secondary)

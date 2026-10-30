@@ -396,13 +396,14 @@ same table cell. The table cell shall contain two text lines. The upper text
 line shall show the track name. The lower text line shall show the album name
 and artist name in smaller, dimmer text. The album name shall occupy up to 60%
 of the lower text line, inclusive of padding, starting from the left. The artist
-name shall occupy the remaining 40% of the lower text line. All text is
-left-justified and shall use elision to fit withing its bounding box. The ASCII
-schematic below shows the arrangement of text in the table cell.
+name shall occupy the remaining 40% of the lower text line. The track name and
+album name shall be left-justified; the artist name shall be right-justified.
+All text shall use elision to fit withing its bounding box. The ASCII schematic
+below shows the arrangement of text in the table cell.
 
     +--------------------------------------------------+
     | <track name .................................. > |
-    | <album name .............. > <artist name .... > |
+    | <album name .............. > < .... artist name> |
     +--------------------------------------------------+
     ^                             ^                    ^
     +------------- 60% -----------+-------- 40% -------+
