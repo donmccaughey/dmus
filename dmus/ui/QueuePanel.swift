@@ -23,8 +23,15 @@ struct QueuePanel: View {
                 description: Text("The queue is empty.")
             )
         } else {
-            List(queue.queuedTracks) { queuedTrack in
-                QueuedTrackRow(track: queuedTrack.track)
+            ScrollViewReader { proxy in
+                List(queue.queuedTracks) { queuedTrack in
+                    QueuedTrackRow(track: queuedTrack.track)
+                }
+                .onChange(of: queue.queuedTracks.last?.id) { _, lastID in
+                    if let lastID {
+                        proxy.scrollTo(lastID, anchor: .bottom)
+                    }
+                }
             }
         }
     }

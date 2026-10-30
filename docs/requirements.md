@@ -411,6 +411,9 @@ On macOS, when a folder item from the files tree is dropped on the queue panel,
 the queue panel shall give the queue the add folder command with the folder of
 the item.
 
+When new tracks are added to the queue, dmus shall scroll the queue table to
+the end so that the last of the newly added queued track rows are visible.
+
 
 ## Menus
 
