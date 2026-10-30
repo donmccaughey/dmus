@@ -276,6 +276,10 @@ On iOS, while the screen is in landscape orientation, dmus shall show two
 equally-sized panels in the main view: the files panel shall be on the left side
 and the queue panel on the right side.
 
+A **panel title** is the title text shown at the top of a panel.
+
+On iOS, dmus shall draw panel titles on an opaque secondary system background.
+
 
 ## Files panel
 
@@ -363,6 +367,9 @@ the search button in the navigation bar.
 
 On iOS, while the visible folder table is **not** empty, the folder table shall
 enable the search button in the navigation bar.
+
+On iOS, the folder table shall draw the navigation bar with the same opaque
+background as a panel title, regardless of the folder table's scroll position.
 
 On iOS, when the user taps a folder row, the files table stack shall push a new
 folder table onto the navigation stack backed by the folder of the tapped row.

@@ -35,6 +35,8 @@ struct FolderTable: View {
         .listStyle(.plain)
         .navigationTitle(folder.name)
         .navigationBarTitleDisplayMode(.inline)
+        .toolbarBackground(.panelTitleBackground, for: .navigationBar)
+        .toolbarBackgroundVisibility(.visible, for: .navigationBar)
         .toolbar {
             SearchButton()
                 .disabled(folder.children.isEmpty)
