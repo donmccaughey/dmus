@@ -23,17 +23,9 @@ struct QueuePanel: View {
                 description: Text("The queue is empty.")
             )
         } else {
-            #if os(macOS)
-            Table(queue.queuedTracks) {
-                TableColumn("Track", value: \.track.trackName)
-                TableColumn("Album", value: \.track.albumName)
-                TableColumn("Artist", value: \.track.artistName)
-            }
-            #else
             List(queue.queuedTracks) { queuedTrack in
                 QueuedTrackRow(track: queuedTrack.track)
             }
-            #endif
         }
     }
 }
