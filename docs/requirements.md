@@ -334,11 +334,20 @@ A **folder table** is a table view that shows one row for each folder or track
 child of the corresponding folder, sets the title to the name of the folder and
 adds a "+" button in the navigation bar.
 
+On iOS, when the user taps the "+" button in the navigation bar, dmus shall add
+the current folder to the queue.
+
 A **folder row** is a folder table row that shows the name of the corresponding
 folder and contains a "+" button on the right side of the row.
 
+On iOS, when the user taps the "+" button on a folder row, dmus shall add that
+folder to the queue.
+
 A **track row** is a folder table row that shows the track name of the
 corresponding track and contains a "+" button on the right side of the row.
+
+On iOS, when the user taps the "+" button on a track row, dmus shall add that
+track to the queue.
 
 On iOS, while its music library is empty, the files panel shall hide the files
 table stack.

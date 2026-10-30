@@ -15,6 +15,7 @@ struct FilesTableStack: View {
 }
 
 struct FolderTable: View {
+    @Environment(Queue.self) private var queue
     let folder: Folder
 
     var body: some View {
@@ -29,34 +30,37 @@ struct FolderTable: View {
         .navigationTitle(folder.name)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            AddButton {}
+            AddButton { queue.add(folder) }
                 .disabled(folder.children.isEmpty)
         }
     }
 }
 
 struct FolderRow: View {
+    @Environment(Queue.self) private var queue
     let folder: Folder
 
     var body: some View {
-        NavigationLink(value: folder) {
-            HStack {
+        HStack {
+            // A button inside the link's label never gets the tap on iOS;
+            // the link takes it and pushes the folder instead.
+            NavigationLink(value: folder) {
                 Text(folder.name)
-                Spacer()
-                AddButton {}
             }
+            AddButton { queue.add(folder) }
         }
     }
 }
 
 struct TrackRow: View {
+    @Environment(Queue.self) private var queue
     let track: Track
 
     var body: some View {
         HStack {
             Text(track.trackName)
             Spacer()
-            AddButton {}
+            AddButton { queue.add(track) }
         }
     }
 }
@@ -67,8 +71,8 @@ private struct AddButton: View {
     var body: some View {
         Button("Add", systemImage: "plus", action: action)
             .labelStyle(.iconOnly)
-            // Borderless keeps a tap on the button from also triggering the
-            // enclosing NavigationLink.
+            // In a List row the default style makes the whole row fire the
+            // button; borderless limits it to the button itself.
             .buttonStyle(.borderless)
     }
 }
@@ -87,5 +91,6 @@ private struct AddButton: View {
             .track(Track(trackName: "Loose", albumName: "(no album)", artistName: "(no artist)", path: "/Music/Loose.m4a")),
         ]
     )))
+    .environment(Queue())
 }
 #endif
