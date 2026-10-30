@@ -32,6 +32,7 @@ struct FolderTable: View {
                 TrackRow(track: track)
             }
         }
+        .listStyle(.plain)
         .navigationTitle(folder.name)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {

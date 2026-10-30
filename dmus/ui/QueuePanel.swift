@@ -27,6 +27,7 @@ struct QueuePanel: View {
                 List(queue.queuedTracks) { queuedTrack in
                     QueuedTrackRow(track: queuedTrack.track)
                 }
+                .listStyle(.plain)
                 .onChange(of: queue.queuedTracks.last?.id) { _, lastID in
                     if let lastID {
                         proxy.scrollTo(lastID, anchor: .bottom)

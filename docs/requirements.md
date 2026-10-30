@@ -334,6 +334,8 @@ A **folder table** is a table view that shows one row for each folder or track
 child of the corresponding folder, sets the title to the name of the folder and
 adds a search button showing the standard search icon in the navigation bar.
 
+A folder table shall draw itself in the standard "plain" style.
+
 A **folder row** is a folder table row that shows the name of the corresponding
 folder and contains a "[+]" button (SF Symbol `plus.square`) and a ">" button
 (standard disclosure chevron) on the right side of the row.
@@ -386,6 +388,8 @@ A **queued track row** is a table view row in the queue table.
 
 The queue table shall show a queued track row for each track in the queue, in
 the same order as the queue.
+
+The queue table shall draw itself in the standard "plain" style.
 
 A queued track row shall show the track name, album name and artist name in the
 same table cell. The table cell shall contain two text lines. The upper text
