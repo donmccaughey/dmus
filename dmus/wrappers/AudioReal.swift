@@ -3,9 +3,10 @@ import Foundation
 
 final class AudioReal: Audio {
     private let player = AVQueuePlayer()
-    // The queue player drops a finished item before posting its notification,
-    // so items are tracked here to tell ours apart from other players' items.
-    private var ownedItems: Set<AVPlayerItem> = []
+    // The queue player still reports a finished item as current when it posts
+    // the end notification, so items() cannot tell current from next.
+    private var currentItem: AVPlayerItem?
+    private var nextItem: AVPlayerItem?
     private var finishedObservers: [any NSObjectProtocol] = []
     private var positionObserver: Any?
 
@@ -36,7 +37,7 @@ final class AudioReal: Audio {
 
     func play(_ track: Track, from timeIndex: TimeInterval, thenPlay nextTrack: Track?) {
         removeAllItems()
-        insert(track)
+        currentItem = insert(track)
         replaceNextTrack(with: nextTrack)
         // AVPlayer clamps a seek past the end to the item's duration.
         player.seek(to: CMTime(seconds: timeIndex, preferredTimescale: 600))
@@ -47,13 +48,10 @@ final class AudioReal: Audio {
     }
 
     func replaceNextTrack(with nextTrack: Track?) {
-        for item in player.items().dropFirst() {
-            player.remove(item)
-            ownedItems.remove(item)
+        if let nextItem {
+            player.remove(nextItem)
         }
-        if let nextTrack {
-            insert(nextTrack)
-        }
+        nextItem = nextTrack.map(insert)
     }
 
     func stop() {
@@ -61,15 +59,16 @@ final class AudioReal: Audio {
         removeAllItems()
     }
 
-    private func insert(_ track: Track) {
+    private func insert(_ track: Track) -> AVPlayerItem {
         let item = AVPlayerItem(url: URL(filePath: track.path))
-        ownedItems.insert(item)
         player.insert(item, after: nil)
+        return item
     }
 
     private func removeAllItems() {
         player.removeAllItems()
-        ownedItems.removeAll()
+        currentItem = nil
+        nextItem = nil
     }
 
     private static func seconds(_ time: CMTime) -> TimeInterval {
@@ -97,8 +96,9 @@ final class AudioReal: Audio {
     }
 
     private func itemDidFinish(_ item: AVPlayerItem?) {
-        guard let item, ownedItems.contains(item) else { return }
-        ownedItems.remove(item)
+        guard let item, item == currentItem else { return }
+        currentItem = nextItem
+        nextItem = nil
         onTrackFinished?()
     }
 
