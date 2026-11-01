@@ -72,13 +72,32 @@ structs may share a code file when they have a single consumer.
 
 The dmus project shall create [wrapper interfaces](wrappers-for-testing.md) for
 system services that are difficult to test in isolation, such as the file
-system, network, clock and random number generator.
+system, network, audio playback, clock and random number generator.
 
 The dmus project shall place wrapper interfaces and their real and fake
 implementations in the `dmus/wrappers/` subdirectory.
 
 The dmus project shall place unit test files in the same folder as the code file
 under test.
+
+
+# System service wrappers
+
+The **file system wrapper** shall wrap general file system information and
+operations.
+
+The **preferences wrapper** shall wrap user defaults and other settings.
+
+
+## Audio wrapper
+
+The **audio library** is collectively the set of system audio APIs used to
+implement playback.
+
+The audio library shall support gapless playback of `.mp3` and `.m4a` files.
+
+The **audio wrapper** shall wrap the audio library, exposing high level
+operations in the application domain.
 
 
 # Model
@@ -194,15 +213,126 @@ root folder; **path** is the absolute path to the music file.
 
 The **queue** is an in-memory list of tracks to play. The queue has one
 property: **tracks** is the list of tracks in the queue, in play order. The same
-track may appear in the queue more than once.
+track may appear in the queue more than once. The queue is owned by the player.
 
-An **empty queue** is a queue with an empty tracks list.
+The queue is an **empty queue** when the tracks list is empty.
 
 When given the **add track** command, the queue shall append the given track to
 its tracks.
 
 When given the **add folder** command, the queue shall append the track
 descendants of the given folder to its tracks in preorder.
+
+When given the **clear** command, the queue shall remove all tracks from its
+tracks.
+
+
+## Player
+
+The **player** is the coordinator of track playback. The player owns the queue.
+
+A **time index** is a non-negative number of seconds, including fractional
+seconds, measured from the start of the current track. A time index beyond the
+end of the current track is invalid and is clamped to the end of the track.
+
+The player shall have an **audio** property that is the audio wrapper.
+
+The player shall have a **queue** property that is its queue.
+
+The player shall have a **current track** read-only calculated property that
+returns the first track in the queue, or `nil` when the queue is empty.
+
+The player shall have a **next track** read-only calculated property that
+returns the second track in the queue, or `nil` when the queue contains fewer
+than two tracks; the next track is passed to the audio wrapper to support
+gapless playback.
+
+The player shall have a **time index** property that is the time index for the
+current track, or zero when the current track is `nil`.
+
+The player shall have an **is playing** read-only boolean property that returns
+true when the player is in the playback state and false when in the stopped
+state. The "is playing" property may be implemented as a variable or as a
+calculated property read from the audio wrapper.
+
+**Playback** is the player state where audio is being played.
+
+**Stopped** is the player state where no audio is being played. The player does
+not have a separate "paused" state: the current track and time index properties
+control where playback starts or resumes.
+
+
+## Playback
+
+While in playback and while there is a next track, when it finishes playing the
+current track, the audio wrapper shall begin playing the next track without a
+gap.
+
+While in playback and while there is no next track, when it finishes playing the
+current track, the audio wrapper shall stop playback.
+
+While in playback, when the audio wrapper finishes playing the current track,
+the player shall remove it from the queue.
+
+While in playback, the player shall keep the time index in sync with the audio
+wrapper by callback, notification or polling.
+
+
+## Play command
+
+While in playback, if given the **play** command, the player shall ignore the
+command.
+
+While stopped and while there is a current track, when given the play command,
+the player shall start playing the current track at the time index and enter the
+playback state.
+
+
+## Stop command
+
+While stopped, if given the **stop** command, the player shall ignore the
+command.
+
+While in playback, when given the stop command, the player shall update the time
+index to the current playback position, stop audio playback and enter the
+stopped state.
+
+
+## Back command
+
+While the queue is not empty, when given the back command, the player shall set
+the time index to zero.
+
+While in playback, when given the back command, the player shall begin playing
+the current track from the start.
+
+
+## Next command
+
+While the queue is not empty, when given the next command, the player shall set
+the time index to zero and discard the current track.
+
+While in playback and while there is a next track, when given the next command,
+the player shall stop playing the current track and begin playing the next track
+from the start.
+
+While in playback and while there is no next track, when given the next command,
+the player shall stop playing the current track and enter the stopped state.
+
+
+## Clear command
+
+While the queue is not empty, when given the clear command, the player shall set
+the time index to zero and clear the queue.
+
+While in playback, when given the clear command, the player shall stop playback
+and enter the stopped state.
+
+
+## Command availability
+
+While the queue is empty, the player shall ignore the play, stop, back, next and
+clear commands.
 
 
 # Launch behavior
@@ -217,8 +347,8 @@ true when load errors is not empty.
 When the app launches, dmus shall create a music library store and share it with
 other views.
 
-When the app launches, dmus shall create an empty queue and share it with other
-views.
+When the app launches, dmus shall create a player with an empty queue and share
+the player with other views.
 
 When the app launches and the `--demo` command line option is **not** given,
 dmus shall call the load music library function in the background, passing it
@@ -379,7 +509,7 @@ folder table onto the navigation stack backed by the folder of the tapped row.
 
 The queue panel shall show the title "Queue" at the top of the panel.
 
-The queue panel shall get its tracks from the app's queue.
+The queue panel shall get its tracks from the player's queue.
 
 While the queue is empty, the queue panel shall show a content unavailable view
 with title "No tracks", description "The queue is empty." and a bullet list

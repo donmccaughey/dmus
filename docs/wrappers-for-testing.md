@@ -31,10 +31,13 @@ Wrapper interfaces should provide methods and properties with high level names
 that describe their purpose in the application domain rather than simply
 mirroring the low level, often general purpose, name being wrapped.
 
-Real implementations of wrapper methods and properties should keep their
-internal logic as minimal and close to direct delegation as practical. Some
-duplication in wrapper methods and properties is reasonable where it aids
-readability at the use site.
+
+## Simple wrappers
+
+In the simple case, the real implementations of wrapper methods and properties
+should keep their internal logic as minimal and close to direct delegation as
+practical. Some duplication in wrapper methods and properties is reasonable
+where it aids readability at the use site.
 
 For example, the wrapper below provides `getMusicDirectoryURL()` and
 `getMoviesDirectoryURL()` which make the same underlying method call to
@@ -64,3 +67,26 @@ For example, the wrapper below provides `getMusicDirectoryURL()` and
             )
         }
     }
+
+
+## Fasçade wrappers
+
+A wrapper intended to simplify use of a complex library is a **fasçade
+wrapper**. Unlike simple wrappers, the real implementation of a fasçade wrapper
+is intended to hide the complexity of the underlying library, so it may contain
+complex logic.
+
+When creating a fasçade wrapper, aim to find a balance between exposing and
+hiding the complexity of the wrapped library rather than trying to hide all
+complexity behind a minimal but inconsistent interface.
+
+Where the complexity is essential to the current use case, it is often better to
+make this complexity explicit in the fasçade interface so that it is clear in
+the application domain code rather than hidden in the wrapper.
+
+Complex libraries often expose low level detail, which requires boilerplate code
+that doesn't vary much for the current use case; wrap repeated formulaic
+boilerplate behind fasçade methods.
+
+Where the wrapped library exposes complex domain objects to the caller, consider
+exposing wrapper classes or handles in the fasçade interface.

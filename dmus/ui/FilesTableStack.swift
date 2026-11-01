@@ -45,7 +45,7 @@ struct FolderTable: View {
 }
 
 struct FolderRow: View {
-    @Environment(Queue.self) private var queue
+    @Environment(Player.self) private var player
     let folder: Folder
     let push: (Folder) -> Void
 
@@ -53,7 +53,7 @@ struct FolderRow: View {
         HStack {
             Text(folder.name)
             Spacer()
-            RowButton("Add", systemImage: "plus.square") { queue.add(folder) }
+            RowButton("Add", systemImage: "plus.square") { player.queue.add(folder) }
             RowButton("Open", systemImage: "chevron.right") { push(folder) }
                 .foregroundStyle(.tertiary)
         }
@@ -65,14 +65,14 @@ struct FolderRow: View {
 }
 
 struct TrackRow: View {
-    @Environment(Queue.self) private var queue
+    @Environment(Player.self) private var player
     let track: Track
 
     var body: some View {
         HStack {
             Text(track.trackName)
             Spacer()
-            RowButton("Add", systemImage: "plus.circle") { queue.add(track) }
+            RowButton("Add", systemImage: "plus.circle") { player.queue.add(track) }
         }
     }
 }
@@ -118,6 +118,6 @@ private struct RowButton: View {
             .track(Track(trackName: "Loose", albumName: "(no album)", artistName: "(no artist)", path: "/Music/Loose.m4a")),
         ]
     )))
-    .environment(Queue())
+    .environment(Player(audio: AudioReal()))
 }
 #endif

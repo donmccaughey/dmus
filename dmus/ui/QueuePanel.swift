@@ -1,7 +1,9 @@
 import SwiftUI
 
 struct QueuePanel: View {
-    @Environment(Queue.self) private var queue
+    @Environment(Player.self) private var player
+
+    private var queue: Queue { player.queue }
 
     var body: some View {
         Panel(title: "Queue") {
@@ -39,12 +41,12 @@ struct QueuePanel: View {
 }
 
 #Preview("Empty") {
-    QueuePanel().environment(Queue())
+    QueuePanel().environment(Player(audio: AudioReal()))
 }
 
 #Preview("Filled") {
-    let queue = Queue()
-    queue.add(Folder(path: "/Music/Artist", name: "Artist", children: [
+    let player = Player(audio: AudioReal())
+    player.queue.add(Folder(path: "/Music/Artist", name: "Artist", children: [
         .folder(Folder(path: "/Music/Artist/Album", name: "Album", children: [
             .track(Track(trackName: "Song", albumName: "Album", artistName: "Artist", path: "/Music/Artist/Album/Song.mp3")),
             .track(Track(trackName: "Another Song", albumName: "Album", artistName: "Artist", path: "/Music/Artist/Album/Another Song.mp3")),
@@ -57,5 +59,5 @@ struct QueuePanel: View {
             path: "/Music/Artist/Long.mp3"
         )),
     ]))
-    return QueuePanel().environment(queue)
+    return QueuePanel().environment(player)
 }

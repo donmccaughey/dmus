@@ -18,7 +18,7 @@ struct DmusApp: App {
     @NSApplicationDelegateAdaptor private var appDelegate: DmusAppDelegate
     #endif
     private let store = MusicLibraryStore()
-    private let queue = Queue()
+    private let player = Player(audio: AudioReal())
 
     init() {
         // Started at launch rather than in a view's .task so loading is
@@ -44,6 +44,6 @@ struct DmusApp: App {
     }
 
     private var mainView: some View {
-        MainView().environment(store).environment(queue)
+        MainView().environment(store).environment(player)
     }
 }

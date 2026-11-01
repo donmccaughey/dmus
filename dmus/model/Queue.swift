@@ -3,7 +3,13 @@ import Observation
 
 @Observable
 final class Queue {
-    private(set) var queuedTracks: [QueuedTrack] = []
+    private(set) var queuedTracks: [QueuedTrack] = [] {
+        didSet { onChange?() }
+    }
+
+    // Views give the queue its add commands directly, so the owning player
+    // listens here to keep the audio wrapper's next track current.
+    @ObservationIgnored var onChange: (() -> Void)?
 
     var tracks: [Track] { queuedTracks.map(\.track) }
 
@@ -28,5 +34,14 @@ final class Queue {
         for child in children {
             add(child)
         }
+    }
+
+    func removeFirst() {
+        guard !queuedTracks.isEmpty else { return }
+        queuedTracks.removeFirst()
+    }
+
+    func clear() {
+        queuedTracks.removeAll()
     }
 }

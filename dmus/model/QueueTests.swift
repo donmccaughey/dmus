@@ -51,3 +51,38 @@ struct QueueTests {
         #expect(queue.tracks == [single, song])
     }
 }
+
+extension QueueTests {
+    @Test func removingFirstDropsTheHeadOfTheQueue() {
+        let queue = Queue()
+        queue.add(song)
+        queue.add(single)
+        queue.removeFirst()
+        #expect(queue.tracks == [single])
+    }
+
+    @Test func removingFirstFromEmptyQueueChangesNothing() {
+        let queue = Queue()
+        queue.removeFirst()
+        #expect(queue.isEmpty)
+    }
+
+    @Test func clearingRemovesAllTracks() {
+        let queue = Queue()
+        queue.add(song)
+        queue.add(single)
+        queue.clear()
+        #expect(queue.isEmpty)
+    }
+
+    @Test func mutationsNotifyOnChange() {
+        let queue = Queue()
+        var changes = 0
+        queue.onChange = { changes += 1 }
+        queue.add(song)
+        queue.add(Folder(path: "/Music/Artist", name: "Artist", children: [.track(single)]))
+        queue.removeFirst()
+        queue.clear()
+        #expect(changes == 4)
+    }
+}
