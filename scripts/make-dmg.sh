@@ -1,0 +1,85 @@
+#!/bin/bash
+# Package a built .app into a compressed disk image whose Finder window shows
+# the app at a large icon size beside an Applications alias.
+#
+# usage: make-dmg.sh path/to/App.app output-dir
+
+set -euo pipefail
+
+app="$1"
+out_dir="$2"
+
+plist="$app/Contents/Info.plist"
+name=$(/usr/libexec/PlistBuddy -c 'Print CFBundleName' "$plist")
+version=$(/usr/libexec/PlistBuddy -c 'Print CFBundleShortVersionString' "$plist")
+
+staging="$out_dir/dmg-staging"
+rw_dmg="$out_dir/$name-rw.dmg"
+dmg="$out_dir/$name-$version.dmg"
+
+mkdir -p "$out_dir"
+rm -rf "$staging" "$rw_dmg" "$dmg"
+mkdir "$staging"
+cp -R "$app" "$staging/"
+ln -s /Applications "$staging/Applications"
+
+hdiutil create -quiet -volname "$name" -srcfolder "$staging" -fs HFS+ \
+    -format UDRW -ov "$rw_dmg"
+
+mount_point=$(hdiutil attach -readwrite -noverify -noautoopen "$rw_dmg" \
+    | grep -o '/Volumes/.*')
+trap 'hdiutil detach -quiet "$mount_point" || true' EXIT
+
+wait_for_finder_to_see_disk() {
+    # Finder registers a newly attached volume asynchronously; scripting it
+    # before then fails with "Can't get disk".
+    for _ in $(seq 1 20); do
+        if [ "$(osascript -e "tell application \"Finder\" to exists disk \"$name\"")" = true ]; then
+            return 0
+        fi
+        sleep 0.5
+    done
+    return 1
+}
+
+layout_finder_window() {
+    # Finder only writes the layout to the volume's .DS_Store when the window
+    # is closed and reopened, and needs a moment to flush before we detach.
+    osascript <<APPLESCRIPT
+tell application "Finder"
+    tell disk "$name"
+        open
+        set current view of container window to icon view
+        set toolbar visible of container window to false
+        set statusbar visible of container window to false
+        set bounds of container window to {200, 200, 800, 600}
+        set options to icon view options of container window
+        set arrangement of options to not arranged
+        set icon size of options to 128
+        set text size of options to 14
+        set position of item "$name.app" of container window to {150, 190}
+        set position of item "Applications" of container window to {450, 190}
+        close
+        open
+        update without registering applications
+        delay 2
+        close
+    end tell
+end tell
+APPLESCRIPT
+}
+
+if ! wait_for_finder_to_see_disk || ! layout_finder_window; then
+    echo "make-dmg.sh: could not lay out the Finder window." >&2
+    echo "If macOS asked to let this terminal control Finder, allow it and rerun." >&2
+    exit 1
+fi
+
+sync
+hdiutil detach -quiet "$mount_point"
+trap - EXIT
+
+hdiutil convert -quiet "$rw_dmg" -format UDZO -imagekey zlib-level=9 -ov -o "$dmg"
+rm -rf "$rw_dmg" "$staging"
+
+echo "$dmg"
