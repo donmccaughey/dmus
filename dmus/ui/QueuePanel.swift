@@ -25,15 +25,23 @@ struct QueuePanel: View {
                 description: Text("The queue is empty.")
             )
         } else {
-            ScrollViewReader { proxy in
-                List(queue.queuedTracks) { queuedTrack in
-                    QueuedTrackRow(track: queuedTrack.track)
-                }
-                .listStyle(.plain)
-                .onChange(of: queue.queuedTracks.last?.id) { _, lastID in
-                    if let lastID {
-                        proxy.scrollTo(lastID, anchor: .bottom)
-                    }
+            VStack(spacing: 0) {
+                PlayerPanel()
+                Divider()
+                queueTable
+            }
+        }
+    }
+
+    private var queueTable: some View {
+        ScrollViewReader { proxy in
+            List(queue.queuedTracks) { queuedTrack in
+                QueuedTrackRow(track: queuedTrack.track)
+            }
+            .listStyle(.plain)
+            .onChange(of: queue.queuedTracks.last?.id) { _, lastID in
+                if let lastID {
+                    proxy.scrollTo(lastID, anchor: .bottom)
                 }
             }
         }

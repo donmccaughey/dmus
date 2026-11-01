@@ -415,7 +415,8 @@ On iOS, dmus shall draw panel titles on an opaque secondary system background.
 
 On macOS, the files panel shall show the title "Files" at the top of the panel.
 
-On iOS, while its music library is empty, the files panel shall show the title "Files" at the top of the panel.
+On iOS, while its music library is empty, the files panel shall show the title
+"Files" at the top of the panel.
 
 On iOS, while its music library is **not** empty, the files panel shall hide the
 title "Files" at the top of the panel.
@@ -516,12 +517,75 @@ with title "No tracks", description "The queue is empty." and a bullet list
 system icon.
 
 While the queue is **not** empty, the queue panel shall hide the content
-unavailable view and show a queue table.
+unavailable view and show the player panel and the queue table.
+
+
+### Player panel
+
+The **player panel** is a view containing playback controls: back, play/stop,
+next and clear buttons.
+
+The **play/stop button** is a button that shows a play triangle (SF Symbol
+`play.fill`) while the player is stopped and shows a stop square (SF Symbol
+`stop.fill`) while the player is in playback.
+
+The **back button** is a button that shows the backward double triangle (SF
+Symbol `backward.fill`).
+
+The **next button** is a button that shows the forward double triangle (SF
+Symbol `forward.fill`).
+
+The **clear button** is a button with the label "clear".
+
+The player panel shall show the play/stop button in the center of the panel, with
+the back button aligned to the left side of the play/stop button, the next
+button aligned to the right side of the play/stop button and the clear button
+aligned to the right side of the panel. The ASCII schematic below shows the
+arrangement of buttons in the view.
+
+    +--------------------------------------------------+
+    |             [ << ]  [  >  ]  [ >> ]      [clear] |
+    +--------------------------------------------------+
+
+The back button, next button and clear buttons shall have the same width.
+
+The play/stop button shall be 20% wider than the back button, next button and
+clear button.
+
+The player panel shall have a fixed height tall enough to show its contents with
+standard padding and a width that fills the width of the queue panel.
+
+When the queue is empty, the player panel shall disable the back button,
+play/stop button, next button and clear button.
+
+When the queue is not empty, the player panel shall enable the back button,
+play/stop button, next button and clear button.
+
+While the player is in playback, when the user clicks or taps it, the play/stop
+button shall send the stop command to the player.
+
+While the player is stopped, when the user clicks or taps it, the play/stop
+button shall send the play command to the player.
+
+When the user clicks or taps it, the back button shall send the back command to
+the player.
+
+When the user clicks or taps it, the next button shall send the next command to
+the player.
+
+When the user clicks or taps it, the clear button shall send the clear command
+to the player.
+
+
+### Queue table
 
 The **queue table** is a table view with one queued track row for each track in
 the queue, in queue order.
 
 A **queued track row** is a table view row in the queue table.
+
+The queue table shall fill all available space in the queue panel below the
+player panel.
 
 The queue table shall show a queued track row for each track in the queue, in
 the same order as the queue.
