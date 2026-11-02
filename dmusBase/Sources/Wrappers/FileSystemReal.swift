@@ -1,13 +1,15 @@
 import Foundation
 
-nonisolated struct FileSystemReal: FileSystem {
+public struct FileSystemReal: FileSystem {
     // Prefetched by listDirectory so getFileInfo reads from the URL's cache
     // instead of going back to disk for each entry.
     private static let fileInfoKeys: Set<URLResourceKey> = [
         .isDirectoryKey, .isRegularFileKey, .isPackageKey, .localizedNameKey
     ]
 
-    func getMusicDirectoryURL() throws -> URL {
+    public init() {}
+    
+    public func getMusicDirectoryURL() throws -> URL {
         try FileManager.default.url(
             for: .musicDirectory,
             in: .userDomainMask,
@@ -16,7 +18,7 @@ nonisolated struct FileSystemReal: FileSystem {
         )
     }
 
-    func getApplicationSupportDirectoryURL() throws -> URL {
+    public func getApplicationSupportDirectoryURL() throws -> URL {
         try FileManager.default.url(
             for: .applicationSupportDirectory,
             in: .userDomainMask,
@@ -25,18 +27,18 @@ nonisolated struct FileSystemReal: FileSystem {
         )
     }
 
-    func createDirectory(at url: URL) throws {
+    public func createDirectory(at url: URL) throws {
         try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
     }
 
-    func excludeFromBackup(_ url: URL) throws {
+    public func excludeFromBackup(_ url: URL) throws {
         var url = url
         var resourceValues = URLResourceValues()
         resourceValues.isExcludedFromBackup = true
         try url.setResourceValues(resourceValues)
     }
 
-    func listDirectory(_ directory: URL) throws -> [URL] {
+    public func listDirectory(_ directory: URL) throws -> [URL] {
         try FileManager.default.contentsOfDirectory(
             at: directory,
             includingPropertiesForKeys: Array(Self.fileInfoKeys),
@@ -44,7 +46,7 @@ nonisolated struct FileSystemReal: FileSystem {
         )
     }
 
-    func getFileInfo(_ url: URL) throws -> FileInfo {
+    public func getFileInfo(_ url: URL) throws -> FileInfo {
         let values = try url.resourceValues(forKeys: Self.fileInfoKeys)
         return FileInfo(
             isDirectory: values.isDirectory == true,

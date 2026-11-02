@@ -1,5 +1,6 @@
 import Foundation
 import Testing
+import WrappersTestSupport
 
 #if os(macOS)
 struct MusicRootDirectoryTests {

@@ -1,5 +1,6 @@
 import Foundation
 import Testing
+import WrappersTestSupport
 
 struct MusicLibraryStoreTests {
     struct SomeError: Error {}

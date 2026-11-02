@@ -6,11 +6,18 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		D474B29630993FBB00FA3132 /* dmusBase in Frameworks */ = {isa = PBXBuildFile; productRef = D474B29530993FBB00FA3132 /* dmusBase */; };
+		D474B29A30994E7300FA3132 /* dmusBase in Frameworks */ = {isa = PBXBuildFile; productRef = D474B29930994E7300FA3132 /* dmusBase */; };
+		D474B29C30994E7300FA3132 /* dmusBaseTestSupport in Frameworks */ = {isa = PBXBuildFile; productRef = D474B29B30994E7300FA3132 /* dmusBaseTestSupport */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		D3A5000000000000000000A2 /* Dmus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dmus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3A5000000000000000000F1 /* dmusTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = dmusTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D41DFEB0308C305900FEA684 /* CLAUDE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CLAUDE.md; sourceTree = "<group>"; };
 		D41DFEB1308C305900FEA684 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		D474B29330993DD200FA3132 /* dmusBase */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = dmusBase; sourceTree = "<group>"; };
 		D4A78314308D0B4000325F1E /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -41,9 +48,6 @@
 				wrappers/Audio.swift,
 				wrappers/AudioFake.swift,
 				wrappers/AudioReal.swift,
-				wrappers/FileSystem.swift,
-				wrappers/FileSystemFake.swift,
-				wrappers/FileSystemReal.swift,
 				wrappers/Preferences.swift,
 				wrappers/PreferencesFake.swift,
 				wrappers/PreferencesReal.swift,
@@ -63,7 +67,6 @@
 				model/PlayerTests.swift,
 				model/QueueTests.swift,
 				wrappers/AudioFake.swift,
-				wrappers/FileSystemFake.swift,
 				wrappers/PreferencesFake.swift,
 			);
 			target = D3A5000000000000000000C0 /* dmus */;
@@ -97,6 +100,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D474B29630993FBB00FA3132 /* dmusBase in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -104,6 +108,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D474B29C30994E7300FA3132 /* dmusBaseTestSupport in Frameworks */,
+				D474B29A30994E7300FA3132 /* dmusBase in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,6 +125,8 @@
 				D4A78311308D0B2500325F1E /* .claude */,
 				D41DFEB6308C307E00FEA684 /* docs */,
 				D3A5000000000000000000A3 /* dmus */,
+				D474B29330993DD200FA3132 /* dmusBase */,
+				D474B29430993FBB00FA3132 /* Frameworks */,
 				D3A5000000000000000000A1 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -130,6 +138,13 @@
 				D3A5000000000000000000F1 /* dmusTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		D474B29430993FBB00FA3132 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -146,12 +161,14 @@
 			buildRules = (
 			);
 			dependencies = (
+				D474B29830994C8700FA3132 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				D3A5000000000000000000A3 /* dmus */,
 			);
 			name = dmus;
 			packageProductDependencies = (
+				D474B29530993FBB00FA3132 /* dmusBase */,
 			);
 			productName = dmus;
 			productReference = D3A5000000000000000000A2 /* Dmus.app */;
@@ -168,9 +185,13 @@
 			buildRules = (
 			);
 			dependencies = (
+				D474B29E30994E7D00FA3132 /* PBXTargetDependency */,
+				D474B2A030994E7D00FA3132 /* PBXTargetDependency */,
 			);
 			name = dmusTests;
 			packageProductDependencies = (
+				D474B29930994E7300FA3132 /* dmusBase */,
+				D474B29B30994E7300FA3132 /* dmusBaseTestSupport */,
 			);
 			productName = dmusTests;
 			productReference = D3A5000000000000000000F1 /* dmusTests.xctest */;
@@ -247,6 +268,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D474B29830994C8700FA3132 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = D474B29730994C8700FA3132 /* dmusBase */;
+		};
+		D474B29E30994E7D00FA3132 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = D474B29D30994E7D00FA3132 /* dmusBase */;
+		};
+		D474B2A030994E7D00FA3132 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = D474B29F30994E7D00FA3132 /* dmusBaseTestSupport */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		D3A5000000000000000000D1 /* Debug */ = {
@@ -546,6 +582,33 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D474B29530993FBB00FA3132 /* dmusBase */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = dmusBase;
+		};
+		D474B29730994C8700FA3132 /* dmusBase */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = dmusBase;
+		};
+		D474B29930994E7300FA3132 /* dmusBase */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = dmusBase;
+		};
+		D474B29B30994E7300FA3132 /* dmusBaseTestSupport */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = dmusBaseTestSupport;
+		};
+		D474B29D30994E7D00FA3132 /* dmusBase */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = dmusBase;
+		};
+		D474B29F30994E7D00FA3132 /* dmusBaseTestSupport */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = dmusBaseTestSupport;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = D3A5000000000000000000E0 /* Project object */;
 }

@@ -1,5 +1,6 @@
 import Foundation
 import Testing
+import WrappersTestSupport
 
 struct LoadMusicLibraryTests {
     let root = URL(filePath: "/Music", directoryHint: .isDirectory)
