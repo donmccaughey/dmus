@@ -7,7 +7,7 @@ struct QueuedTrackRow: View {
         VStack(alignment: .leading, spacing: 2) {
             Text(track.trackName)
                 .lineLimit(1)
-            SplitLayout(leadingFraction: 0.6) {
+            SharedWidthLayout(leadingViewMaxFraction: 0.6) {
                 Text(track.albumName)
                     .lineLimit(1)
                     .padding(.trailing, 8)
@@ -21,15 +21,14 @@ struct QueuedTrackRow: View {
     }
 }
 
-// Divides the width between two subviews at a fixed fraction. GeometryReader
-// would expand to fill the List row's height, and an HStack of flexible frames
-// only splits evenly, so neither gives a fixed 60/40 split inside a row.
-private struct SplitLayout: Layout {
-    let leadingFraction: CGFloat
+// Share available width between two subviews, allocate `leadingViewMaxFraction` width
+// to the leading view when there's not enough space
+private struct SharedWidthLayout: Layout {
+    let leadingViewMaxFraction: CGFloat
 
     func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
         let width = proposal.width ?? 0
-        let height = zip(subviews, widths(for: width)).map { subview, width in
+        let height = zip(subviews, widths(for: width, subviews: subviews)).map { subview, width in
             subview.sizeThatFits(ProposedViewSize(width: width, height: proposal.height)).height
         }.max() ?? 0
         return CGSize(width: width, height: height)
@@ -37,7 +36,7 @@ private struct SplitLayout: Layout {
 
     func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
         var x = bounds.minX
-        for (subview, width) in zip(subviews, widths(for: bounds.width)) {
+        for (subview, width) in zip(subviews, widths(for: bounds.width, subviews: subviews)) {
             subview.place(
                 at: CGPoint(x: x, y: bounds.midY),
                 anchor: .leading,
@@ -47,8 +46,12 @@ private struct SplitLayout: Layout {
         }
     }
 
-    private func widths(for width: CGFloat) -> [CGFloat] {
-        let leading = (width * leadingFraction).rounded(.down)
+    private func widths(for width: CGFloat, subviews: Subviews) -> [CGFloat] {
+        let idealWidths = subviews.map { $0.sizeThatFits(.unspecified).width }
+        guard idealWidths.count == 2 else { return idealWidths }
+        let leadingCap = (width * leadingViewMaxFraction).rounded(.down)
+        let leadingAvailable = max(leadingCap, width - idealWidths[1])
+        let leading = min(idealWidths[0], leadingAvailable)
         return [leading, width - leading]
     }
 }
@@ -66,6 +69,28 @@ private struct SplitLayout: Layout {
             trackName: "A Track Name Long Enough That It Must Be Elided To Fit The Row",
             albumName: "An Album Name Long Enough That It Must Be Elided To Fit",
             artistName: "An Artist Name Long Enough That It Must Be Elided",
+            path: "/Music/Artist/Album/Song.mp3"
+        ))
+    }
+}
+
+#Preview("Long album, short artist") {
+    List {
+        QueuedTrackRow(track: Track(
+            trackName: "Song",
+            albumName: "An Album Name Long Enough To Need More Than Sixty Percent Of The Row",
+            artistName: "Artist",
+            path: "/Music/Artist/Album/Song.mp3"
+        ))
+    }
+}
+
+#Preview("Short album, long artist") {
+    List {
+        QueuedTrackRow(track: Track(
+            trackName: "Song",
+            albumName: "Album",
+            artistName: "An Artist Name Long Enough To Need More Than Forty Percent Of The Row",
             path: "/Music/Artist/Album/Song.mp3"
         ))
     }

@@ -519,6 +519,14 @@ system icon.
 While the queue is **not** empty, the queue panel shall hide the content
 unavailable view and show the player panel and the queue table.
 
+On macOS, when a track item from the files tree is dropped on the queue panel,
+the queue panel shall give the queue the add track command with the track of the
+item.
+
+On macOS, when a folder item from the files tree is dropped on the queue panel,
+the queue panel shall give the queue the add folder command with the folder of
+the item.
+
 
 ### Player panel
 
@@ -592,15 +600,24 @@ the same order as the queue.
 
 The queue table shall draw itself in the standard "plain" style.
 
+When new tracks are added to the queue, dmus shall scroll the queue table to
+the end so that the last of the newly added queued track rows are visible.
+
+
+#### Queued track row
+
 A queued track row shall show the track name, album name and artist name in the
-same table cell. The table cell shall contain two text lines. The upper text
-line shall show the track name. The lower text line shall show the album name
-and artist name in smaller, dimmer text. The album name shall occupy up to 60%
-of the lower text line, inclusive of padding, starting from the left. The artist
-name shall occupy the remaining 40% of the lower text line. The track name and
-album name shall be left-justified; the artist name shall be right-justified.
-All text shall use elision to fit withing its bounding box. The ASCII schematic
-below shows the arrangement of text in the table cell.
+same table cell.
+
+A queued track row shall contain two text lines: upper and lower.
+
+The upper text line of a queued track row shall show the track name.
+
+The lower text line of a queued track row shall show the album name and artist
+name in smaller, dimmer text, with the album name on the left and left-justified
+and the artist name on the right and right-justified.
+
+The ASCII schematic below shows the arrangement of text in the queued track row.
 
     +--------------------------------------------------+
     | <track name .................................. > |
@@ -609,16 +626,15 @@ below shows the arrangement of text in the table cell.
     ^                             ^                    ^
     +------------- 60% -----------+-------- 40% -------+
 
-On macOS, when a track item from the files tree is dropped on the queue panel,
-the queue panel shall give the queue the add track command with the track of the
-item.
+While the album name and artist name both fit on the lower text line of a queued
+track row, each shall occupy the width it needs.
 
-On macOS, when a folder item from the files tree is dropped on the queue panel,
-the queue panel shall give the queue the add folder command with the folder of
-the item.
+While the album name and artist name do not both fit on the lower text line,
+the album name shall occupy up to 60% of the lower text line, inclusive of
+padding, and the artist name shall occupy up to 40%.
 
-When new tracks are added to the queue, dmus shall scroll the queue table to
-the end so that the last of the newly added queued track rows are visible.
+While the track name, album name or artist name does not fit in the available
+space, the queued track row shall use elision to truncate the text.
 
 
 ## Menus
