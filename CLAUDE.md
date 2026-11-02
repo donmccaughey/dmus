@@ -1,7 +1,8 @@
 # Dmus
 
 An offline music player for macOS and iOS. Requirements are in
-`docs/requirements.md`.
+`docs/requirements.md`. Ignore documents in `docs/drafts/` unless instructed
+specifically to consult them.
 
 ## Code style
 
