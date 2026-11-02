@@ -48,9 +48,6 @@
 				wrappers/Audio.swift,
 				wrappers/AudioFake.swift,
 				wrappers/AudioReal.swift,
-				wrappers/Preferences.swift,
-				wrappers/PreferencesFake.swift,
-				wrappers/PreferencesReal.swift,
 			);
 			target = D3A5000000000000000000F2 /* dmusTests */;
 		};
@@ -67,7 +64,6 @@
 				model/PlayerTests.swift,
 				model/QueueTests.swift,
 				wrappers/AudioFake.swift,
-				wrappers/PreferencesFake.swift,
 			);
 			target = D3A5000000000000000000C0 /* dmus */;
 		};
