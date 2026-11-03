@@ -1,26 +1,25 @@
 import Foundation
-import Model
 
-nonisolated struct Folder: Hashable, Sendable, Codable {
-    let path: String?
-    let name: String
-    let children: [FolderChild]
+public struct Folder: Hashable, Sendable, Codable {
+    public let path: String?
+    public let name: String
+    public let children: [FolderChild]
 
-    init() {
+    public init() {
         path = nil
         name = Folder.rootName
         children = []
     }
 
-    init(path: String?, name: String, children: [FolderChild]) {
+    public init(path: String?, name: String, children: [FolderChild]) {
         self.path = path
         self.name = name
         self.children = children
     }
 
-    static let rootName = "Files"
+    public static let rootName = "Files"
     
-    var trackDescendants: [Track] {
+    public var trackDescendants: [Track] {
         children.flatMap { child in
             switch child {
             case .folder(let folder): folder.trackDescendants

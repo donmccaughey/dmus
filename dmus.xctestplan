@@ -1,0 +1,38 @@
+{
+  "configurations" : [
+    {
+      "id" : "C5216A9F-C1BA-4FA5-9A24-FE80B53090D7",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:dmus.xcodeproj",
+        "identifier" : "D3A5000000000000000000F2",
+        "name" : "dmusTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:dmusBase",
+        "identifier" : "WrappersTests",
+        "name" : "WrappersTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:dmusBase",
+        "identifier" : "ModelTests",
+        "name" : "ModelTests"
+      }
+    }
+  ],
+  "version" : 1
+}
