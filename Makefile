@@ -1,27 +1,78 @@
-.PHONY: check clean release
+TMP ?= $(abspath tmp)
 
-APP = DerivedData/Build/Products/Release/Dmus.app
+IOS_CHECK_DEVICE ?= iPhone 16e
 
-check:
+app_files = $(shell find dmus -type f -not -name '.*')
+arch = $(shell uname -m)
+package_files = $(shell find dmusBase -type f -not -name '.*')
+project_files = $(shell find dmus.xcodeproj -type f -not -name '.*')
+release_dir = $(TMP)/Release
+src_files = $(app_files) $(package_files) $(project_files)
+ver = 1.0
+
+
+.SECONDEXPANSION :
+
+
+# ----- phony targets -----
+
+
+.PHONY : check
+check : $(TMP)/checked-iOS.stamp $(TMP)/checked-macOS.stamp
+
+
+.PHONY : release
+release : $(TMP)/Dmus-$(ver).dmg
+
+
+.PHONY : list-simulators
+list-simulators :
+	xcodebuild -project dmus.xcodeproj -scheme dmus -showdestinations
+
+
+.PHONY : clean
+clean :
+	rm -rf *.profraw
+	rm -rf build
+	rm -rf DerivedData
+	rm -rf $(TMP)
+
+
+# ----- file targets -----
+
+
+$(TMP)/ \
+$(TMP)/Release :
+	mkdir -p $@
+
+
+$(TMP)/checked-iOS.stamp : $(src_files) | $$(dir $$@)
 	xcodebuild test \
 		-project dmus.xcodeproj \
 		-scheme dmus \
-		-destination 'platform=macOS,arch=$(shell uname -m)' \
-		-derivedDataPath DerivedData \
+		-destination 'platform=iOS Simulator,name=$(IOS_CHECK_DEVICE)' \
 		-quiet
+	touch $@
 
-release:
+
+$(TMP)/checked-macOS.stamp : $(src_files) | $$(dir $$@)
+	xcodebuild test \
+		-project dmus.xcodeproj \
+		-scheme dmus \
+		-destination 'platform=macOS,arch=$(arch)' \
+		-quiet
+	touch $@
+
+
+$(TMP)/Dmus-$(ver).dmg : $(TMP)/Release/Dmus.app scripts/make-dmg.sh
+	scripts/make-dmg.sh $(TMP)/Release/Dmus.app $(dir $@)
+
+
+$(TMP)/Release/Dmus.app : $(src_files) | $$(dir $$@)
 	xcodebuild build \
 		-project dmus.xcodeproj \
 		-scheme dmus \
 		-configuration Release \
 		-destination 'generic/platform=macOS' \
-		-derivedDataPath DerivedData \
+		CONFIGURATION_BUILD_DIR=$(dir $@) \
 		-quiet
-	scripts/make-dmg.sh $(APP) build
-
-clean:
-	rm -rf *.profraw
-	rm -rf build
-	rm -rf DerivedData
-	rm -rf tmp
