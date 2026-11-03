@@ -7,7 +7,11 @@ arch = $(shell uname -m)
 package_files = $(shell find dmusBase -type f -not -name '.*')
 project_files = $(shell find dmus.xcodeproj -type f -not -name '.*')
 release_dir = $(TMP)/Release
-src_files = $(app_files) $(package_files) $(project_files)
+src_files = \
+		 .git/hooks/pre-commit \
+		$(app_files) \
+		$(package_files) \
+		$(project_files)
 ver = 1.0
 
 
@@ -39,6 +43,10 @@ clean :
 
 
 # ----- file targets -----
+
+
+.git/hooks/pre-commit : scripts/pre-commit
+	cp $< $@
 
 
 $(TMP)/ \
