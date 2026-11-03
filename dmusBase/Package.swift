@@ -8,7 +8,7 @@ let package = Package(
     products: [
         .library(
             name: "dmusBase",
-            targets: ["Wrappers"]
+            targets: ["Model", "Wrappers"]
         ),
         .library(
             name: "dmusBaseTestSupport",
@@ -16,16 +16,19 @@ let package = Package(
         ),
     ],
     targets: [
-        .target(
-            name: "Wrappers"
-        ),
-        .target(
-            name: "WrappersTestSupport",
-            dependencies: ["Wrappers"]
-        ),
+        // wrappers
+        .target(name: "Wrappers"),
+        .target(name: "WrappersTestSupport", dependencies: ["Wrappers"]),
         .testTarget(
             name: "WrappersTests",
             dependencies: ["Wrappers", "WrappersTestSupport"]
         ),
+        // model
+        .target(name: "Model", dependencies: ["Wrappers"]),
+        .testTarget(
+            name: "ModelTests",
+            dependencies: ["Model", "Wrappers", "WrappersTestSupport"]
+        ),
+
     ]
 )

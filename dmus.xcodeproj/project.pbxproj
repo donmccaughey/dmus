@@ -17,6 +17,7 @@
 		D3A5000000000000000000F1 /* dmusTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = dmusTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D41DFEB0308C305900FEA684 /* CLAUDE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CLAUDE.md; sourceTree = "<group>"; };
 		D41DFEB1308C305900FEA684 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		D45D240330998DFB00F84DF9 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		D474B29330993DD200FA3132 /* dmusBase */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = dmusBase; sourceTree = "<group>"; };
 		D4A78314308D0B4000325F1E /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -80,6 +81,11 @@
 			path = docs;
 			sourceTree = "<group>";
 		};
+		D45D240630998E1900F84DF9 /* scripts */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = scripts;
+			sourceTree = "<group>";
+		};
 		D4A78311308D0B2500325F1E /* .claude */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = .claude;
@@ -113,9 +119,11 @@
 			children = (
 				D4A78314308D0B4000325F1E /* .gitignore */,
 				D41DFEB0308C305900FEA684 /* CLAUDE.md */,
+				D45D240330998DFB00F84DF9 /* Makefile */,
 				D41DFEB1308C305900FEA684 /* README.md */,
 				D4A78311308D0B2500325F1E /* .claude */,
 				D41DFEB6308C307E00FEA684 /* docs */,
+				D45D240630998E1900F84DF9 /* scripts */,
 				D3A5000000000000000000A3 /* dmus */,
 				D474B29330993DD200FA3132 /* dmusBase */,
 				D474B29430993FBB00FA3132 /* Frameworks */,

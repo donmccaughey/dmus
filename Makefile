@@ -37,8 +37,6 @@ list-simulators :
 .PHONY : clean
 clean :
 	rm -rf *.profraw
-	rm -rf build
-	rm -rf DerivedData
 	rm -rf $(TMP)
 
 
@@ -52,6 +50,19 @@ clean :
 $(TMP)/ \
 $(TMP)/Release :
 	mkdir -p $@
+
+
+# use a stamp file because `$(release_dir)/Dmus.app` is a directory
+$(TMP)/built-release.stamp : $(src_files) | $(release_dir)
+	rm -rf $(release_dir)
+	xcodebuild build \
+		-project dmus.xcodeproj \
+		-scheme dmus \
+		-configuration Release \
+		-destination 'generic/platform=macOS' \
+		CONFIGURATION_BUILD_DIR=$(release_dir) \
+		-quiet
+	touch $@
 
 
 $(TMP)/checked-iOS.stamp : $(src_files) | $$(dir $$@)
@@ -72,15 +83,5 @@ $(TMP)/checked-macOS.stamp : $(src_files) | $$(dir $$@)
 	touch $@
 
 
-$(TMP)/Dmus-$(ver).dmg : $(TMP)/Release/Dmus.app scripts/make-dmg.sh
-	scripts/make-dmg.sh $(TMP)/Release/Dmus.app $(dir $@)
-
-
-$(TMP)/Release/Dmus.app : $(src_files) | $$(dir $$@)
-	xcodebuild build \
-		-project dmus.xcodeproj \
-		-scheme dmus \
-		-configuration Release \
-		-destination 'generic/platform=macOS' \
-		CONFIGURATION_BUILD_DIR=$(dir $@) \
-		-quiet
+$(TMP)/Dmus-$(ver).dmg : $(TMP)/built-release.stamp scripts/make-dmg.sh
+	scripts/make-dmg.sh $(release_dir)/Dmus.app $(TMP)
