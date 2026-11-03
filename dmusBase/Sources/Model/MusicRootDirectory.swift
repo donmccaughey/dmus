@@ -1,8 +1,8 @@
 import Foundation
 import Wrappers
 
-nonisolated enum MusicRootDirectory {
-    static func locate(
+public enum MusicRootDirectory {
+    public static func locate(
         fileSystem: any FileSystem = FileSystemReal(),
         preferences: any Preferences = PreferencesReal()
     ) throws -> URL {

@@ -35,8 +35,6 @@
 				model/MusicLibrary.swift,
 				model/MusicLibraryStore.swift,
 				model/MusicLibraryStoreTests.swift,
-				model/MusicRootDirectory.swift,
-				model/MusicRootDirectoryTests.swift,
 				model/Player.swift,
 				model/PlayerTests.swift,
 				model/Queue.swift,
@@ -51,7 +49,6 @@
 				model/LoadDemoMusicLibraryTests.swift,
 				model/LoadMusicLibraryTests.swift,
 				model/MusicLibraryStoreTests.swift,
-				model/MusicRootDirectoryTests.swift,
 				model/PlayerTests.swift,
 				model/QueueTests.swift,
 			);
