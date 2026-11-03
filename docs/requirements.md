@@ -82,9 +82,6 @@ structure that parallels that of the corresponding code files under test.
 
 ## Code locations
 
-The dmus project shall place user interface (UI) code in the `dmus/ui/`
-subdirectory.
-
 The dmus project shall place wrapper interfaces and their real implementations
 in the `dmusBase` Swift package in the `Wrappers` target and corresponding unit
 tests in the `WrappersTests` target.
@@ -94,6 +91,11 @@ the `dmusBase` Swift package in the `WrappersTestSupport` target.
 
 The dmus project shall place model code in the `dmusBase` Swift package in the
 `Model` target and corresponding unit tests in the `ModelTests` target.
+
+The dmus project shall organize user interface code around major UI elements
+and/or features. The primary files panel code shall live in `dmus/files/`. The
+primary queue panel code shall live in `dmus/queue/`. The settings dialog code
+shall live in `dmus/settings/`.
 
 The dmus project shall place all other code, app configuration and app asset
 files in the `dmus/` subdirectory.
