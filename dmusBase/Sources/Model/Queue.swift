@@ -1,48 +1,49 @@
 import Foundation
-import Model
 import Observation
 
 @Observable
-final class Queue {
-    private(set) var queuedTracks: [QueuedTrack] = [] {
+public final class Queue {
+    private(set) public var queuedTracks: [QueuedTrack] = [] {
         didSet { onChange?() }
     }
 
     // Views give the queue its add commands directly, so the owning player
     // listens here to keep the audio wrapper's next track current.
-    @ObservationIgnored var onChange: (() -> Void)?
+    @ObservationIgnored public var onChange: (() -> Void)?
 
-    var tracks: [Track] { queuedTracks.map(\.track) }
+    public init() {}
+    
+    public var tracks: [Track] { queuedTracks.map(\.track) }
 
-    var isEmpty: Bool { queuedTracks.isEmpty }
+    public var isEmpty: Bool { queuedTracks.isEmpty }
 
-    func add(_ track: Track) {
+    public func add(_ track: Track) {
         queuedTracks.append(QueuedTrack(track))
     }
 
-    func add(_ folder: Folder) {
+    public func add(_ folder: Folder) {
         queuedTracks.append(contentsOf: folder.trackDescendants.map { QueuedTrack($0) })
     }
 
-    func add(_ child: FolderChild) {
+    public func add(_ child: FolderChild) {
         switch child {
         case .folder(let folder): add(folder)
         case .track(let track): add(track)
         }
     }
 
-    func add(_ children: [FolderChild]) {
+    public func add(_ children: [FolderChild]) {
         for child in children {
             add(child)
         }
     }
 
-    func removeFirst() {
+    public func removeFirst() {
         guard !queuedTracks.isEmpty else { return }
         queuedTracks.removeFirst()
     }
 
-    func clear() {
+    public func clear() {
         queuedTracks.removeAll()
     }
 }
