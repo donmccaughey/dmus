@@ -32,7 +32,6 @@
 				model/LoadMusicLibrary.swift,
 				model/LoadMusicLibraryTests.swift,
 				model/LoadResult.swift,
-				model/MusicLibrary.swift,
 				model/MusicLibraryStore.swift,
 				model/MusicLibraryStoreTests.swift,
 				model/Player.swift,
