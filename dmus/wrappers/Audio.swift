@@ -5,7 +5,7 @@ protocol Audio: AnyObject {
     var onTrackFinished: (() -> Void)? { get set }
     var onPlaybackPositionChanged: ((TimeInterval) -> Void)? { get set }
 
-    func play(_ track: Track, from timeIndex: TimeInterval, thenPlay nextTrack: Track?)
-    func replaceNextTrack(with nextTrack: Track?)
+    func play(_ trackURL: URL, from timeIndex: TimeInterval, thenPlay nextTrackURL: URL?)
+    func replaceNextTrack(with nextTrackURL: URL?)
     func stop()
 }

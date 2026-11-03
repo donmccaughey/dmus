@@ -35,10 +35,10 @@ final class AudioReal: Audio {
         Self.seconds(player.currentTime())
     }
 
-    func play(_ track: Track, from timeIndex: TimeInterval, thenPlay nextTrack: Track?) {
+    func play(_ trackURL: URL, from timeIndex: TimeInterval, thenPlay nextTrackURL: URL?) {
         removeAllItems()
-        currentItem = insert(track)
-        replaceNextTrack(with: nextTrack)
+        currentItem = insert(trackURL)
+        replaceNextTrack(with: nextTrackURL)
         // AVPlayer clamps a seek past the end to the item's duration.
         player.seek(to: CMTime(seconds: timeIndex, preferredTimescale: 600))
         #if os(iOS)
@@ -47,11 +47,11 @@ final class AudioReal: Audio {
         player.play()
     }
 
-    func replaceNextTrack(with nextTrack: Track?) {
+    func replaceNextTrack(with nextTrackURL: URL?) {
         if let nextItem {
             player.remove(nextItem)
         }
-        nextItem = nextTrack.map(insert)
+        nextItem = nextTrackURL.map(insert)
     }
 
     func stop() {
@@ -59,8 +59,8 @@ final class AudioReal: Audio {
         removeAllItems()
     }
 
-    private func insert(_ track: Track) -> AVPlayerItem {
-        let item = AVPlayerItem(url: URL(filePath: track.path))
+    private func insert(_ trackURL: URL) -> AVPlayerItem {
+        let item = AVPlayerItem(url: trackURL)
         player.insert(item, after: nil)
         return item
     }

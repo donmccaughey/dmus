@@ -2,36 +2,36 @@ import Foundation
 
 final class AudioFake: Audio {
     enum Call: Equatable {
-        case play(Track, from: TimeInterval, thenPlay: Track?)
-        case replaceNextTrack(Track?)
+        case play(URL, from: TimeInterval, thenPlay: URL?)
+        case replaceNextTrack(URL?)
         case stop
     }
 
     private(set) var calls: [Call] = []
-    private(set) var currentTrack: Track?
-    private(set) var nextTrack: Track?
+    private(set) var currentTrackURL: URL?
+    private(set) var nextTrackURL: URL?
     private(set) var isPlaying = false
     var playbackPosition: TimeInterval = 0
     var onTrackFinished: (() -> Void)?
     var onPlaybackPositionChanged: ((TimeInterval) -> Void)?
 
-    func play(_ track: Track, from timeIndex: TimeInterval, thenPlay nextTrack: Track?) {
-        calls.append(.play(track, from: timeIndex, thenPlay: nextTrack))
-        currentTrack = track
-        self.nextTrack = nextTrack
+    func play(_ trackURL: URL, from timeIndex: TimeInterval, thenPlay nextTrackURL: URL?) {
+        calls.append(.play(trackURL, from: timeIndex, thenPlay: nextTrackURL))
+        currentTrackURL = trackURL
+        self.nextTrackURL = nextTrackURL
         playbackPosition = timeIndex
         isPlaying = true
     }
 
-    func replaceNextTrack(with nextTrack: Track?) {
-        calls.append(.replaceNextTrack(nextTrack))
-        self.nextTrack = nextTrack
+    func replaceNextTrack(with nextTrackURL: URL?) {
+        calls.append(.replaceNextTrack(nextTrackURL))
+        self.nextTrackURL = nextTrackURL
     }
 
     func stop() {
         calls.append(.stop)
-        currentTrack = nil
-        nextTrack = nil
+        currentTrackURL = nil
+        nextTrackURL = nil
         isPlaying = false
     }
 
@@ -42,10 +42,10 @@ final class AudioFake: Audio {
     // Mirrors the real wrapper, which has already advanced to the next track
     // by the time it reports the finished one.
     func finishCurrentTrack() {
-        currentTrack = nextTrack
-        nextTrack = nil
+        currentTrackURL = nextTrackURL
+        nextTrackURL = nil
         playbackPosition = 0
-        isPlaying = currentTrack != nil
+        isPlaying = currentTrackURL != nil
         onTrackFinished?()
     }
 

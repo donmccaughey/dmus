@@ -54,7 +54,7 @@ struct PlayerTests {
     @Test func playStartsCurrentTrackAtTimeIndexWithNextTrack() {
         let player = makePlayer([first, second, third])
         player.play()
-        #expect(audio.calls == [.play(first, from: 0, thenPlay: second)])
+        #expect(audio.calls == [.play(first.url, from: 0, thenPlay: second.url)])
         #expect(player.isPlaying)
     }
 
@@ -86,7 +86,7 @@ struct PlayerTests {
         player.stop()
         audio.clearCalls()
         player.play()
-        #expect(audio.calls == [.play(first, from: 30, thenPlay: second)])
+        #expect(audio.calls == [.play(first.url, from: 30, thenPlay: second.url)])
     }
 
     @Test func backWhileStoppedResetsTimeIndex() {
@@ -105,7 +105,7 @@ struct PlayerTests {
         audio.reportPosition(5)
         player.back()
         #expect(player.timeIndex == 0)
-        #expect(audio.calls == [.play(first, from: 0, thenPlay: second)])
+        #expect(audio.calls == [.play(first.url, from: 0, thenPlay: second.url)])
         #expect(player.isPlaying)
     }
 
@@ -126,7 +126,7 @@ struct PlayerTests {
         player.next()
         #expect(player.queue.tracks == [second, third])
         #expect(player.timeIndex == 0)
-        #expect(audio.calls == [.play(second, from: 0, thenPlay: third)])
+        #expect(audio.calls == [.play(second.url, from: 0, thenPlay: third.url)])
         #expect(player.isPlaying)
     }
 
@@ -166,7 +166,7 @@ struct PlayerTests {
         #expect(player.queue.tracks == [second, third])
         #expect(player.currentTrack == second)
         #expect(player.timeIndex == 0)
-        #expect(audio.calls == [.replaceNextTrack(third)])
+        #expect(audio.calls == [.replaceNextTrack(third.url)])
         #expect(player.isPlaying)
     }
 
@@ -194,9 +194,9 @@ struct PlayerTests {
     @Test func trackAddedDuringPlaybackBecomesAudioNextTrack() {
         let player = makePlayingPlayer([first])
         player.queue.add(second)
-        #expect(audio.calls == [.replaceNextTrack(second)])
+        #expect(audio.calls == [.replaceNextTrack(second.url)])
         player.queue.add(third)
-        #expect(audio.calls == [.replaceNextTrack(second), .replaceNextTrack(second)])
+        #expect(audio.calls == [.replaceNextTrack(second.url), .replaceNextTrack(second.url)])
     }
 
     @Test func trackAddedWhileStoppedDoesNotTouchAudio() {

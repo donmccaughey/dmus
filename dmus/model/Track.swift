@@ -6,6 +6,8 @@ nonisolated struct Track: Hashable, Sendable, Codable {
     let artistName: String
     let path: String
 
+    var url: URL { URL(filePath: path) }
+
     static let noAlbum = "(no album)"
     static let noArtist = "(no artist)"
 }

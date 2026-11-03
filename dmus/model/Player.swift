@@ -29,7 +29,7 @@ final class Player {
 
     func play() {
         guard let currentTrack, !isPlaying else { return }
-        audio.play(currentTrack, from: timeIndex, thenPlay: nextTrack)
+        audio.play(currentTrack.url, from: timeIndex, thenPlay: nextTrack?.url)
         isPlaying = true
     }
 
@@ -43,7 +43,7 @@ final class Player {
         guard let currentTrack else { return }
         timeIndex = 0
         if isPlaying {
-            audio.play(currentTrack, from: 0, thenPlay: nextTrack)
+            audio.play(currentTrack.url, from: 0, thenPlay: nextTrack?.url)
         }
     }
 
@@ -53,7 +53,7 @@ final class Player {
         mutateQueue { queue.removeFirst() }
         guard isPlaying else { return }
         if let currentTrack {
-            audio.play(currentTrack, from: 0, thenPlay: nextTrack)
+            audio.play(currentTrack.url, from: 0, thenPlay: nextTrack?.url)
         } else {
             stopAudio()
         }
@@ -83,7 +83,7 @@ final class Player {
 
     private func queueDidChange() {
         guard isPlaying, !isMutatingQueue else { return }
-        audio.replaceNextTrack(with: nextTrack)
+        audio.replaceNextTrack(with: nextTrack?.url)
     }
 
     // The audio wrapper has already moved on to the next track, so only the
@@ -95,7 +95,7 @@ final class Player {
         if queue.isEmpty {
             isPlaying = false
         } else {
-            audio.replaceNextTrack(with: nextTrack)
+            audio.replaceNextTrack(with: nextTrack?.url)
         }
     }
 
