@@ -10,9 +10,15 @@ nonisolated struct Track: Hashable, Sendable, Codable {
 
     static let noAlbum = "(no album)"
     static let noArtist = "(no artist)"
-}
-
-nonisolated extension Track {
+    private static let musicFileExtensions: Set<String> = ["mp3", "m4a"]
+    
+    init(trackName: String, albumName: String, artistName: String, path: String) {
+        self.trackName = trackName
+        self.albumName = albumName
+        self.artistName = artistName
+        self.path = path
+    }
+    
     init?(
         displayName: String,
         pathExtension: String,
@@ -28,8 +34,6 @@ nonisolated extension Track {
             path: path
         )
     }
-
-    private static let musicFileExtensions: Set<String> = ["mp3", "m4a"]
 
     // The display name already omits the extension when the Finder hides it,
     // so only strip an extension that is still present.
