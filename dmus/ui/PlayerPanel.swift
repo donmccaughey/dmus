@@ -24,7 +24,7 @@ struct PlayerPanel: View {
                 controlButton("Next", systemImage: "forward.fill", action: player.next)
             }
             Button(action: player.clear) {
-                Text("clear")
+                Text("Clear")
                     .frame(width: Self.buttonWidth)
             }
             .frame(maxWidth: .infinity, alignment: .trailing)
