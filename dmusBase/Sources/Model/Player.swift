@@ -1,17 +1,16 @@
 import Foundation
-import Model
 import Observation
 import Wrappers
 
-@Observable
-final class Player {
-    let audio: any Audio
-    let queue: Queue
-    private(set) var timeIndex: TimeInterval = 0
-    private(set) var isPlaying = false
+@Observable @MainActor
+public final class Player {
+    public let audio: any Audio
+    public let queue: Queue
+    private(set) public var timeIndex: TimeInterval = 0
+    private(set) public var isPlaying = false
     private var isMutatingQueue = false
 
-    init(audio: any Audio, queue: Queue = Queue()) {
+    public init(audio: any Audio = AudioReal(), queue: Queue = Queue()) {
         self.audio = audio
         self.queue = queue
         queue.onChange = { [weak self] in self?.queueDidChange() }
@@ -21,27 +20,27 @@ final class Player {
         }
     }
 
-    var currentTrack: Track? {
+    public var currentTrack: Track? {
         queue.tracks.first
     }
 
-    var nextTrack: Track? {
+    public var nextTrack: Track? {
         queue.tracks.dropFirst().first
     }
 
-    func play() {
+    public func play() {
         guard let currentTrack, !isPlaying else { return }
         audio.play(currentTrack.url, from: timeIndex, thenPlay: nextTrack?.url)
         isPlaying = true
     }
 
-    func stop() {
+    public func stop() {
         guard !queue.isEmpty, isPlaying else { return }
         timeIndex = audio.playbackPosition
         stopAudio()
     }
 
-    func back() {
+    public func back() {
         guard let currentTrack else { return }
         timeIndex = 0
         if isPlaying {
@@ -49,7 +48,7 @@ final class Player {
         }
     }
 
-    func next() {
+    public func next() {
         guard !queue.isEmpty else { return }
         timeIndex = 0
         mutateQueue { queue.removeFirst() }
@@ -61,7 +60,7 @@ final class Player {
         }
     }
 
-    func clear() {
+    public func clear() {
         guard !queue.isEmpty else { return }
         timeIndex = 0
         mutateQueue { queue.clear() }

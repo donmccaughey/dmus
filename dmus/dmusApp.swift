@@ -1,3 +1,4 @@
+import Model
 import SwiftUI
 import Wrappers
 
@@ -19,7 +20,7 @@ struct DmusApp: App {
     @NSApplicationDelegateAdaptor private var appDelegate: DmusAppDelegate
     #endif
     private let store = MusicLibraryStore()
-    private let player = Player(audio: AudioReal())
+    private let player = Player()
 
     init() {
         // Started at launch rather than in a view's .task so loading is

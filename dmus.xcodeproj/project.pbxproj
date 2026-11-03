@@ -34,8 +34,6 @@
 				model/LoadResult.swift,
 				model/MusicLibraryStore.swift,
 				model/MusicLibraryStoreTests.swift,
-				model/Player.swift,
-				model/PlayerTests.swift,
 			);
 			target = D3A5000000000000000000F2 /* dmusTests */;
 		};
@@ -46,7 +44,6 @@
 				model/LoadDemoMusicLibraryTests.swift,
 				model/LoadMusicLibraryTests.swift,
 				model/MusicLibraryStoreTests.swift,
-				model/PlayerTests.swift,
 			);
 			target = D3A5000000000000000000C0 /* dmus */;
 		};

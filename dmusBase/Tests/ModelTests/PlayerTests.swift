@@ -3,6 +3,7 @@ import Model
 import Testing
 import WrappersTestSupport
 
+@MainActor
 struct PlayerTests {
     let first = Track(trackName: "First", albumName: "Album", artistName: "Artist", path: "/Music/Artist/Album/First.mp3")
     let second = Track(trackName: "Second", albumName: "Album", artistName: "Artist", path: "/Music/Artist/Album/Second.mp3")
