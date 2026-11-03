@@ -1,7 +1,6 @@
 import Foundation
-import Model
 
-nonisolated func loadDemoMusicLibrary(demoData: Data, trackPath: String) -> LoadResult {
+public func loadDemoMusicLibrary(demoData: Data, trackPath: String) -> LoadResult {
     let rootEntry: DemoEntry
     do {
         let entries = try JSONDecoder().decode([DemoEntry].self, from: demoData)
@@ -30,7 +29,7 @@ private struct DemoEntry: Decodable {
     let contents: [DemoEntry]?
 }
 
-nonisolated enum LoadDemoError: Error, Equatable {
+public enum LoadDemoError: Error, Equatable {
     case noDirectoryEntry
 }
 
