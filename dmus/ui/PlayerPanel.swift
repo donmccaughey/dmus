@@ -1,4 +1,5 @@
 import SwiftUI
+import Wrappers
 
 struct PlayerPanel: View {
     @Environment(Player.self) private var player

@@ -1,6 +1,7 @@
 import Foundation
 
-protocol Audio: AnyObject {
+@MainActor
+public protocol Audio: AnyObject {
     var playbackPosition: TimeInterval { get }
     var onTrackFinished: (() -> Void)? { get set }
     var onPlaybackPositionChanged: ((TimeInterval) -> Void)? { get set }

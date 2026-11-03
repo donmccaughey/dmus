@@ -1,7 +1,8 @@
 import AVFoundation
 import Foundation
 
-final class AudioReal: Audio {
+@MainActor
+public final class AudioReal: Audio {
     private let player = AVQueuePlayer()
     // The queue player still reports a finished item as current when it posts
     // the end notification, so items() cannot tell current from next.
@@ -10,10 +11,10 @@ final class AudioReal: Audio {
     private var finishedObservers: [any NSObjectProtocol] = []
     private var positionObserver: Any?
 
-    var onTrackFinished: (() -> Void)?
-    var onPlaybackPositionChanged: ((TimeInterval) -> Void)?
+    public var onTrackFinished: (() -> Void)?
+    public var onPlaybackPositionChanged: ((TimeInterval) -> Void)?
 
-    init() {
+    public init() {
         player.actionAtItemEnd = .advance
         #if os(iOS)
         try? AVAudioSession.sharedInstance().setCategory(.playback)
@@ -22,7 +23,7 @@ final class AudioReal: Audio {
         observePosition()
     }
 
-    deinit {
+    isolated deinit {
         for observer in finishedObservers {
             NotificationCenter.default.removeObserver(observer)
         }
@@ -31,11 +32,11 @@ final class AudioReal: Audio {
         }
     }
 
-    var playbackPosition: TimeInterval {
+    public var playbackPosition: TimeInterval {
         Self.seconds(player.currentTime())
     }
 
-    func play(_ trackURL: URL, from timeIndex: TimeInterval, thenPlay nextTrackURL: URL?) {
+    public func play(_ trackURL: URL, from timeIndex: TimeInterval, thenPlay nextTrackURL: URL?) {
         removeAllItems()
         currentItem = insert(trackURL)
         replaceNextTrack(with: nextTrackURL)
@@ -47,14 +48,14 @@ final class AudioReal: Audio {
         player.play()
     }
 
-    func replaceNextTrack(with nextTrackURL: URL?) {
+    public func replaceNextTrack(with nextTrackURL: URL?) {
         if let nextItem {
             player.remove(nextItem)
         }
         nextItem = nextTrackURL.map(insert)
     }
 
-    func stop() {
+    public func stop() {
         player.pause()
         removeAllItems()
     }

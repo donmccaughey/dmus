@@ -45,9 +45,6 @@
 				model/QueuedTrack.swift,
 				model/QueueTests.swift,
 				model/Track.swift,
-				wrappers/Audio.swift,
-				wrappers/AudioFake.swift,
-				wrappers/AudioReal.swift,
 			);
 			target = D3A5000000000000000000F2 /* dmusTests */;
 		};
@@ -63,7 +60,6 @@
 				model/MusicRootDirectoryTests.swift,
 				model/PlayerTests.swift,
 				model/QueueTests.swift,
-				wrappers/AudioFake.swift,
 			);
 			target = D3A5000000000000000000C0 /* dmus */;
 		};

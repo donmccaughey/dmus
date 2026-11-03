@@ -1,4 +1,5 @@
 import SwiftUI
+import Wrappers
 
 #if os(macOS)
 final class DmusAppDelegate: NSObject, NSApplicationDelegate {

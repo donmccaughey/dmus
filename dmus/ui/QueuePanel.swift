@@ -1,4 +1,5 @@
 import SwiftUI
+import Wrappers
 
 struct QueuePanel: View {
     @Environment(Player.self) private var player

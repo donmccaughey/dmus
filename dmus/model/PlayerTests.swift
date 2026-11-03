@@ -1,5 +1,6 @@
 import Foundation
 import Testing
+import WrappersTestSupport
 
 struct PlayerTests {
     let first = Track(trackName: "First", albumName: "Album", artistName: "Artist", path: "/Music/Artist/Album/First.mp3")

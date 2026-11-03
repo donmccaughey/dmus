@@ -1,5 +1,6 @@
 #if os(iOS)
 import SwiftUI
+import Wrappers
 
 struct FilesTableStack: View {
     let musicLibrary: MusicLibrary
