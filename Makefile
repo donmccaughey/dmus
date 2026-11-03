@@ -53,7 +53,10 @@ $(TMP)/Release :
 
 
 # use a stamp file because `$(release_dir)/Dmus.app` is a directory
-$(TMP)/built-release.stamp : $(src_files) | $(release_dir)
+$(TMP)/built-release.stamp : \
+		$(TMP)/checked-iOS.stamp \
+		$(TMP)/checked-macOS.stamp \
+		| $(release_dir)
 	rm -rf $(release_dir)
 	xcodebuild build \
 		-project dmus.xcodeproj \
