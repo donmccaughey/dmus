@@ -1,4 +1,5 @@
 import Foundation
+import Model
 import Wrappers
 
 nonisolated func loadMusicLibrary(

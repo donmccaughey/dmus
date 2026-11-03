@@ -1,4 +1,5 @@
 import Foundation
+import Model
 
 nonisolated func loadDemoMusicLibrary(demoData: Data, trackPath: String) -> LoadResult {
     let rootEntry: DemoEntry

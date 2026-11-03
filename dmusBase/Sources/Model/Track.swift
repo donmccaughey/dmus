@@ -1,25 +1,25 @@
 import Foundation
 
-nonisolated struct Track: Hashable, Sendable, Codable {
-    let trackName: String
-    let albumName: String
-    let artistName: String
-    let path: String
+public struct Track: Hashable, Sendable, Codable {
+    public let trackName: String
+    public let albumName: String
+    public let artistName: String
+    public let path: String
 
-    var url: URL { URL(filePath: path) }
+    public var url: URL { URL(filePath: path) }
 
-    static let noAlbum = "(no album)"
-    static let noArtist = "(no artist)"
+    public static let noAlbum = "(no album)"
+    public static let noArtist = "(no artist)"
     private static let musicFileExtensions: Set<String> = ["mp3", "m4a"]
     
-    init(trackName: String, albumName: String, artistName: String, path: String) {
+    public init(trackName: String, albumName: String, artistName: String, path: String) {
         self.trackName = trackName
         self.albumName = albumName
         self.artistName = artistName
         self.path = path
     }
     
-    init?(
+    public init?(
         displayName: String,
         pathExtension: String,
         path: String,

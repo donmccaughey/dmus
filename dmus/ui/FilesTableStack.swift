@@ -1,4 +1,5 @@
 #if os(iOS)
+import Model
 import SwiftUI
 import Wrappers
 

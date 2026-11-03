@@ -1,4 +1,5 @@
 import Foundation
+import Model
 
 nonisolated struct Folder: Hashable, Sendable, Codable {
     let path: String?

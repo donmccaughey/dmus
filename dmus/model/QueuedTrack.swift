@@ -1,4 +1,5 @@
 import Foundation
+import Model
 
 // The same track can be queued more than once, so each entry gets its own
 // identity instead of borrowing the track's.

@@ -1,4 +1,5 @@
 import Foundation
+import Model
 
 nonisolated enum FolderChild: Hashable, Sendable, Identifiable, Codable {
     case folder(Folder)

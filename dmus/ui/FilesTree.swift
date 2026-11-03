@@ -1,4 +1,5 @@
 #if os(macOS)
+import Model
 import SwiftUI
 
 struct FilesTree: View {
