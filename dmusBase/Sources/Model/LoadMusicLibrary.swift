@@ -1,8 +1,7 @@
 import Foundation
-import Model
 import Wrappers
 
-nonisolated func loadMusicLibrary(
+public func loadMusicLibrary(
     musicRootDirectory: URL,
     fileSystem: any FileSystem = FileSystemReal()
 ) -> LoadResult {

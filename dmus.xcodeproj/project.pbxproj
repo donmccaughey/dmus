@@ -27,8 +27,6 @@
 		D3A5000000000000000000F9 /* Exceptions for "dmus" folder in "dmusTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				model/LoadMusicLibrary.swift,
-				model/LoadMusicLibraryTests.swift,
 				model/MusicLibraryStore.swift,
 				model/MusicLibraryStoreTests.swift,
 			);
@@ -38,7 +36,6 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
-				model/LoadMusicLibraryTests.swift,
 				model/MusicLibraryStoreTests.swift,
 			);
 			target = D3A5000000000000000000C0 /* dmus */;
