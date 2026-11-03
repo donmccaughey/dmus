@@ -43,7 +43,6 @@
 				model/Player.swift,
 				model/PlayerTests.swift,
 				model/Queue.swift,
-				model/QueuedTrack.swift,
 				model/QueueTests.swift,
 			);
 			target = D3A5000000000000000000F2 /* dmusTests */;
