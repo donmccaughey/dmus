@@ -19,9 +19,7 @@ nonisolated struct Folder: Hashable, Sendable, Codable {
     }
 
     static let rootName = "Files"
-}
-
-nonisolated extension Folder {
+    
     var trackDescendants: [Track] {
         children.flatMap { child in
             switch child {
