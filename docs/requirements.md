@@ -448,13 +448,25 @@ On iOS, dmus shall draw panel titles on an opaque secondary system background.
 
 ## Files panel
 
-On macOS, the files panel shall show the title "Files" at the top of the panel.
+The **find button** is a button with the label "Find".
 
-On iOS, while its music library is empty, the files panel shall show the title
-"Files" at the top of the panel.
+On macOS, the files panel shall show the title "Files" and the find button with
+bordered style at the top of the panel.
+
+On macOS, while the music library is empty, the files panel shall disable the
+find button.
+
+On macOS, while the music library is not empty, the files panel shall enable the
+find button.
+
+On iOS, while the music library is empty, the files panel shall show the title
+"Files" and the find button with bordered style at the top of the panel, and
+shall disable the find button. Note that this find button only serves as a
+placeholder and is always disabled; on iOS the files table stack contains the
+active find button.
 
 On iOS, while its music library is not empty, the files panel shall hide the
-title "Files" at the top of the panel.
+title "Files" and the find button at the top of the panel.
 
 The files panel shall get its music library and load did fail state from the
 app's music library store.
@@ -502,7 +514,7 @@ on iOS.
 
 A **folder table** is a table view that shows one row for each folder or track
 child of the corresponding folder, sets the title to the name of the folder and
-adds a search button showing the standard search icon in the navigation bar.
+adds a find button in bordered style to the right side of the navigation bar.
 
 A folder table shall draw itself in the standard "plain" style.
 
@@ -527,12 +539,6 @@ table stack.
 
 On iOS, while its music library is not empty, the files panel shall show a files
 table stack backed by its music library.
-
-On iOS, while the visible folder table is empty, the folder table shall disable
-the search button in the navigation bar.
-
-On iOS, while the visible folder table is not empty, the folder table shall
-enable the search button in the navigation bar.
 
 On iOS, the folder table shall draw the navigation bar with the same opaque
 background as a panel title, regardless of the folder table's scroll position.

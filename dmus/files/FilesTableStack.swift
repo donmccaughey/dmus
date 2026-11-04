@@ -40,8 +40,9 @@ struct FolderTable: View {
         .toolbarBackground(.panelTitleBackground, for: .navigationBar)
         .toolbarBackgroundVisibility(.visible, for: .navigationBar)
         .toolbar {
-            SearchButton()
-                .disabled(folder.children.isEmpty)
+            ToolbarItem(placement: .topBarTrailing) {
+                FindButton()
+            }
         }
     }
 }
@@ -76,13 +77,6 @@ struct TrackRow: View {
             Spacer()
             RowButton("Add", systemImage: "plus.circle") { player.queue.add(track) }
         }
-    }
-}
-
-private struct SearchButton: View {
-    var body: some View {
-        Button("Search", systemImage: "magnifyingglass") {}
-            .labelStyle(.iconOnly)
     }
 }
 

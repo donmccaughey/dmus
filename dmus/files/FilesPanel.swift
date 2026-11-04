@@ -4,8 +4,9 @@ import SwiftUI
 struct FilesPanel: View {
     @Environment(MusicLibraryStore.self) private var store
 
-    // On iOS the root folder table's navigation title already reads "Files",
-    // so the panel title would duplicate it once the library is loaded.
+    // On iOS the root folder table's navigation bar already shows the "Files"
+    // title and a find button, so the panel title would duplicate them once
+    // the library is loaded.
     private var showsTitle: Bool {
         #if os(macOS)
         true
@@ -31,7 +32,14 @@ struct FilesPanel: View {
                 FilesTableStack(musicLibrary: store.library)
                 #endif
             }
+        } accessory: {
+            findButton
         }
+    }
+
+    private var findButton: some View {
+        FindButton()
+            .disabled(store.library.isEmpty)
     }
 }
 
