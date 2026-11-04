@@ -31,8 +31,12 @@ Dmus shall use Swift language and the SwiftUI framework.
 
 On macOS, dmus shall use AppKit rather than Mac Catalyst.
 
-On macOS, dmus shall **not** use the App Sandbox, since dmus is not distributed
-through the App Store.
+On macOS, dmus shall use the App Sandbox so that it can be distributed through
+the Mac App Store.
+
+On macOS, dmus shall request only these sandbox entitlements: read-only access
+to user-selected files, app-scoped security bookmarks and read-only access to
+the user's Music folder.
 
 Dmus shall use only APIs available on the minimum deployment targets.
 
@@ -106,6 +110,9 @@ files in the `dmus/` subdirectory.
 The **file system wrapper** shall wrap general file system information and
 operations.
 
+On macOS, the file system wrapper shall wrap security-scoped bookmark creation,
+resolution and access.
+
 The **preferences wrapper** shall wrap user defaults and other settings.
 
 
@@ -125,12 +132,19 @@ operations in the application domain.
 The **music root directory** is the directory on the local filesystem that dmus
 searches for music files.
 
-On macOS, dmus shall read the music root directory from user defaults,
-initializing it to the system music directory for the current user if not
-present.
+On macOS, dmus shall save the music root directory in user defaults as a
+security-scoped bookmark.
 
-On macOS, dmus shall create the music root directory on launch if it does not
-exist.
+On macOS, when the saved bookmark resolves and can be accessed, dmus shall
+start accessing the security-scoped music root directory and keep it accessible
+for as long as it is the music root directory.
+
+On macOS, when the saved bookmark resolves but is stale, dmus shall replace the
+saved bookmark with a fresh one.
+
+On macOS, when no bookmark is saved or the saved bookmark does not resolve or
+cannot be accessed, dmus shall use the system music directory for the current
+user as the music root directory without saving a bookmark.
 
 On iOS, dmus shall use the `Music/` subdirectory of the standard application
 support directory as the music root directory, creating it on launch if it does
@@ -692,6 +706,7 @@ When the user chooses a directory in the file chooser, the settings dialog shall
 update the music files text box.
 
 When the user chooses a different music root directory in the settings dialog,
-dmus shall save the new music root directory to user defaults, load the new
-music library in the background and update the app when the new music library
-has loaded.
+dmus shall stop accessing the previous music root directory if it was security
+scoped, save the new music root directory to user defaults as a security-scoped
+bookmark, start accessing it, load the new music library in the background and
+update the app when the new music library has loaded.

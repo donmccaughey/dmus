@@ -1,6 +1,6 @@
 import Foundation
 
 public protocol Preferences: Sendable {
-    func getMusicRootDirectoryPath() -> String?
-    func setMusicRootDirectoryPath(_ path: String)
+    func getMusicRootDirectoryBookmark() -> Data?
+    func setMusicRootDirectoryBookmark(_ bookmark: Data)
 }

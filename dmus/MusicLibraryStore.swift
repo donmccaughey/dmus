@@ -7,7 +7,7 @@ import Wrappers
 final class MusicLibraryStore {
     private(set) var library = MusicLibrary()
     private(set) var loadErrors: [any Error] = []
-    private(set) var musicRootDirectory: URL?
+    private(set) var musicRootDirectory: MusicRootDirectory?
     private(set) var loadTask: Task<Void, Never>?
 
     private let fileSystem: any FileSystem
@@ -43,20 +43,23 @@ final class MusicLibraryStore {
         }
     }
 
+    #if os(macOS)
     func changeMusicRootDirectory(to url: URL) {
-        guard url.path != musicRootDirectory?.path else { return }
-        preferences.setMusicRootDirectoryPath(url.path)
-        musicRootDirectory = url
+        guard url.path != musicRootDirectory?.url.path else { return }
+        musicRootDirectory?.stopAccessing(fileSystem: fileSystem)
+        let musicRootDirectory = MusicRootDirectory.choose(url, fileSystem: fileSystem, preferences: preferences)
+        self.musicRootDirectory = musicRootDirectory
         let fileSystem = fileSystem
         loadTask?.cancel()
         loadTask = Task.detached(priority: .utility) {
-            let result = loadMusicLibrary(musicRootDirectory: url, fileSystem: fileSystem)
+            let result = loadMusicLibrary(musicRootDirectory: musicRootDirectory.url, fileSystem: fileSystem)
             await self.applyUnlessCancelled(result)
         }
     }
+    #endif
 
-    private func setMusicRootDirectory(_ url: URL?) {
-        musicRootDirectory = url
+    private func setMusicRootDirectory(_ musicRootDirectory: MusicRootDirectory?) {
+        self.musicRootDirectory = musicRootDirectory
     }
 
     // A superseded load still walks to completion since loadMusicLibrary does
@@ -67,7 +70,7 @@ final class MusicLibraryStore {
     }
 
     private nonisolated static func load(
-        _ located: Result<URL, any Error>,
+        _ located: Result<MusicRootDirectory, any Error>,
         isDemo: Bool,
         fileSystem: any FileSystem
     ) -> LoadResult {
@@ -76,7 +79,7 @@ final class MusicLibraryStore {
         }
         switch located {
         case .success(let musicRootDirectory):
-            return loadMusicLibrary(musicRootDirectory: musicRootDirectory, fileSystem: fileSystem)
+            return loadMusicLibrary(musicRootDirectory: musicRootDirectory.url, fileSystem: fileSystem)
         case .failure(let error):
             return LoadResult(library: MusicLibrary(), errors: [error])
         }

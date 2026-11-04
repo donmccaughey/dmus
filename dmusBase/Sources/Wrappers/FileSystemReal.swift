@@ -10,12 +10,16 @@ public struct FileSystemReal: FileSystem {
     public init() {}
     
     public func getMusicDirectoryURL() throws -> URL {
-        try FileManager.default.url(
+        let url = try FileManager.default.url(
             for: .musicDirectory,
             in: .userDomainMask,
             appropriateFor: nil,
             create: true
         )
+        // Inside the App Sandbox the home directory is the app container, whose
+        // Music entry is a symlink to the real ~/Music; resolve it so the user
+        // sees the real path.
+        return url.resolvingSymlinksInPath()
     }
 
     public func getApplicationSupportDirectoryURL() throws -> URL {
@@ -55,4 +59,33 @@ public struct FileSystemReal: FileSystem {
             localizedName: values.localizedName
         )
     }
+
+    #if os(macOS)
+    public func makeSecurityScopedBookmark(for url: URL) throws -> Data {
+        try url.bookmarkData(
+            options: .withSecurityScope,
+            includingResourceValuesForKeys: nil,
+            relativeTo: nil
+        )
+    }
+
+    public func resolveSecurityScopedBookmark(_ bookmark: Data) throws -> ResolvedBookmark {
+        var isStale = false
+        let url = try URL(
+            resolvingBookmarkData: bookmark,
+            options: .withSecurityScope,
+            relativeTo: nil,
+            bookmarkDataIsStale: &isStale
+        )
+        return ResolvedBookmark(url: url, isStale: isStale)
+    }
+
+    public func startAccessing(_ url: URL) -> Bool {
+        url.startAccessingSecurityScopedResource()
+    }
+
+    public func stopAccessing(_ url: URL) {
+        url.stopAccessingSecurityScopedResource()
+    }
+    #endif
 }

@@ -54,13 +54,13 @@ struct MusicLibraryStoreTests {
     @Test func backgroundLoadLocatesRootAndLoadsLibrary() async {
         var fileSystem = FileSystemFake()
         fileSystem.add("/Saved/Music/Song.mp3")
-        let preferences = PreferencesFake(musicRootDirectoryPath: "/Saved/Music")
+        let preferences = PreferencesFake(musicRootDirectoryBookmark: FileSystemFake.bookmark(for: "/Saved/Music"))
         let store = MusicLibraryStore(fileSystem: fileSystem, preferences: preferences)
 
         store.loadInBackground(isDemo: false)
         await store.loadTask?.value
 
-        #expect(store.musicRootDirectory?.path == "/Saved/Music")
+        #expect(store.musicRootDirectory?.url.path == "/Saved/Music")
         #expect(!store.loadDidFail)
         #expect(trackNames(in: store) == ["Song"])
     }
@@ -76,19 +76,21 @@ struct MusicLibraryStoreTests {
         #expect(store.library.isEmpty)
     }
 
-    @Test func changingRootSavesPreferenceAndReloads() async {
+    @Test func changingRootSavesBookmarkSwapsAccessAndReloads() async {
         var fileSystem = FileSystemFake()
         fileSystem.add("/Saved/Music/Old.mp3")
         fileSystem.add("/Other/Music/New.mp3")
-        let preferences = PreferencesFake(musicRootDirectoryPath: "/Saved/Music")
+        let preferences = PreferencesFake(musicRootDirectoryBookmark: FileSystemFake.bookmark(for: "/Saved/Music"))
         let store = MusicLibraryStore(fileSystem: fileSystem, preferences: preferences)
         store.loadInBackground(isDemo: false)
         await store.loadTask?.value
 
         store.changeMusicRootDirectory(to: URL(filePath: "/Other/Music", directoryHint: .isDirectory))
 
-        #expect(preferences.musicRootDirectoryPath == "/Other/Music")
-        #expect(store.musicRootDirectory?.path == "/Other/Music")
+        #expect(preferences.musicRootDirectoryBookmark == FileSystemFake.bookmark(for: "/Other/Music"))
+        #expect(fileSystem.log.stopped == ["/Saved/Music"])
+        #expect(fileSystem.log.started == ["/Saved/Music", "/Other/Music"])
+        #expect(store.musicRootDirectory?.url.path == "/Other/Music")
 
         await store.loadTask?.value
 
@@ -97,16 +99,18 @@ struct MusicLibraryStoreTests {
     }
 
     @Test func choosingCurrentRootAgainDoesNothing() async {
-        let preferences = PreferencesFake(musicRootDirectoryPath: "/Saved/Music")
-        let store = MusicLibraryStore(fileSystem: FileSystemFake(), preferences: preferences)
+        let preferences = PreferencesFake(musicRootDirectoryBookmark: FileSystemFake.bookmark(for: "/Saved/Music"))
+        let fileSystem = FileSystemFake()
+        let store = MusicLibraryStore(fileSystem: fileSystem, preferences: preferences)
         store.loadInBackground(isDemo: false)
         await store.loadTask?.value
         let loadTask = store.loadTask
-        preferences.musicRootDirectoryPath = nil
+        preferences.musicRootDirectoryBookmark = nil
 
         store.changeMusicRootDirectory(to: URL(filePath: "/Saved/Music", directoryHint: .isDirectory))
 
-        #expect(preferences.musicRootDirectoryPath == nil)
+        #expect(preferences.musicRootDirectoryBookmark == nil)
+        #expect(fileSystem.log.stopped.isEmpty)
         #expect(store.loadTask == loadTask)
     }
     #endif

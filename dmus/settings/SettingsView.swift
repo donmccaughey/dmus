@@ -1,5 +1,6 @@
 #if os(macOS)
 import AppKit
+import Model
 import SwiftUI
 import UniformTypeIdentifiers
 
@@ -20,7 +21,7 @@ struct SettingsView: View {
     }
 
     private var musicRootDirectoryPath: String {
-        store.musicRootDirectory?.path ?? ""
+        store.musicRootDirectory?.url.path ?? ""
     }
 
     private func chooseMusicRootDirectory() {
@@ -28,7 +29,7 @@ struct SettingsView: View {
         panel.canChooseDirectories = true
         panel.canChooseFiles = false
         panel.allowsMultipleSelection = false
-        panel.directoryURL = store.musicRootDirectory
+        panel.directoryURL = store.musicRootDirectory?.url
         // Dims files that are not music so the user can see which directories hold music.
         panel.allowedContentTypes = [.mp3, .mpeg4Audio]
         guard panel.runModal() == .OK, let url = panel.url else { return }

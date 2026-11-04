@@ -1,15 +1,15 @@
 import Foundation
 
 public struct PreferencesReal: Preferences {
-    private static let musicRootDirectoryKey = "musicRootDirectory"
+    private static let musicRootDirectoryBookmarkKey = "musicRootDirectoryBookmark"
 
     public init() {}
     
-    public func getMusicRootDirectoryPath() -> String? {
-        UserDefaults.standard.string(forKey: Self.musicRootDirectoryKey)
+    public func getMusicRootDirectoryBookmark() -> Data? {
+        UserDefaults.standard.data(forKey: Self.musicRootDirectoryBookmarkKey)
     }
 
-    public func setMusicRootDirectoryPath(_ path: String) {
-        UserDefaults.standard.set(path, forKey: Self.musicRootDirectoryKey)
+    public func setMusicRootDirectoryBookmark(_ bookmark: Data) {
+        UserDefaults.standard.set(bookmark, forKey: Self.musicRootDirectoryBookmarkKey)
     }
 }

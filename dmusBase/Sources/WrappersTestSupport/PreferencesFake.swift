@@ -2,17 +2,17 @@ import Foundation
 import Wrappers
 
 public final class PreferencesFake: Preferences, @unchecked Sendable {
-    public var musicRootDirectoryPath: String?
+    public var musicRootDirectoryBookmark: Data?
 
-    public init(musicRootDirectoryPath: String? = nil) {
-        self.musicRootDirectoryPath = musicRootDirectoryPath
+    public init(musicRootDirectoryBookmark: Data? = nil) {
+        self.musicRootDirectoryBookmark = musicRootDirectoryBookmark
     }
 
-    public func getMusicRootDirectoryPath() -> String? {
-        musicRootDirectoryPath
+    public func getMusicRootDirectoryBookmark() -> Data? {
+        musicRootDirectoryBookmark
     }
 
-    public func setMusicRootDirectoryPath(_ path: String) {
-        musicRootDirectoryPath = path
+    public func setMusicRootDirectoryBookmark(_ bookmark: Data) {
+        musicRootDirectoryBookmark = bookmark
     }
 }

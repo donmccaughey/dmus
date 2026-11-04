@@ -24,11 +24,24 @@ public struct FileSystemFake: FileSystem {
         let localizedName: String?
     }
 
+    // A class so copies of the fake handed to the code under test share one
+    // record that the test can read back.
+    public final class Log: @unchecked Sendable {
+        public var bookmarked: [String] = []
+        public var started: [String] = []
+        public var stopped: [String] = []
+    }
+
     public var entries: [Entry] = []
     public var unlistableDirectories: Set<String> = []
     public var unreadableEntries: Set<String> = []
     public var uncreatableDirectories: Set<String> = []
+    public var unbookmarkablePaths: Set<String> = []
+    public var unresolvableBookmarks: Set<String> = []
+    public var staleBookmarks: Set<String> = []
+    public var inaccessiblePaths: Set<String> = []
     public var musicDirectoryURL: URL?
+    public let log = Log()
 
     public init(
         entries: [Entry] = [],
@@ -46,6 +59,10 @@ public struct FileSystemFake: FileSystem {
     
     public mutating func add(_ path: String, _ kind: Kind = .file, localizedName: String? = nil) {
         entries.append(Entry(path: path, kind: kind, localizedName: localizedName))
+    }
+
+    public static func bookmark(for path: String) -> Data {
+        Data(path.utf8)
     }
 
     public func getMusicDirectoryURL() throws -> URL {
@@ -96,4 +113,37 @@ public struct FileSystemFake: FileSystem {
             localizedName: entry.localizedName
         )
     }
+
+    #if os(macOS)
+    public func makeSecurityScopedBookmark(for url: URL) throws -> Data {
+        if unbookmarkablePaths.contains(url.path) {
+            throw FileSystemFakeError(path: url.path)
+        }
+        log.bookmarked.append(url.path)
+        return Self.bookmark(for: url.path)
+    }
+
+    public func resolveSecurityScopedBookmark(_ bookmark: Data) throws -> ResolvedBookmark {
+        let path = String(decoding: bookmark, as: UTF8.self)
+        if unresolvableBookmarks.contains(path) {
+            throw FileSystemFakeError(path: path)
+        }
+        return ResolvedBookmark(
+            url: URL(filePath: path, directoryHint: .isDirectory),
+            isStale: staleBookmarks.contains(path)
+        )
+    }
+
+    public func startAccessing(_ url: URL) -> Bool {
+        if inaccessiblePaths.contains(url.path) {
+            return false
+        }
+        log.started.append(url.path)
+        return true
+    }
+
+    public func stopAccessing(_ url: URL) {
+        log.stopped.append(url.path)
+    }
+    #endif
 }
