@@ -49,8 +49,16 @@ script in ways that reintroduce them.
 - **Screenshots by window ID.** `screencapture -l <id>` captures only that
   window. Never capture the whole screen.
 - **Persistence state.** `-ApplePersistenceIgnoreState YES` stops NSWindow
-  state restoration from replaying the last window frame, so first-launch
-  size and position are what the code specifies.
+  state restoration from replaying saved state. The main window's size is
+  kept by frame autosave instead (key `NSWindow Frame main`), which the flag
+  does not touch. To check the first-launch size, delete the key first and
+  read it back through cfprefsd, not the plist file, which lags:
+
+  ```bash
+  dom=~/Library/Containers/cc.donm.dmus/Data/Library/Preferences/cc.donm.dmus
+  defaults delete "$dom" "NSWindow Frame main"
+  defaults read "$dom" "NSWindow Frame main"
+  ```
 
 ## Checking the result
 
