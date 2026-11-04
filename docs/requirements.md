@@ -27,9 +27,15 @@ On macOS, dmus shall target macOS 15 Sequoia or later.
 
 On iOS, dmus shall target iOS 18 (including iPadOS 18) or later.
 
-Dmus shall use Swift language and the SwiftUI framework.
+Dmus shall use the Swift language.
 
-On macOS, dmus shall use AppKit rather than Mac Catalyst.
+On macOS, dmus shall use the AppKit framework for its user interface, rather
+than SwiftUI or Mac Catalyst.
+
+On macOS, dmus shall create all windows, views and menus programmatically and
+shall not use nibs or storyboards.
+
+On iOS, dmus shall use the SwiftUI framework for its user interface.
 
 On macOS, dmus shall use the App Sandbox so that it can be distributed through
 the Mac App Store.
@@ -684,6 +690,25 @@ space, the queued track row shall use elision to truncate the text.
 
 
 ## Menus
+
+### Standard menus
+
+On macOS, dmus shall have a menu bar with these menus, in order: the app
+("Dmus") menu, "File", "Edit" and "Window".
+
+On macOS, the app menu shall contain these items, in order: "About Dmus",
+"Settings…" (⌘,), "Services", "Hide Dmus" (⌘H), "Hide Others" (⌥⌘H), "Show
+All" and "Quit Dmus" (⌘Q).
+
+On macOS, the "File" menu shall contain the item "Close" (⌘W).
+
+On macOS, the "Edit" menu shall contain these items, in order: "Undo" (⌘Z),
+"Redo" (⇧⌘Z), "Cut" (⌘X), "Copy" (⌘C), "Paste" (⌘V), "Delete" and "Select
+All" (⌘A).
+
+On macOS, the "Window" menu shall contain these items, in order: "Minimize"
+(⌘M), "Zoom" and "Bring All to Front".
+
 
 ### Settings menu
 
