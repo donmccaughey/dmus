@@ -83,11 +83,11 @@ those are the main new pieces of work.
 | `MainMenu.swift` (new, macOS) | `enum MainMenu { static func make(settingsTarget: AnyObject, settingsAction: Selector) -> NSMenu }` building the four menus with standard first-responder selectors (`orderFrontStandardAboutPanel:`, `hide:`, `hideOtherApplications:` with `[.command, .option]`, `unhideAllApplications:`, `terminate:`, `performClose:`, `undo:`, `redo:`, `cut:`, `copy:`, `paste:`, `delete:`, `selectAll:`, `performMiniaturize:`, `performZoom:`, `arrangeInFront:`). Sets `NSApp.servicesMenu` and `NSApp.windowsMenu`. Edit selectors with a nil target reach the field editor of the selectable path field, so ⌘A/⌘C work there. |
 | `MainWindowController.swift` (new, macOS) | `NSWindow(contentRect: 0,0,900,600, styleMask: [.titled, .closable, .miniaturizable, .resizable], backing: .buffered, defer: false)`, title "Dmus", `tabbingMode = .disallowed`, `isRestorable = false`. Order matters: assign `contentViewController` (whose `loadView` creates a 900×600 view) first, then `center()`, then `super.init(window:)`, then `shouldCascadeWindows = false` and `windowFrameAutosaveName = "main"` on the controller, which restores a saved frame if one exists. (`NSWindowController` resets the window's own autosave name when it takes the window, so `window.setFrameAutosaveName` before `super.init` is silently lost.) The minimum size lives in `MainViewController` as `>= 640` / `>= 480` constraints on its view: once a window has a content view controller it derives its minimum from the content constraints and ignores `contentMinSize`. As `NSWindowDelegate`, `windowWillClose` calls `NSApp.terminate(nil)`. |
 | `MainViewController.swift` (new, macOS) | Overrides `loadView()` without calling super (so AppKit never looks for a nib) and builds a horizontal `NSStackView` (spacing 0, `.fill`) of `FilesPanelViewController.view`, a vertical `NSBox` separator with `widthAnchor == 1`, `QueuePanelViewController.view`, plus `files.widthAnchor == queue.widthAnchor`. Adds the two as child view controllers. |
-| `PanelView.swift` (new, macOS) | Replaces `Panel` on macOS: title bar (`NSVisualEffectView`, material `.titlebar`, `.withinWindow`) holding a centered `NSFont.preferredFont(forTextStyle: .headline)` label with 16pt vertical padding and an optional accessory view pinned trailing with an 8pt inset; a horizontal `NSBox` separator (`heightAnchor == 1`); a content slot filling the rest. API: `init(title:accessory:)`, `func setContent(_ view: NSView)` (replaces the current content view, if different). |
+| `PanelView.swift` (new, macOS) | Replaces `Panel` on macOS: title bar (`NSVisualEffectView`, material `.headerView`, `.withinWindow`; `.titlebar` renders visibly darker than SwiftUI's `.bar`, `.headerView` matches it) holding a centered `NSFont.preferredFont(forTextStyle: .headline)` label with 16pt vertical padding and an optional accessory view pinned trailing with an 8pt inset; a horizontal `NSBox` separator (`heightAnchor == 1`); a content slot filling the rest. API: `init(title:accessory:)`, `func setContent(_ view: NSView)` (replaces the current content view, if different). |
 | `EmptyStateView.swift` (new, macOS) | AppKit stand-in for SwiftUI's `ContentUnavailableView`: large SF Symbol (`NSImage(systemSymbolName:)`, large `SymbolConfiguration`, secondary tint), bold title, secondary-color description, centered. `var descriptionText: String` so the files panel can switch between "did not load" and "is empty". |
 | `Observing.swift` (new, platform-neutral, also in `dmusTests`) | `@MainActor func observeChanges(_ apply: @escaping @MainActor () -> Void)`: runs `apply` inside `withObservationTracking`; in `onChange` schedules `Task { @MainActor in observeChanges(apply) }`. Named `observeChanges` rather than `observe` because `NSObject` has an `observe(_:options:changeHandler:)` member, and inside an `NSView` subclass a member shadows a same-named global function. |
 | `ObservingTests.swift` (new, `dmusTests` only) | An `@Observable` fixture; `observeChanges` copies a property into a counter; mutate; then poll `while runs < 2 { await Task.yield() }` with a bounded iteration count (ordering between the onChange task and the test continuation is not guaranteed); expect the second run saw the new value. Also: a closure that reads nothing is run once only. `@Test` methods are MainActor-isolated under the target's default isolation, so calling `observeChanges` from them is fine. |
-| `Panel.swift`, `MainView.swift` | Wrap in `#if os(iOS)` (step 4); drop the `#if os(macOS)` branches inside (`.bar` material, side-by-side-only path). |
+| `Panel.swift`, `MainView.swift` | Wrap in `#if os(iOS)` and drop the `#if os(macOS)` branches inside (`.bar` material, side-by-side-only path). `MainView.swift` in step 4; `Panel.swift` in step 5, because the SwiftUI `QueuePanel` hosted through step 4 still uses it. |
 | `Scene+ContentArea.swift` | Delete in step 2. `NSWindow(contentRect:)` is already in content-area terms. |
 
 ### Files panel (`dmus/files/`)
@@ -153,14 +153,15 @@ those are the main new pieces of work.
    `FilesTreeView`, `FilesPanelViewController`. `MainViewController` becomes
    the real stack view with the files controller on the left and, for now, a
    hosted SwiftUI `QueuePanel` on the right. Wrap `MainView.swift`,
-   `Panel.swift`, `FilesPanel.swift` and `FindButton.swift` in `#if os(iOS)`;
-   delete `FilesTree.swift`. Verify tree contents in both modes, disclosure
+   `FilesPanel.swift` and `FindButton.swift` in `#if os(iOS)`; delete
+   `FilesTree.swift`. Verify tree contents in both modes, disclosure
    triangles, expand/collapse, drag onto the hosted queue.
 5. **Queue panel.** `LowerLineWidths` + tests, `QueuedTrackCellView`,
    `QueueTableView`, `PlayerPanelView`, `QueuePanelViewController` with
    `DropTargetView`. Wire into `MainViewController`; remove the hosted
-   `QueuePanel`. Wrap `QueuePanel.swift`, `PlayerPanel.swift` and
-   `QueuedTrackRow.swift` in `#if os(iOS)` and remove `.dropDestination`;
+   `QueuePanel`. Wrap `QueuePanel.swift`, `PlayerPanel.swift`,
+   `QueuedTrackRow.swift` and `Panel.swift` in `#if os(iOS)` and remove
+   `.dropDestination`;
    delete `FolderChild+Transferable.swift`. Verify drag and drop of a track
    and of a folder (preorder), clear button, play/stop/back/next with short
    clips, scroll-to-end, row elision at 640 width, scroll position kept when

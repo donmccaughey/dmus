@@ -1,3 +1,4 @@
+#if os(iOS)
 import SwiftUI
 
 struct FindButton: View {
@@ -11,3 +12,4 @@ struct FindButton: View {
 #Preview {
     FindButton()
 }
+#endif

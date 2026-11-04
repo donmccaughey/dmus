@@ -27,6 +27,8 @@
 		D4BDA180309A880A00C3D858 /* Exceptions for "dmus" folder in "dmusTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				"files/FolderChild+Pasteboard.swift",
+				"files/FolderChild+PasteboardTests.swift",
 				MusicLibraryStore.swift,
 				MusicLibraryStoreTests.swift,
 				Observing.swift,
@@ -37,6 +39,7 @@
 		D4FF6D343092CDFA00FE2C42 /* Exceptions for "dmus" folder in "dmus" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				"files/FolderChild+PasteboardTests.swift",
 				Info.plist,
 				MusicLibraryStoreTests.swift,
 				ObservingTests.swift,

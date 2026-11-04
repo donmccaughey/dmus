@@ -1,16 +1,13 @@
+#if os(iOS)
 import Model
 import SwiftUI
 import Wrappers
 
 struct MainView: View {
     var body: some View {
-        #if os(macOS)
-        panels(arrangement: .sideBySide)
-        #else
         GeometryReader { proxy in
             panels(arrangement: proxy.size.width > proxy.size.height ? .sideBySide : .stacked)
         }
-        #endif
     }
 
     private enum Arrangement {
@@ -37,3 +34,4 @@ struct MainView: View {
 #Preview {
     MainView().environment(MusicLibraryStore()).environment(Player(audio: AudioReal()))
 }
+#endif

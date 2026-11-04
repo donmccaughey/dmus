@@ -50,7 +50,7 @@ final class PanelView: NSView {
 
     private static func makeTitleBar(title: String, accessory: NSView?) -> NSView {
         let titleBar = NSVisualEffectView()
-        titleBar.material = .titlebar
+        titleBar.material = .headerView
         titleBar.blendingMode = .withinWindow
 
         let titleLabel = NSTextField(labelWithString: title)

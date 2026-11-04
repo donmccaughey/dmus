@@ -18,15 +18,39 @@ final class MainViewController: NSViewController {
         fatalError("init(coder:) is not supported")
     }
 
-    // Hosts the SwiftUI panels until they are rewritten in AppKit.
     override func loadView() {
-        let hostingView = NSHostingView(rootView: MainView().environment(store).environment(player))
-        // The window controls its own size and minimum size, so the hosted
-        // view must not impose its own.
-        hostingView.sizingOptions = []
-        hostingView.frame = NSRect(x: 0, y: 0, width: 900, height: 600)
-        view = hostingView
+        view = NSView(frame: NSRect(x: 0, y: 0, width: 900, height: 600))
+        let filesPanel = FilesPanelViewController(store: store)
+        addChild(filesPanel)
+        let separator = NSBox()
+        separator.boxType = .separator
+        let queuePanel = makeQueuePanel()
+        for subview in [filesPanel.view, separator, queuePanel] {
+            subview.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview(subview)
+        }
+        NSLayoutConstraint.activate([
+            filesPanel.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            filesPanel.view.topAnchor.constraint(equalTo: view.topAnchor),
+            filesPanel.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            separator.leadingAnchor.constraint(equalTo: filesPanel.view.trailingAnchor),
+            separator.widthAnchor.constraint(equalToConstant: 1),
+            separator.topAnchor.constraint(equalTo: view.topAnchor),
+            separator.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            queuePanel.leadingAnchor.constraint(equalTo: separator.trailingAnchor),
+            queuePanel.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            queuePanel.topAnchor.constraint(equalTo: view.topAnchor),
+            queuePanel.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            queuePanel.widthAnchor.constraint(equalTo: filesPanel.view.widthAnchor),
+        ])
         constrainMinimumSize()
+    }
+
+    // Hosts the SwiftUI queue panel until it is rewritten in AppKit.
+    private func makeQueuePanel() -> NSView {
+        let hostingView = NSHostingView(rootView: QueuePanel().environment(player))
+        hostingView.sizingOptions = []
+        return hostingView
     }
 
     // The window takes its minimum size from its content view's constraints
