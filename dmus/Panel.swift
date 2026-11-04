@@ -1,3 +1,4 @@
+#if os(iOS)
 import SwiftUI
 
 struct Panel<Content: View, Accessory: View>: View {
@@ -43,11 +44,7 @@ extension ShapeStyle where Self == AnyShapeStyle {
     // rows scroll underneath it, so it must be a solid color: a material
     // would let the rows show through.
     static var panelTitleBackground: AnyShapeStyle {
-        #if os(macOS)
-        AnyShapeStyle(.bar)
-        #else
         AnyShapeStyle(Color(.secondarySystemBackground))
-        #endif
     }
 }
 
@@ -66,3 +63,4 @@ extension ShapeStyle where Self == AnyShapeStyle {
             .controlSize(.small)
     }
 }
+#endif

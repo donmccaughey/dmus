@@ -1,3 +1,4 @@
+#if os(iOS)
 import Model
 import SwiftUI
 import Wrappers
@@ -58,3 +59,4 @@ struct PlayerPanel: View {
     player.queue.add(Track(trackName: "Song", albumName: "Album", artistName: "Artist", path: "/Music/Artist/Album/Song.mp3"))
     return PlayerPanel().environment(player)
 }
+#endif

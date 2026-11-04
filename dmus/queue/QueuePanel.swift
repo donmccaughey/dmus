@@ -1,3 +1,4 @@
+#if os(iOS)
 import Model
 import SwiftUI
 import Wrappers
@@ -11,10 +12,6 @@ struct QueuePanel: View {
         Panel(title: "Queue") {
             content
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .dropDestination(for: FolderChild.self) { children, _ in
-                    queue.add(children)
-                    return true
-                }
         } accessory: {
             clearButton
         }
@@ -80,3 +77,4 @@ struct QueuePanel: View {
     ]))
     return QueuePanel().environment(player)
 }
+#endif

@@ -1,3 +1,4 @@
+#if os(iOS)
 import Model
 import SwiftUI
 
@@ -96,3 +97,4 @@ private struct SharedWidthLayout: Layout {
         ))
     }
 }
+#endif

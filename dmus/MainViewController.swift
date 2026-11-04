@@ -1,7 +1,6 @@
 #if os(macOS)
 import AppKit
 import Model
-import SwiftUI
 
 final class MainViewController: NSViewController {
     private let store: MusicLibraryStore
@@ -24,8 +23,9 @@ final class MainViewController: NSViewController {
         addChild(filesPanel)
         let separator = NSBox()
         separator.boxType = .separator
-        let queuePanel = makeQueuePanel()
-        for subview in [filesPanel.view, separator, queuePanel] {
+        let queuePanel = QueuePanelViewController(player: player)
+        addChild(queuePanel)
+        for subview in [filesPanel.view, separator, queuePanel.view] {
             subview.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(subview)
         }
@@ -37,20 +37,13 @@ final class MainViewController: NSViewController {
             separator.widthAnchor.constraint(equalToConstant: 1),
             separator.topAnchor.constraint(equalTo: view.topAnchor),
             separator.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            queuePanel.leadingAnchor.constraint(equalTo: separator.trailingAnchor),
-            queuePanel.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            queuePanel.topAnchor.constraint(equalTo: view.topAnchor),
-            queuePanel.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            queuePanel.widthAnchor.constraint(equalTo: filesPanel.view.widthAnchor),
+            queuePanel.view.leadingAnchor.constraint(equalTo: separator.trailingAnchor),
+            queuePanel.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            queuePanel.view.topAnchor.constraint(equalTo: view.topAnchor),
+            queuePanel.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            queuePanel.view.widthAnchor.constraint(equalTo: filesPanel.view.widthAnchor),
         ])
         constrainMinimumSize()
-    }
-
-    // Hosts the SwiftUI queue panel until it is rewritten in AppKit.
-    private func makeQueuePanel() -> NSView {
-        let hostingView = NSHostingView(rootView: QueuePanel().environment(player))
-        hostingView.sizingOptions = []
-        return hostingView
     }
 
     // The window takes its minimum size from its content view's constraints

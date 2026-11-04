@@ -22,6 +22,7 @@ final class PanelView: NSView {
             separator.topAnchor.constraint(equalTo: titleBar.bottomAnchor),
             separator.leadingAnchor.constraint(equalTo: leadingAnchor),
             separator.trailingAnchor.constraint(equalTo: trailingAnchor),
+            separator.heightAnchor.constraint(equalToConstant: 1),
             contentContainer.topAnchor.constraint(equalTo: separator.bottomAnchor),
             contentContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
             contentContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
@@ -38,14 +39,7 @@ final class PanelView: NSView {
         guard view !== contentView else { return }
         contentView?.removeFromSuperview()
         contentView = view
-        view.translatesAutoresizingMaskIntoConstraints = false
-        contentContainer.addSubview(view)
-        NSLayoutConstraint.activate([
-            view.topAnchor.constraint(equalTo: contentContainer.topAnchor),
-            view.leadingAnchor.constraint(equalTo: contentContainer.leadingAnchor),
-            view.trailingAnchor.constraint(equalTo: contentContainer.trailingAnchor),
-            view.bottomAnchor.constraint(equalTo: contentContainer.bottomAnchor),
-        ])
+        contentContainer.addFillingSubview(view)
     }
 
     private static func makeTitleBar(title: String, accessory: NSView?) -> NSView {
