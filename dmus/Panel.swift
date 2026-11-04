@@ -1,9 +1,10 @@
 import SwiftUI
 
-struct Panel<Content: View>: View {
+struct Panel<Content: View, Accessory: View>: View {
     let title: LocalizedStringKey
     var showsTitle = true
     @ViewBuilder let content: () -> Content
+    @ViewBuilder let accessory: () -> Accessory
 
     var body: some View {
         VStack(spacing: 0) {
@@ -11,12 +12,28 @@ struct Panel<Content: View>: View {
                 Text(title)
                     .font(.headline)
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 8)
+                    .padding(.vertical, 16)
+                    .overlay(alignment: .trailing) {
+                        accessory()
+                            .padding(.trailing, 8)
+                    }
                     .background(.panelTitleBackground)
                 Divider()
             }
             content()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+    }
+}
+
+extension Panel where Accessory == EmptyView {
+    init(
+        title: LocalizedStringKey,
+        showsTitle: Bool = true,
+        @ViewBuilder content: @escaping () -> Content
+    ) {
+        self.init(title: title, showsTitle: showsTitle, content: content) {
+            EmptyView()
         }
     }
 }
@@ -37,5 +54,15 @@ extension ShapeStyle where Self == AnyShapeStyle {
 #Preview {
     Panel(title: "Panel") {
         Text("Content")
+    }
+}
+
+#Preview("Accessory") {
+    Panel(title: "Panel") {
+        Text("Content")
+    } accessory: {
+        Button("Action") {}
+            .buttonStyle(.bordered)
+            .controlSize(.small)
     }
 }

@@ -5,32 +5,17 @@ import Wrappers
 struct PlayerPanel: View {
     @Environment(Player.self) private var player
 
-    // An iPhone in portrait is too narrow for regular-size controls: the
-    // centered group would overlap the clear button at the trailing edge.
-    #if os(macOS)
-    private static let controlSize = ControlSize.regular
     private static let buttonWidth: CGFloat = 44
-    #else
-    private static let controlSize = ControlSize.small
-    private static let buttonWidth: CGFloat = 36
-    #endif
     private static let playStopButtonWidth = buttonWidth * 1.2
 
     var body: some View {
-        ZStack {
-            HStack {
-                controlButton("Back", systemImage: "backward.fill", action: player.back)
-                playStopButton
-                controlButton("Next", systemImage: "forward.fill", action: player.next)
-            }
-            Button(action: player.clear) {
-                Text("Clear")
-                    .frame(width: Self.buttonWidth)
-            }
-            .frame(maxWidth: .infinity, alignment: .trailing)
+        HStack {
+            controlButton("Back", systemImage: "backward.fill", action: player.back)
+            playStopButton
+            controlButton("Next", systemImage: "forward.fill", action: player.next)
         }
+        .frame(maxWidth: .infinity)
         .buttonStyle(.bordered)
-        .controlSize(Self.controlSize)
         .disabled(player.queue.isEmpty)
         .padding()
         .fixedSize(horizontal: false, vertical: true)

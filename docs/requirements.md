@@ -384,9 +384,9 @@ other views.
 When the app launches, dmus shall create a player with an empty queue and share
 the player with other views.
 
-When the app launches and the `--demo` command line option is **not** given,
-dmus shall call the load music library function in the background, passing it
-the path of the music root directory.
+When the app launches and the `--demo` command line option is not given, dmus
+shall call the load music library function in the background, passing it the
+path of the music root directory.
 
 When the app launches and the `--demo` command line option is given, dmus shall
 call the load demo music library function in the background.
@@ -440,7 +440,8 @@ On iOS, while the screen is in landscape orientation, dmus shall show two
 equally-sized panels in the main view: the files panel shall be on the left side
 and the queue panel on the right side.
 
-A **panel title** is the title text shown at the top of a panel.
+A **panel title area** is the area at the top of a panel that holds the title
+text and optionally other controls.
 
 On iOS, dmus shall draw panel titles on an opaque secondary system background.
 
@@ -452,7 +453,7 @@ On macOS, the files panel shall show the title "Files" at the top of the panel.
 On iOS, while its music library is empty, the files panel shall show the title
 "Files" at the top of the panel.
 
-On iOS, while its music library is **not** empty, the files panel shall hide the
+On iOS, while its music library is not empty, the files panel shall hide the
 title "Files" at the top of the panel.
 
 The files panel shall get its music library and load did fail state from the
@@ -462,7 +463,7 @@ While its music library is empty, the files panel shall show a content
 unavailable view with title "No music", description "The music library is
 empty." and a folder system icon.
 
-While its music library is **not** empty, the files panel shall hide the content
+While its music library is not empty, the files panel shall hide the content
 unavailable view.
 
 While its music library is empty and load did fail is true, the files panel
@@ -484,7 +485,7 @@ the track name.
 On macOS, while its music library is empty, the files panel shall hide the files
 tree.
 
-On macOS, while its music library is **not** empty, the files panel shall show a
+On macOS, while its music library is not empty, the files panel shall show a
 files tree backed by its music library.
 
 On macOS, when the user drags a folder item, the files tree shall start a drag
@@ -524,13 +525,13 @@ track to the queue.
 On iOS, while its music library is empty, the files panel shall hide the files
 table stack.
 
-On iOS, while its music library is **not** empty, the files panel shall show a
-files table stack backed by its music library.
+On iOS, while its music library is not empty, the files panel shall show a files
+table stack backed by its music library.
 
 On iOS, while the visible folder table is empty, the folder table shall disable
 the search button in the navigation bar.
 
-On iOS, while the visible folder table is **not** empty, the folder table shall
+On iOS, while the visible folder table is not empty, the folder table shall
 enable the search button in the navigation bar.
 
 On iOS, the folder table shall draw the navigation bar with the same opaque
@@ -542,7 +543,12 @@ folder table onto the navigation stack backed by the folder of the tapped row.
 
 ## Queue panel
 
-The queue panel shall show the title "Queue" at the top of the panel.
+The **clear button** is a button with the label "Clear".
+
+The queue panel shall show the title "Queue" and the clear button at the top of
+the panel. The title shall be centered; the title and clear button shall be
+vertically aligned; the clear button shall be horizontally positioned on the
+right side of the panel.
 
 The queue panel shall get its tracks from the player's queue.
 
@@ -550,8 +556,12 @@ While the queue is empty, the queue panel shall show a content unavailable view
 with title "No tracks", description "The queue is empty." and a bullet list
 system icon.
 
-While the queue is **not** empty, the queue panel shall hide the content
-unavailable view and show the player panel and the queue table.
+When the queue is empty, the queue panel shall disable the clear button.
+
+While the queue is not empty, the queue panel shall hide the content unavailable
+view and show the player panel and the queue table.
+
+When the queue is not empty, the queue panel shall enable the clear button.
 
 On macOS, when a track item from the files tree is dropped on the queue panel,
 the queue panel shall give the queue the add track command with the track of the
@@ -561,11 +571,14 @@ On macOS, when a folder item from the files tree is dropped on the queue panel,
 the queue panel shall give the queue the add folder command with the folder of
 the item.
 
+When the user clicks or taps it, the clear button shall send the clear command
+to the player.
+
 
 ### Player panel
 
-The **player panel** is a view containing playback controls: back, play/stop,
-next and clear buttons.
+The **player panel** is a view containing playback controls: back, play/stop and
+next buttons.
 
 The **play/stop button** is a button that shows a play triangle (SF Symbol
 `play.fill`) while the player is stopped and shows a stop square (SF Symbol
@@ -577,31 +590,27 @@ Symbol `backward.fill`).
 The **next button** is a button that shows the forward double triangle (SF
 Symbol `forward.fill`).
 
-The **clear button** is a button with the label "clear".
-
-The player panel shall show the play/stop button in the center of the panel, with
-the back button aligned to the left side of the play/stop button, the next
-button aligned to the right side of the play/stop button and the clear button
-aligned to the right side of the panel. The ASCII schematic below shows the
-arrangement of buttons in the view.
+The player panel shall show the play/stop button in the center of the panel,
+with the back button aligned to the left side of the play/stop button and the
+next button aligned to the right side of the play/stop button. The ASCII
+schematic below shows the arrangement of buttons in the view.
 
     +--------------------------------------------------+
-    |             [ << ]  [  >  ]  [ >> ]      [clear] |
+    |             [ << ]  [  >  ]  [ >> ]              |
     +--------------------------------------------------+
 
-The back button, next button and clear buttons shall have the same width.
+The back button and next button shall have the same width.
 
-The play/stop button shall be 20% wider than the back button, next button and
-clear button.
+The play/stop button shall be 20% wider than the back button and next button.
 
 The player panel shall have a fixed height tall enough to show its contents with
 standard padding and a width that fills the width of the queue panel.
 
 When the queue is empty, the player panel shall disable the back button,
-play/stop button, next button and clear button.
+play/stop button and next button.
 
 When the queue is not empty, the player panel shall enable the back button,
-play/stop button, next button and clear button.
+play/stop button and next button.
 
 While the player is in playback, when the user clicks or taps it, the play/stop
 button shall send the stop command to the player.
@@ -614,9 +623,6 @@ the player.
 
 When the user clicks or taps it, the next button shall send the next command to
 the player.
-
-When the user clicks or taps it, the clear button shall send the clear command
-to the player.
 
 
 ### Queue table
@@ -690,11 +696,11 @@ The music files setting shall consist of the **music files text box**, the label
 music root directory, and the **choose music files button**, a button with label
 "Choose…".
 
-The music files text box shall **not** accept keyboard focus; the tab order of
-the settings dialog shall skip it.
+The music files text box shall not accept keyboard focus; the tab order of the
+settings dialog shall skip it.
 
 The music files text box shall allow the user to select and copy its text but
-shall **not** allow the user to edit it.
+shall not allow the user to edit it.
 
 When a user clicks the choose music files button, the settings dialog shall open
 the system file chooser, initialized to the current path in the music files text

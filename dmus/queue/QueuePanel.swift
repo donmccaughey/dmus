@@ -15,7 +15,16 @@ struct QueuePanel: View {
                     queue.add(children)
                     return true
                 }
+        } accessory: {
+            clearButton
         }
+    }
+
+    private var clearButton: some View {
+        Button("Clear", action: player.clear)
+            .buttonStyle(.bordered)
+            .controlSize(.regular)
+            .disabled(queue.isEmpty)
     }
 
     @ViewBuilder
