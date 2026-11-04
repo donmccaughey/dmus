@@ -29,6 +29,8 @@
 			membershipExceptions = (
 				MusicLibraryStore.swift,
 				MusicLibraryStoreTests.swift,
+				Observing.swift,
+				ObservingTests.swift,
 			);
 			target = D3A5000000000000000000F2 /* dmusTests */;
 		};
@@ -37,6 +39,7 @@
 			membershipExceptions = (
 				Info.plist,
 				MusicLibraryStoreTests.swift,
+				ObservingTests.swift,
 			);
 			target = D3A5000000000000000000C0 /* dmus */;
 		};
