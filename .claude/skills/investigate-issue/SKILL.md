@@ -45,7 +45,7 @@ one you used and why.
   Launch the app only if the on-disk evidence and the code do not account for the
   report together.
 - **Project configuration or requirements**: read `dmus.xcodeproj/project.pbxproj`,
-  `dmus/dmus.entitlements`, and `docs/requirements.md`. Use `-showBuildSettings`
+  `dmus/dmus-iOS.entitlements`, `dmus/dmus-macOS.entitlements`, and `docs/requirements.md`. Use `-showBuildSettings`
   when a setting's effective value matters.
 
 A build failure is itself a finding. Report it rather than working around it.
