@@ -1,7 +1,7 @@
 import Observation
 
-// AppKit does not track Observable reads itself before macOS 26, so AppKit
-// views re-run their updates through this.
+// AppKit before macOS 26 and UIKit before iOS 26 do not track Observable
+// reads themselves, so their views re-run their updates through this.
 @MainActor
 func observeChanges(_ apply: @escaping @MainActor () -> Void) {
     withObservationTracking(apply) {

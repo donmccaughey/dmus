@@ -49,8 +49,11 @@ iPad Pro 11-inch is `2EFD3632-0EFD-4BEE-B638-7AA561250E90`.
   the app's error- and fault-level lines, plus anything mentioning
   "constraint", from `simctl spawn <udid> log show` into the log it prints.
   Two lines are always there and are simulator noise (a libxpc "assertion
-  failed" and a CFBundle "No factory registered"); an Auto Layout conflict
-  would appear as "Unable to simultaneously satisfy constraints".
+  failed" and a CFBundle "No factory registered"), as are two
+  app_launch_measurement "Failed to send CA Event" lines on some launches
+  and an AXRuntimeCommon "Unknown client: Dmus" once System Events has
+  clicked in the app; an Auto Layout conflict would appear as "Unable to
+  simultaneously satisfy constraints".
   `launch` prints the host PID, which `kill -0` can watch.
 - **Orientation is read from the screen.** `simctl` cannot report or set
   orientation, and `simctl io screenshot` always writes the framebuffer in
@@ -128,10 +131,24 @@ changes shape on rotation, so re-query it (`get {position, size} of window
   starts at device y 548, so a drag meant to scroll it has to start below
   that.
 - Dark mode: `xcrun simctl ui <udid> appearance dark` (and `light` after).
+  Switch after the script returns, with `--keep`, and take the screenshot
+  with `simctl io` (rotating a landscape one with `sips -r 270`): the dimmed
+  home indicator is too faint in dark mode for the script to read the
+  orientation, so a launch in dark mode fails with "could not rotate".
 - The iPad app switcher (to read the scene title or open a second window)
   is `key code 4 using {control down, shift down, command down}` on the
   raised iPad window; clicking Simulator's Device > App Switcher menu item
   through System Events toggles it too.
+- The iPad Pro 11-inch window is scaled: the device screen starts at
+  (43, 95) points inside the window and one device point is 0.76 screen
+  points, in both orientations. Wait a second after `AXRaise` before a
+  `click at`, or the click only raises the window.
+- The iPad multitasking control ("•••" at the top centre of an app) and
+  everything it opens ignore `click at`; use the held CGEvent press. It
+  shows Full Screen, Split View and Slide Over, and a shelf along the bottom
+  with one thumbnail per Dmus window plus "New Window". The shelf also
+  lists windows saved from earlier runs, which only connect when chosen.
+  After Split View, pick the second app from the Home screen or the Dock.
 - A simulator that last ran the SwiftUI build keeps the scene session
   SwiftUI persisted, so UIKit restores `SwiftUI.AppSceneDelegate` as the
   scene delegate without asking the app delegate: the screen is black, the

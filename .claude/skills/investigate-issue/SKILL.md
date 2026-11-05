@@ -3,7 +3,7 @@ name: investigate-issue
 description: Read a Dmus GitHub issue by number, verify or reproduce it, and post the steps and result as a comment on the issue. Use when asked to investigate, verify, confirm, or reproduce an issue.
 argument-hint: [issue-number]
 disable-model-invocation: true
-allowed-tools: Bash(gh issue view:*), Bash(gh issue comment:*), Bash(gh api:*), Bash(xcodebuild:*), Bash(xcrun simctl:*), Bash(open:*), Bash(osascript:*), Bash(screencapture:*), Bash(git log:*), Bash(git rev-parse:*), Bash(git status:*), Bash(ls:*), Bash(mdls:*), Bash(GetFileInfo:*), Bash(sw_vers:*)
+allowed-tools: Bash(gh issue view:*), Bash(gh issue comment:*), Bash(gh api:*), Bash(xcodebuild:*), Bash(xcrun simctl:*), Bash(open:*), Bash(osascript:*), Bash(screencapture:*), Bash(git log:*), Bash(git rev-parse:*), Bash(git status:*), Bash(ls:*), Bash(mdls:*), Bash(GetFileInfo:*), Bash(sw_vers:*), Bash(.claude/skills/launch-ios-app/scripts/launch-ios-app.sh:*)
 ---
 
 Investigate GitHub issue #$ARGUMENTS in `donmccaughey/dmus` and post a comment on
@@ -86,20 +86,19 @@ Quit when done:
 osascript -e 'quit app "dmus"'
 ```
 
-iOS Simulator:
+iOS Simulator, with the `launch-ios-app` skill's script, which builds,
+installs, launches, screenshots and terminates the app on the iOS 18.4
+iPhone 16e:
 
 ```bash
-xcrun simctl boot "iPhone 15" 2>/dev/null; open -a Simulator
-xcodebuild -scheme dmus -configuration Debug -destination 'platform=iOS Simulator,name=iPhone 15' build 2>&1 | tail -20
-APP="$(xcodebuild -scheme dmus -configuration Debug -destination 'platform=iOS Simulator,name=iPhone 15' -showBuildSettings 2>/dev/null | awk '/ BUILT_PRODUCTS_DIR =/{print $3}')/Dmus.app"
-xcrun simctl install booted "$APP"
-xcrun simctl launch booted cc.donm.dmus
-xcrun simctl io booted screenshot "$SCRATCHPAD/issue-$ARGUMENTS-ios.png"
+.claude/skills/launch-ios-app/scripts/launch-ios-app.sh --build --screenshot "$SCRATCHPAD/issue-$ARGUMENTS-ios.png"
 ```
 
-Pick another available device from `xcrun simctl list devices available` if the
-issue names a different form factor. Shut the simulator down afterward with
-`xcrun simctl shutdown booted`.
+Add `--demo` for the bundled demo library and `--landscape` for the
+side-by-side arrangement. Pass `--udid` with a device from
+`xcrun simctl list devices available` if the issue names a different form
+factor or OS. To tap or scroll in the running app, add `--keep` and follow
+"Driving the launched app" in `.claude/skills/launch-ios-app/SKILL.md`.
 
 ## 5. Write and post the comment
 

@@ -277,19 +277,29 @@ Dynamic Type) becomes explicit code.
    the iOS 18.4 iPad Pro 11-inch simulator (`--udid`), including a Split
    View width where the window is taller than wide, and open a second window
    from the app switcher to confirm both scenes share one queue. Move the
-   plan to `docs/plans/completed/`.
+   plan to `docs/plans/completed/`. Done 2026-11-04: nothing in `dmus/`
+   imports SwiftUI or hosts it. The UIKit build was compared with the
+   SwiftUI one (the step 3 commit, built in a scratch worktree) in both
+   modes, both orientations, light and dark; what differs is listed below.
+   On the iPad Pro 11-inch it is stacked in portrait and in a landscape
+   Split View half, side by side in full-screen landscape, and two windows
+   share one queue. That run found the queue table scrolling short of the
+   end in a second window opened on a filled queue, because the table had
+   no window or size yet; it now leaves such a table at the top, as SwiftUI
+   did.
 
 ## Differences from the SwiftUI build
 
-Observed on the iOS 18.4 iPhone 16e in steps 4 to 6, for step 7 to accept or
-adjust:
+The finished UIKit build differs from the SwiftUI build in these ways on the
+iOS 18.4 iPhone 16e. None was adjusted:
 
 - Empty states: `UIContentUnavailableView` centres its icon, title and
   description in the safe area; SwiftUI drew the same block 10pt higher.
 - Folder rows are 44⅓pt apart, not 44pt: `UITableView` adds the separator
   to a self-sized row.
 - Bordered buttons (Find, Clear) have the same frame and fill but slightly
-  different corners and text antialiasing.
+  different corners and text antialiasing, and a disabled one's fill is a
+  little fainter.
 - Hairlines run edge to edge; SwiftUI's `Divider` stopped at the safe area,
   which showed in landscape.
 - Player panel: a bordered image button is 34⅓pt high in UIKit and 29⅓pt in
