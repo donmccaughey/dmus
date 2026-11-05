@@ -35,7 +35,11 @@ than SwiftUI or Mac Catalyst.
 On macOS, dmus shall create all windows, views and menus programmatically and
 shall not use nibs or storyboards.
 
-On iOS, dmus shall use the SwiftUI framework for its user interface.
+On iOS, dmus shall use the UIKit framework for its user interface, rather
+than SwiftUI.
+
+On iOS, dmus shall create all scenes, windows, views and view controllers
+programmatically and shall not use nibs or storyboards.
 
 On macOS, dmus shall use the App Sandbox so that it can be distributed through
 the Mac App Store.
@@ -531,7 +535,8 @@ folder and contains a "[+]" button (SF Symbol `plus.square`) and a ">" button
 When the user taps the "[+]" button on a folder row, dmus shall add that folder
 to the queue.
 
-When the user taps the ">" button  on a folder row, dmus shall push .
+When the user taps the ">" button on a folder row, dmus shall push a new
+folder table backed by that folder onto the files table stack.
 
 A **track row** is a folder table row that shows the track name of the
 corresponding track and contains a "(+)" (SF Symbol `plus.circle`) button on the
