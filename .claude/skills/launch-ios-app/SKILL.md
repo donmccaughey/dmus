@@ -135,6 +135,9 @@ changes shape on rotation, so re-query it (`get {position, size} of window
   and rerun.
 - Every view frame in the running app:
   `lldb -p $(pgrep -f Dmus.app/Dmus) --batch -o 'expr -l objc -O -- [[[UIApplication sharedApplication] keyWindow] recursiveDescription]' -o detach -o quit`.
-- While the iOS UI is still SwiftUI: a `Button` inside a `NavigationLink`
-  label never fires; the link takes the tap. The current rows hide the link
-  behind the row instead, so the add and chevron buttons do respond to taps.
+- `click at` fires buttons (the row "+" and chevron, Back, Find, Clear, the
+  player controls) but is too brief to select a table row, in the UIKit
+  folder tables and the SwiftUI lists alike. To tap a row, post a CGEvent
+  left mouse down at the point, hold about 0.1 s, then mouse up.
+- Track rows have only a "(+)", where the folder rows' chevron is: window
+  (9, 109) puts the first one at `click at {404, 306}` in portrait.

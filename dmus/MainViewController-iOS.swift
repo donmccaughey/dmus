@@ -4,12 +4,18 @@ import SwiftUI
 import UIKit
 
 final class MainViewController: UIViewController {
-    private let store: MusicLibraryStore
-    private let player: Player
+    private let filesPanel: FilesPanelViewController
+    private let queuePanel: UIViewController
+    private let stack = UIStackView()
+    private let separator = HairlineView()
+    private var arrangement: PanelArrangement?
+    private lazy var equalWidths = filesPanel.view.widthAnchor.constraint(equalTo: queuePanel.view.widthAnchor)
+    private lazy var equalHeights = filesPanel.view.heightAnchor.constraint(equalTo: queuePanel.view.heightAnchor)
 
     init(store: MusicLibraryStore, player: Player) {
-        self.store = store
-        self.player = player
+        filesPanel = FilesPanelViewController(store: store, player: player)
+        // Hosts the SwiftUI queue panel until the UIKit one replaces it.
+        queuePanel = UIHostingController(rootView: QueuePanel().environment(player))
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -18,21 +24,48 @@ final class MainViewController: UIViewController {
         fatalError("init(coder:) is not supported")
     }
 
-    // Hosts the SwiftUI main view until the UIKit panels replace it.
     override func loadView() {
         view = UIView()
         view.backgroundColor = .systemBackground
-        let hosted = UIHostingController(rootView: MainView().environment(store).environment(player))
-        addChild(hosted)
-        hosted.view.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(hosted.view)
-        NSLayoutConstraint.activate([
-            hosted.view.topAnchor.constraint(equalTo: view.topAnchor),
-            hosted.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            hosted.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            hosted.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-        ])
-        hosted.didMove(toParent: self)
+        addChild(filesPanel)
+        addChild(queuePanel)
+        for subview in [filesPanel.view!, separator, queuePanel.view!] {
+            stack.addArrangedSubview(subview)
+        }
+        view.addFillingSubview(stack)
+        filesPanel.didMove(toParent: self)
+        queuePanel.didMove(toParent: self)
+    }
+
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        arrange(PanelArrangement(fitting: view.bounds.size))
+        equalizeUsableAreas()
+    }
+
+    private func arrange(_ newArrangement: PanelArrangement) {
+        guard newArrangement != arrangement else { return }
+        arrangement = newArrangement
+        NSLayoutConstraint.deactivate([equalWidths, equalHeights])
+        switch newArrangement {
+        case .sideBySide:
+            stack.axis = .horizontal
+            separator.axis = .vertical
+            equalWidths.isActive = true
+        case .stacked:
+            stack.axis = .vertical
+            separator.axis = .horizontal
+            equalHeights.isActive = true
+        }
+    }
+
+    // The panels run under the safe area insets, so the files panel gets
+    // the difference between the insets on its side and the queue panel's
+    // to leave both the same room inside the safe area.
+    private func equalizeUsableAreas() {
+        let insets = view.safeAreaInsets
+        equalWidths.constant = insets.left - insets.right
+        equalHeights.constant = insets.top - insets.bottom
     }
 }
 

@@ -246,7 +246,11 @@ Dynamic Type) becomes explicit code.
    "(+)" adds one track; an empty folder shows an empty table; in landscape
    text stays out of the notch while the bar background reaches the edge;
    dark mode via `simctl ui $udid appearance dark`. Compare with the
-   baselines. Measure the player button width from the baseline for step 6.
+   baselines. Measure the player button width from the baseline for step 6:
+   on the iOS 18.4 iPhone 16e the SwiftUI back and next buttons are 66pt
+   wide, play is 75⅓pt (the 20% applies to the 44pt label, not the whole
+   button), all are 30pt high with 9⅔pt between them, and the player panel
+   is 62⅓pt from hairline to hairline.
 6. **Queue panel.** `QueuedTrackCellView`, `QueueTableView`,
    `PlayerPanelView`, `QueuePanelViewController`; wire into
    `MainViewController` and remove the hosting and the last
