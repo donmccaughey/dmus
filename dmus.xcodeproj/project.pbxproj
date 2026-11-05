@@ -33,6 +33,8 @@
 				MusicLibraryStoreTests.swift,
 				Observing.swift,
 				ObservingTests.swift,
+				PanelArrangement.swift,
+				PanelArrangementTests.swift,
 				queue/LowerLineWidths.swift,
 				queue/LowerLineWidthsTests.swift,
 			);
@@ -45,6 +47,7 @@
 				Info.plist,
 				MusicLibraryStoreTests.swift,
 				ObservingTests.swift,
+				PanelArrangementTests.swift,
 				queue/LowerLineWidthsTests.swift,
 			);
 			target = D3A5000000000000000000C0 /* dmus */;
