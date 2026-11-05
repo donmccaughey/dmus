@@ -119,7 +119,14 @@ changes shape on rotation, so re-query it (`get {position, size} of window
   landscape; the chevron on that row is `{410, 306}` in portrait.
 - Scroll a list with a CGEvent left-mouse drag (mouse down, ~30 dragged
   steps, mouse up); scroll-wheel events posted over the simulator are
-  ignored.
+  ignored. Keep posting dragged events at the end point for half a second
+  before the mouse up so the list does not coast, and expect it to move
+  about 1.7 times the drag distance.
+- In portrait with a filled queue the player buttons are at device
+  (112, 514), (195, 514) and (278, 514) and "Clear" is at (350, 455); with
+  the window at (9, 109) play is `click at {235, 707}`. The queue table
+  starts at device y 548, so a drag meant to scroll it has to start below
+  that.
 - Dark mode: `xcrun simctl ui <udid> appearance dark` (and `light` after).
 - The iPad app switcher (to read the scene title or open a second window)
   is `key code 4 using {control down, shift down, command down}` on the
@@ -137,7 +144,7 @@ changes shape on rotation, so re-query it (`get {position, size} of window
   `lldb -p $(pgrep -f Dmus.app/Dmus) --batch -o 'expr -l objc -O -- [[[UIApplication sharedApplication] keyWindow] recursiveDescription]' -o detach -o quit`.
 - `click at` fires buttons (the row "+" and chevron, Back, Find, Clear, the
   player controls) but is too brief to select a table row, in the UIKit
-  folder tables and the SwiftUI lists alike. To tap a row, post a CGEvent
-  left mouse down at the point, hold about 0.1 s, then mouse up.
+  folder tables. To tap a row, post a CGEvent left mouse down at the point,
+  hold about 0.1 s, then mouse up.
 - Track rows have only a "(+)", where the folder rows' chevron is: window
   (9, 109) puts the first one at `click at {404, 306}` in portrait.

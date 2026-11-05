@@ -247,10 +247,11 @@ Dynamic Type) becomes explicit code.
    text stays out of the notch while the bar background reaches the edge;
    dark mode via `simctl ui $udid appearance dark`. Compare with the
    baselines. Measure the player button width from the baseline for step 6:
-   on the iOS 18.4 iPhone 16e the SwiftUI back and next buttons are 66pt
-   wide, play is 75⅓pt (the 20% applies to the 44pt label, not the whole
-   button), all are 30pt high with 9⅔pt between them, and the player panel
-   is 62⅓pt from hairline to hairline.
+   on the iOS 18.4 iPhone 16e the SwiftUI back and next buttons are 68pt
+   wide, play is 76⅔pt (the 20% applies to the 44pt label, not the whole
+   button), all are 29⅓pt high with 8pt between them, and the player panel
+   is 62⅓pt from hairline to hairline. (Measure across the middle of a
+   button; its rounded corners make it look narrower near the top.)
 6. **Queue panel.** `QueuedTrackCellView`, `QueueTableView`,
    `PlayerPanelView`, `QueuePanelViewController`; wire into
    `MainViewController` and remove the hosting and the last
@@ -277,6 +278,34 @@ Dynamic Type) becomes explicit code.
    View width where the window is taller than wide, and open a second window
    from the app switcher to confirm both scenes share one queue. Move the
    plan to `docs/plans/completed/`.
+
+## Differences from the SwiftUI build
+
+Observed on the iOS 18.4 iPhone 16e in steps 4 to 6, for step 7 to accept or
+adjust:
+
+- Empty states: `UIContentUnavailableView` centres its icon, title and
+  description in the safe area; SwiftUI drew the same block 10pt higher.
+- Folder rows are 44⅓pt apart, not 44pt: `UITableView` adds the separator
+  to a self-sized row.
+- Bordered buttons (Find, Clear) have the same frame and fill but slightly
+  different corners and text antialiasing.
+- Hairlines run edge to edge; SwiftUI's `Divider` stopped at the safe area,
+  which showed in landscape.
+- Player panel: a bordered image button is 34⅓pt high in UIKit and 29⅓pt in
+  SwiftUI, so the panel is 5pt taller; play is 81⅔pt wide, 20% more than
+  the whole 68pt back and next buttons, where SwiftUI's was 76⅔pt.
+- The player panel caps Dynamic Type at `accessibilityLarge` so its symbols
+  stay inside the fixed-width buttons.
+- The queue table scrolls to the end on the first add as well; the SwiftUI
+  list only did from the second add on.
+- At the largest accessibility sizes the centred "Queue" title runs under
+  the "Clear" button. This was not compared with the SwiftUI build.
+- iOS 26 only: the folder table's Find button is a bordered pill inside the
+  navigation bar's glass capsule; SwiftUI drew one glass capsule. Bordered
+  buttons (Find, Clear, the player controls) draw their text and symbols in
+  the label colour rather than the tint, which was not compared with the
+  SwiftUI build.
 
 ## Verification
 

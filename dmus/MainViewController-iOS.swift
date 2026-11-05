@@ -1,11 +1,11 @@
 #if os(iOS)
+import DeveloperToolsSupport
 import Model
-import SwiftUI
 import UIKit
 
 final class MainViewController: UIViewController {
     private let filesPanel: FilesPanelViewController
-    private let queuePanel: UIViewController
+    private let queuePanel: QueuePanelViewController
     private let stack = UIStackView()
     private let separator = HairlineView()
     private var arrangement: PanelArrangement?
@@ -14,8 +14,7 @@ final class MainViewController: UIViewController {
 
     init(store: MusicLibraryStore, player: Player) {
         filesPanel = FilesPanelViewController(store: store, player: player)
-        // Hosts the SwiftUI queue panel until the UIKit one replaces it.
-        queuePanel = UIHostingController(rootView: QueuePanel().environment(player))
+        queuePanel = QueuePanelViewController(player: player)
         super.init(nibName: nil, bundle: nil)
     }
 
