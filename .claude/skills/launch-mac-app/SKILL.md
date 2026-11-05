@@ -62,7 +62,8 @@ script in ways that reintroduce them.
 
 ## Checking the result
 
-- Normal mode: the Files panel lists folders from `~/Music`.
+- Normal mode: the Files panel lists folders from the music root chosen in
+  Settings (`~/Music` on a fresh install).
 - Demo mode: the Files panel lists artist folders from the bundled
   `demo-data.json` (starting with "3 Doors Down").
 - Either mode with an empty Files panel after a few seconds means the load
@@ -70,3 +71,22 @@ script in ways that reintroduce them.
 
 If the user already has Dmus open, leave it alone. The script only ever
 signals the PID it launched.
+
+## Driving the launched app
+
+The UI is programmatic AppKit, so System Events works on it directly once
+the process is addressed by pid, never by name (the user's own copy is
+usually running too):
+
+- `tell (first process whose unix id is <pid>)` for menus, AX queries and
+  `click button "Play"`; real `NSButton`s fire from an AX click.
+- The Settings window's controls sit directly in `window "Dmus Settings"`:
+  `static text 2` is the path, `button "Choose…"` the button.
+- `NSRunningApplication.activate()` on the pid orders the main window in
+  front of an open Settings window; reopen Settings from the menu before
+  clicking in it.
+- `screencapture -l <window id>` works for any of the pid's windows; list
+  them with `CGWindowListCopyWindowInfo` (the skill's `window-id` tool only
+  prints the first one).
+- To see every view frame in the running app:
+  `lldb -p <pid> --batch -o 'expr -l objc -O -- [[[[NSApplication sharedApplication] windows][0] contentView] _subtreeDescription]' -o detach -o quit`.

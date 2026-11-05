@@ -15,11 +15,11 @@ final class EmptyStateView: NSView {
         super.init(frame: .zero)
 
         let imageView = NSImageView(image: NSImage(systemSymbolName: systemImage, accessibilityDescription: nil)!)
-        imageView.symbolConfiguration = NSImage.SymbolConfiguration(pointSize: 44, weight: .regular)
+        imageView.symbolConfiguration = NSImage.SymbolConfiguration(pointSize: 36, weight: .regular)
         imageView.contentTintColor = .secondaryLabelColor
 
         let titleLabel = NSTextField(labelWithString: title)
-        titleLabel.font = .systemFont(ofSize: NSFont.preferredFont(forTextStyle: .title2).pointSize, weight: .bold)
+        titleLabel.font = .systemFont(ofSize: NSFont.preferredFont(forTextStyle: .largeTitle).pointSize, weight: .bold)
         titleLabel.textColor = .secondaryLabelColor
 
         descriptionLabel.font = .preferredFont(forTextStyle: .body)
@@ -28,8 +28,8 @@ final class EmptyStateView: NSView {
         let stack = NSStackView(views: [imageView, titleLabel, descriptionLabel])
         stack.orientation = .vertical
         stack.alignment = .centerX
-        stack.spacing = 8
-        stack.setCustomSpacing(16, after: imageView)
+        stack.spacing = 12
+        stack.setCustomSpacing(24, after: imageView)
         stack.translatesAutoresizingMaskIntoConstraints = false
         addSubview(stack)
         NSLayoutConstraint.activate([
