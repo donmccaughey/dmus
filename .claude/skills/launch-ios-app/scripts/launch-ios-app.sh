@@ -99,8 +99,8 @@ xcrun simctl install "$udid" "$app"
 
 args=()
 (( demo )) && args+=(--demo)
-log="$cache_dir/launch-$(date +%Y%m%d-%H%M%S)-$$.log"
-launch_output=$(xcrun simctl launch --stderr="$log" "$udid" "$bundle_id" "${args[@]}")
+launch_time=$(date '+%Y-%m-%d %H:%M:%S')
+launch_output=$(xcrun simctl launch "$udid" "$bundle_id" "${args[@]}")
 app_pid="${launch_output##*: }"
 
 # The orientation the app is laid out in, read from the screen itself, since
@@ -154,6 +154,12 @@ if [[ "$orientation" != "$target" ]] || { (( landscape )) && ! window_is_landsca
 fi
 
 sleep "$wait_seconds"
+# `simctl launch --stderr` never creates its file, so the app's errors and
+# Auto Layout complaints are pulled from the unified log instead.
+log="$cache_dir/launch-$(date +%Y%m%d-%H%M%S)-$$.log"
+xcrun simctl spawn "$udid" log show --start "$launch_time" --style compact \
+    --predicate "process == \"${product_name%.app}\" AND (messageType == error OR messageType == fault OR eventMessage CONTAINS \"constraint\")" \
+    2>/dev/null | grep -v '^Timestamp' > "$log" || true
 if ! kill -0 "$app_pid" 2>/dev/null; then
     echo "app exited early (pid $app_pid); log: $log" >&2
     cat "$log" >&2

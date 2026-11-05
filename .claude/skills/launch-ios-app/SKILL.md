@@ -44,9 +44,14 @@ iPad Pro 11-inch is `2EFD3632-0EFD-4BEE-B638-7AA561250E90`.
   xcodebuild stops warning about the Rosetta variant.
 - **Each run starts fresh.** `simctl terminate` before `install` and
   `launch`, so the queue is empty and the new binary is the one running.
-- **Stderr to a log.** `simctl launch --stderr=<log>` is where Auto Layout
-  conflicts and other UIKit warnings land; `launch` prints the host PID,
-  which `kill -0` can watch.
+- **Log from the unified log.** `simctl launch --stderr=<path>` never
+  creates its file (Xcode 26), so after the settle time the script writes
+  the app's error- and fault-level lines, plus anything mentioning
+  "constraint", from `simctl spawn <udid> log show` into the log it prints.
+  Two lines are always there and are simulator noise (a libxpc "assertion
+  failed" and a CFBundle "No factory registered"); an Auto Layout conflict
+  would appear as "Unable to simultaneously satisfy constraints".
+  `launch` prints the host PID, which `kill -0` can watch.
 - **Orientation is read from the screen.** `simctl` cannot report or set
   orientation, and `simctl io screenshot` always writes the framebuffer in
   physical portrait dimensions with the content drawn rotated, so the image
@@ -116,6 +121,18 @@ changes shape on rotation, so re-query it (`get {position, size} of window
   steps, mouse up); scroll-wheel events posted over the simulator are
   ignored.
 - Dark mode: `xcrun simctl ui <udid> appearance dark` (and `light` after).
+- The iPad app switcher (to read the scene title or open a second window)
+  is `key code 4 using {control down, shift down, command down}` on the
+  raised iPad window; clicking Simulator's Device > App Switcher menu item
+  through System Events toggles it too.
+- A simulator that last ran the SwiftUI build keeps the scene session
+  SwiftUI persisted, so UIKit restores `SwiftUI.AppSceneDelegate` as the
+  scene delegate without asking the app delegate: the screen is black, the
+  app crashes in `AppSceneDelegate.sceneItem()` when sent to the
+  background, and the script fails with "could not rotate … (now unknown)".
+  On iOS 18.4 this cleared after two launches; on iOS 26.1 it survives
+  relaunches, reinstalls and a bundle version change. `simctl uninstall`
+  and rerun.
 - Every view frame in the running app:
   `lldb -p $(pgrep -f Dmus.app/Dmus) --batch -o 'expr -l objc -O -- [[[UIApplication sharedApplication] keyWindow] recursiveDescription]' -o detach -o quit`.
 - While the iOS UI is still SwiftUI: a `Button` inside a `NavigationLink`
