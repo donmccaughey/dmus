@@ -27,9 +27,9 @@ enum MainMenu {
         let services = NSMenuItem(title: "Services", action: nil, keyEquivalent: "")
         services.submenu = servicesMenu
 
-        return menuItem(title: "Dmus", items: [
+        return menuItem(title: "MC Mus", items: [
             NSMenuItem(
-                title: "About Dmus",
+                title: "About MC Mus",
                 action: #selector(NSApplication.orderFrontStandardAboutPanel(_:)),
                 keyEquivalent: ""
             ),
@@ -38,7 +38,7 @@ enum MainMenu {
             .separator(),
             services,
             .separator(),
-            NSMenuItem(title: "Hide Dmus", action: #selector(NSApplication.hide(_:)), keyEquivalent: "h"),
+            NSMenuItem(title: "Hide MC Mus", action: #selector(NSApplication.hide(_:)), keyEquivalent: "h"),
             hideOthers,
             NSMenuItem(
                 title: "Show All",
@@ -46,7 +46,7 @@ enum MainMenu {
                 keyEquivalent: ""
             ),
             .separator(),
-            NSMenuItem(title: "Quit Dmus", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"),
+            NSMenuItem(title: "Quit MC Mus", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"),
         ])
     }
 

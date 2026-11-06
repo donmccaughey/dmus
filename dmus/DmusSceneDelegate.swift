@@ -11,7 +11,7 @@ final class DmusSceneDelegate: UIResponder, UIWindowSceneDelegate {
     ) {
         guard let windowScene = scene as? UIWindowScene else { return }
         // Shown in the iPad app switcher, as the SwiftUI WindowGroup title was.
-        windowScene.title = "Dmus"
+        windowScene.title = "MC Mus"
         let appDelegate = DmusAppDelegate.shared
         let window = UIWindow(windowScene: windowScene)
         window.rootViewController = MainViewController(store: appDelegate.store, player: appDelegate.player)

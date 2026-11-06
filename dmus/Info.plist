@@ -8,7 +8,7 @@
 			<key>UTTypeIdentifier</key>
 			<string>cc.donm.mcmus.folder-child</string>
 			<key>UTTypeDescription</key>
-			<string>Dmus folder or track</string>
+			<string>MC Mus folder or track</string>
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.data</string>

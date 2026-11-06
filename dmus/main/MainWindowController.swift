@@ -10,7 +10,7 @@ final class MainWindowController: NSWindowController, NSWindowDelegate {
             backing: .buffered,
             defer: false
         )
-        window.title = "Dmus"
+        window.title = "MC Mus"
         window.tabbingMode = .disallowed
         window.isRestorable = false
         // Setting the content view controller resizes the window, so it goes
