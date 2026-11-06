@@ -5,7 +5,7 @@ import UIKit
 
 final class FilesPanelViewController: UIViewController {
     private let store: MusicLibraryStore
-    private let emptyStateView = EmptyStateView(title: "No music", systemImage: "folder", description: "")
+    private let emptyFilesView = EmptyStateView(title: "No music", systemImage: "folder", description: "")
     private let filesTableStack: FilesTableStackController
     private lazy var panelView = PanelView(title: "Files", accessory: Self.makePlaceholderFindButton())
 
@@ -36,11 +36,11 @@ final class FilesPanelViewController: UIViewController {
     private func update() {
         let library = store.library
         if library.isEmpty {
-            emptyStateView.descriptionText = store.loadDidFail
+            emptyFilesView.descriptionText = store.loadDidFail
                 ? "The music library did not load."
                 : "The music library is empty."
             panelView.showsTitle = true
-            panelView.setContent(emptyStateView)
+            panelView.setContent(emptyFilesView)
         } else {
             // The root folder table's navigation bar already shows the
             // "Files" title and a find button, so the panel title would

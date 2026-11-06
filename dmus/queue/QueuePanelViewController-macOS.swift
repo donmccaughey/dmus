@@ -7,17 +7,13 @@ import Wrappers
 final class QueuePanelViewController: NSViewController {
     private let player: Player
     private let clearButton = NSButton(title: "Clear", target: nil, action: nil)
-    private let emptyStateView = EmptyStateView(
+    private let emptyQueueView = EmptyStateView(
         title: "No tracks",
         systemImage: "list.bullet",
         description: "The queue is empty."
     )
     private let queueTableView = QueueTableView()
     private let dropTargetView = DropTargetView()
-    private lazy var queueView = NSStackView.headerOverBody(
-        header: PlayerPanelView(player: player),
-        body: queueTableView
-    )
     private lazy var panelView = PanelView(title: "Queue", accessory: clearButton)
 
     init(player: Player) {
@@ -38,6 +34,13 @@ final class QueuePanelViewController: NSViewController {
         dropTargetView.onDrop = { [weak self] children in
             self?.player.queue.add(children)
         }
+        let queueBody = NSView()
+        queueBody.addFillingSubview(emptyQueueView)
+        queueBody.addFillingSubview(queueTableView)
+        dropTargetView.setContent(NSStackView.headerOverBody(
+            header: PlayerPanelView(player: player),
+            body: queueBody
+        ))
         panelView.setContent(dropTargetView)
         view = panelView
     }
@@ -49,12 +52,11 @@ final class QueuePanelViewController: NSViewController {
         }
     }
 
-    // One block for both the content swap and the table reload, so the table
-    // is on screen before it scrolls to the tracks that were just added.
     private func update() {
         let queuedTracks = player.queue.queuedTracks
         clearButton.isEnabled = !queuedTracks.isEmpty
-        dropTargetView.setContent(queuedTracks.isEmpty ? emptyStateView : queueView)
+        emptyQueueView.isHidden = !queuedTracks.isEmpty
+        queueTableView.isHidden = queuedTracks.isEmpty
         queueTableView.setQueuedTracks(queuedTracks)
     }
 

@@ -6,7 +6,7 @@ import Model
 final class FilesPanelViewController: NSViewController {
     private let store: MusicLibraryStore
     private let findButton = NSButton(title: "Find", target: nil, action: nil)
-    private let emptyStateView = EmptyStateView(title: "No music", systemImage: "folder", description: "")
+    private let emptyFilesView = EmptyStateView(title: "No music", systemImage: "folder", description: "")
     private let treeView = FilesTreeView()
     private lazy var libraryView = NSStackView.bodyOverFooter(body: treeView, footer: ShareStatusBarView())
     private lazy var panelView = PanelView(title: "Files", accessory: findButton)
@@ -38,10 +38,10 @@ final class FilesPanelViewController: NSViewController {
         let library = store.library
         findButton.isEnabled = !library.isEmpty
         if library.isEmpty {
-            emptyStateView.descriptionText = store.loadDidFail
+            emptyFilesView.descriptionText = store.loadDidFail
                 ? "The music library did not load."
                 : "The music library is empty."
-            panelView.setContent(emptyStateView)
+            panelView.setContent(emptyFilesView)
         } else {
             treeView.setLibrary(library)
             panelView.setContent(libraryView)

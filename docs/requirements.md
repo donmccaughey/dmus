@@ -464,6 +464,9 @@ On iOS, dmus shall draw panel titles on an opaque secondary system background.
 
 The **find button** is a button with the label "Find".
 
+The **empty files view** is a view that shows the title "No music", description
+"The music library is empty." and a folder system icon all centered in the view.
+
 On macOS, the files panel shall show the title "Files" and the find button with
 bordered style at the top of the panel.
 
@@ -485,16 +488,15 @@ title "Files" and the find button at the top of the panel.
 The files panel shall get the music library and load did fail state from the
 app's music library store.
 
-While the music library is empty, the files panel shall show a content
-unavailable view with title "No music", description "The music library is
-empty." and a folder system icon.
+While the music library is empty, the files panel shall show the empty files
+view.
 
-While the music library is not empty, the files panel shall hide the content
-unavailable view.
+While the music library is not empty, the files panel shall hide the empty files
+view.
 
 While the music library is empty and load did fail is true, the files panel
-shall set the description of the content unavailable view to "The music library
-did not load.".
+shall set the description of the empty files view to "The music library did not
+load.".
 
 
 ### Files tree
@@ -599,6 +601,9 @@ text "No device connected."
 
 The **clear button** is a button with the label "Clear".
 
+The **empty queue view** is a view that shows title "No tracks", description
+"The queue is empty." and a "bullet list" system icon all centered in the view.
+
 The queue panel shall show the title "Queue" and the clear button at the top of
 the panel. The title shall be centered; the title and clear button shall be
 vertically aligned; the clear button shall be horizontally positioned on the
@@ -606,16 +611,13 @@ right side of the panel.
 
 The queue panel shall get its tracks from the player's queue.
 
-While the queue is empty, the queue panel shall show a content unavailable view
-with title "No tracks", description "The queue is empty." and a bullet list
-system icon.
+The queue panel shall show the player panel at the top of the queue panel.
 
-When the queue is empty, the queue panel shall disable the clear button.
+While the queue is empty, the queue panel shall show the empty queue view, hide
+the queue table and disable the clear button.
 
-While the queue is not empty, the queue panel shall hide the content unavailable
-view and show the player panel and the queue table.
-
-When the queue is not empty, the queue panel shall enable the clear button.
+While the queue is not empty, the queue panel shall hide the empty queue view,
+show the queue table and enable the clear button.
 
 On macOS, when a track item from the files tree is dropped on the queue panel,
 the queue panel shall give the queue the add track command with the track of the

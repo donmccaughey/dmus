@@ -6,7 +6,7 @@ import UIKit
 final class QueuePanelViewController: UIViewController {
     private let player: Player
     private let clearButton: UIButton
-    private let emptyStateView = EmptyStateView(
+    private let emptyQueueView = EmptyStateView(
         title: "No tracks",
         systemImage: "list.bullet",
         description: "The queue is empty."
@@ -27,6 +27,7 @@ final class QueuePanelViewController: UIViewController {
     }
 
     override func loadView() {
+        panelView.setContent(queueView)
         view = panelView
     }
 
@@ -37,17 +38,19 @@ final class QueuePanelViewController: UIViewController {
         }
     }
 
-    // One block for both the content swap and the table reload, so the table
-    // is on screen before it scrolls to the tracks that were just added.
     private func update() {
         let queuedTracks = player.queue.queuedTracks
         clearButton.isEnabled = !queuedTracks.isEmpty
-        panelView.setContent(queuedTracks.isEmpty ? emptyStateView : queueView)
+        emptyQueueView.isHidden = !queuedTracks.isEmpty
+        queueTableView.isHidden = queuedTracks.isEmpty
         queueTableView.setQueuedTracks(queuedTracks)
     }
 
     private func makeQueueView() -> UIView {
-        let stack = UIStackView(arrangedSubviews: [PlayerPanelView(player: player), HairlineView(), queueTableView])
+        let queueBody = UIView()
+        queueBody.addFillingSubview(emptyQueueView)
+        queueBody.addFillingSubview(queueTableView)
+        let stack = UIStackView(arrangedSubviews: [PlayerPanelView(player: player), HairlineView(), queueBody])
         stack.axis = .vertical
         return stack
     }

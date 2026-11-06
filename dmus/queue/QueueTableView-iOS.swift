@@ -40,10 +40,7 @@ final class QueueTableView: UIView {
     private func scrollToEnd() {
         // Tracks queued before this view came on screen, as when a second
         // window opens, were not just added and have no size to scroll in.
-        guard let window else { return }
-        // The first tracks arrive in the same turn that puts this view on
-        // screen, before any layout pass has given it a size to scroll in.
-        window.layoutIfNeeded()
+        guard window != nil else { return }
         let lastRow = IndexPath(row: dataSource.queuedTracks.count - 1, section: 0)
         tableView.scrollToRow(at: lastRow, at: .bottom, animated: false)
     }

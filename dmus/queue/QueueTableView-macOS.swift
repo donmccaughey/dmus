@@ -41,9 +41,6 @@ final class QueueTableView: NSScrollView {
     }
 
     private func scrollToEnd() {
-        // The first tracks arrive in the same turn that puts this view on
-        // screen, before any layout pass has given it a size to scroll in.
-        window?.layoutIfNeeded()
         tableView.scrollRowToVisible(tableView.numberOfRows - 1)
     }
 }
