@@ -3,7 +3,7 @@ import AppKit
 import Model
 
 @main
-final class DmusAppDelegate: NSObject, NSApplicationDelegate {
+final class MCMusAppDelegate: NSObject, NSApplicationDelegate {
     private let store = MusicLibraryStore()
     private let player = Player()
     private lazy var mainWindowController = MainWindowController(store: store, player: player)
@@ -12,7 +12,7 @@ final class DmusAppDelegate: NSObject, NSApplicationDelegate {
     // The main() that AppKit supplies for a @main delegate only calls
     // NSApplicationMain, which relies on a nib to instantiate the delegate.
     static func main() {
-        let delegate = DmusAppDelegate()
+        let delegate = MCMusAppDelegate()
         NSApplication.shared.delegate = delegate
         withExtendedLifetime(delegate) {
             _ = NSApplicationMain(CommandLine.argc, CommandLine.unsafeArgv)

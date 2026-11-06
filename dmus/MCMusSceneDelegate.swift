@@ -1,7 +1,7 @@
 #if os(iOS)
 import UIKit
 
-final class DmusSceneDelegate: UIResponder, UIWindowSceneDelegate {
+final class MCMusSceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 
     func scene(
@@ -12,7 +12,7 @@ final class DmusSceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = scene as? UIWindowScene else { return }
         // Shown in the iPad app switcher, as the SwiftUI WindowGroup title was.
         windowScene.title = "MC Mus"
-        let appDelegate = DmusAppDelegate.shared
+        let appDelegate = MCMusAppDelegate.shared
         let window = UIWindow(windowScene: windowScene)
         window.rootViewController = MainViewController(store: appDelegate.store, player: appDelegate.player)
         window.makeKeyAndVisible()

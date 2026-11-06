@@ -3,12 +3,12 @@ import Model
 import UIKit
 
 @main
-final class DmusAppDelegate: UIResponder, UIApplicationDelegate {
+final class MCMusAppDelegate: UIResponder, UIApplicationDelegate {
     let store = MusicLibraryStore()
     let player = Player()
 
-    static var shared: DmusAppDelegate {
-        UIApplication.shared.delegate as! DmusAppDelegate
+    static var shared: MCMusAppDelegate {
+        UIApplication.shared.delegate as! MCMusAppDelegate
     }
 
     func application(
@@ -28,7 +28,7 @@ final class DmusAppDelegate: UIResponder, UIApplicationDelegate {
         // asks here; a configuration with no name has no delegate class
         // until one is set.
         let configuration = UISceneConfiguration(name: nil, sessionRole: connectingSceneSession.role)
-        configuration.delegateClass = DmusSceneDelegate.self
+        configuration.delegateClass = MCMusSceneDelegate.self
         return configuration
     }
 }
