@@ -17,7 +17,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "D3A5000000000000000000C0"
                BuildableName = "MC Mus.app"
-               BlueprintName = "dmus"
+               BlueprintName = "mcmus"
                ReferencedContainer = "container:dmus.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -30,8 +30,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "D3A5000000000000000000F2"
-               BuildableName = "dmusTests.xctest"
-               BlueprintName = "dmusTests"
+               BuildableName = "mcmusTests.xctest"
+               BlueprintName = "mcmusTests"
                ReferencedContainer = "container:dmus.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -44,7 +44,8 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:dmus.xctestplan">
+            reference = "container:dmus.xctestplan"
+            default = "YES">
          </TestPlanReference>
       </TestPlans>
       <Testables>
@@ -53,8 +54,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "D3A5000000000000000000F2"
-               BuildableName = "dmusTests.xctest"
-               BlueprintName = "dmusTests"
+               BuildableName = "mcmusTests.xctest"
+               BlueprintName = "mcmusTests"
                ReferencedContainer = "container:dmus.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -76,10 +77,16 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D3A5000000000000000000C0"
             BuildableName = "MC Mus.app"
-            BlueprintName = "dmus"
+            BlueprintName = "mcmus"
             ReferencedContainer = "container:dmus.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <CommandLineArguments>
+         <CommandLineArgument
+            argument = "--demo"
+            isEnabled = "YES">
+         </CommandLineArgument>
+      </CommandLineArguments>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -93,7 +100,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D3A5000000000000000000C0"
             BuildableName = "MC Mus.app"
-            BlueprintName = "dmus"
+            BlueprintName = "mcmus"
             ReferencedContainer = "container:dmus.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

@@ -53,22 +53,22 @@ A build failure is itself a finding. Report it rather than working around it.
 ## 4. Build and launch recipes
 
 In these recipes `$SCRATCHPAD` is the session scratchpad directory from the system
-prompt; set it before running them. The schemes are `dmus` and `dmus-demo`
-(the latter launches with `--demo`). `dmusTests` is a Swift Testing logic test
-bundle with no host app; the `dmus` scheme runs it. The bundle identifier is
+prompt; set it before running them. The schemes are `mcmus` and `mcmus-demo`
+(the latter launches with `--demo`). `mcmusTests` is a Swift Testing logic test
+bundle with no host app; the `mcmus` scheme runs it. The bundle identifier is
 `cc.donm.mcmus`.
 
 Unit tests:
 
 ```bash
-xcodebuild -scheme dmus -destination 'platform=macOS' test 2>&1 | tail -20
+xcodebuild -scheme mcmus -destination 'platform=macOS' test 2>&1 | tail -20
 ```
 
 macOS:
 
 ```bash
-xcodebuild -scheme dmus -configuration Debug -destination 'platform=macOS' build 2>&1 | tail -20
-APP="$(xcodebuild -scheme dmus -configuration Debug -destination 'platform=macOS' -showBuildSettings 2>/dev/null | awk -F' = ' '/ BUILT_PRODUCTS_DIR =/{print $2}')/MC Mus.app"
+xcodebuild -scheme mcmus -configuration Debug -destination 'platform=macOS' build 2>&1 | tail -20
+APP="$(xcodebuild -scheme mcmus -configuration Debug -destination 'platform=macOS' -showBuildSettings 2>/dev/null | awk -F' = ' '/ BUILT_PRODUCTS_DIR =/{print $2}')/MC Mus.app"
 open "$APP"
 ```
 

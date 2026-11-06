@@ -33,7 +33,7 @@ release : $(TMP)/made-disk-image.stamp
 
 .PHONY : list-simulators
 list-simulators :
-	xcodebuild -project dmus.xcodeproj -scheme dmus -showdestinations
+	xcodebuild -project dmus.xcodeproj -scheme mcmus -showdestinations
 
 
 .PHONY : clean
@@ -64,7 +64,7 @@ $(TMP)/built-release.stamp : \
 	rm -rf $(release_dir)
 	xcodebuild build \
 		-project dmus.xcodeproj \
-		-scheme dmus \
+		-scheme mcmus \
 		-configuration Release \
 		-destination 'generic/platform=macOS' \
 		CONFIGURATION_BUILD_DIR=$(release_dir) \
@@ -75,7 +75,7 @@ $(TMP)/built-release.stamp : \
 $(TMP)/checked-iOS.stamp : $(src_files) | $$(dir $$@)
 	xcodebuild test \
 		-project dmus.xcodeproj \
-		-scheme dmus \
+		-scheme mcmus \
 		-destination 'platform=iOS Simulator,name=$(IOS_CHECK_DEVICE)' \
 		-quiet
 	touch $@
@@ -84,7 +84,7 @@ $(TMP)/checked-iOS.stamp : $(src_files) | $$(dir $$@)
 $(TMP)/checked-macOS.stamp : $(src_files) | $$(dir $$@)
 	xcodebuild test \
 		-project dmus.xcodeproj \
-		-scheme dmus \
+		-scheme mcmus \
 		-destination 'platform=macOS,arch=$(arch)' \
 		-quiet
 	touch $@

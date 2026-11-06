@@ -14,7 +14,7 @@
 
 /* Begin PBXFileReference section */
 		D3A5000000000000000000A2 /* MC Mus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MC Mus.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		D3A5000000000000000000F1 /* dmusTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = dmusTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3A5000000000000000000F1 /* mcmusTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = mcmusTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D41DFEB0308C305900FEA684 /* CLAUDE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CLAUDE.md; sourceTree = "<group>"; };
 		D41DFEB1308C305900FEA684 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		D45D240330998DFB00F84DF9 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
@@ -24,7 +24,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		D47788FF309D80C70074B85B /* Exceptions for "dmusTests" folder in "dmus" target */ = {
+		D47788FF309D80C70074B85B /* Exceptions for "dmusTests" folder in "mcmus" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				components/PanelArrangementTests.swift,
@@ -32,9 +32,9 @@
 				ObservingTests.swift,
 				queue/LowerLineWidthsTests.swift,
 			);
-			target = D3A5000000000000000000C0 /* dmus */;
+			target = D3A5000000000000000000C0 /* mcmus */;
 		};
-		D4778900309D80C70074B85B /* Exceptions for "dmusTests" folder in "dmusTests" target */ = {
+		D4778900309D80C70074B85B /* Exceptions for "dmusTests" folder in "mcmusTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				components/PanelArrangementTests.swift,
@@ -42,9 +42,9 @@
 				ObservingTests.swift,
 				queue/LowerLineWidthsTests.swift,
 			);
-			target = D3A5000000000000000000F2 /* dmusTests */;
+			target = D3A5000000000000000000F2 /* mcmusTests */;
 		};
-		D4BDA180309A880A00C3D858 /* Exceptions for "dmus" folder in "dmusTests" target */ = {
+		D4BDA180309A880A00C3D858 /* Exceptions for "dmus" folder in "mcmusTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				components/PanelArrangement.swift,
@@ -54,15 +54,15 @@
 				Observing.swift,
 				queue/LowerLineWidths.swift,
 			);
-			target = D3A5000000000000000000F2 /* dmusTests */;
+			target = D3A5000000000000000000F2 /* mcmusTests */;
 		};
-		D4FF6D343092CDFA00FE2C42 /* Exceptions for "dmus" folder in "dmus" target */ = {
+		D4FF6D343092CDFA00FE2C42 /* Exceptions for "dmus" folder in "mcmus" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 				MusicLibraryStoreTests.swift,
 			);
-			target = D3A5000000000000000000C0 /* dmus */;
+			target = D3A5000000000000000000C0 /* mcmus */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -70,8 +70,8 @@
 		D3A5000000000000000000A3 /* dmus */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				D4FF6D343092CDFA00FE2C42 /* Exceptions for "dmus" folder in "dmus" target */,
-				D4BDA180309A880A00C3D858 /* Exceptions for "dmus" folder in "dmusTests" target */,
+				D4FF6D343092CDFA00FE2C42 /* Exceptions for "dmus" folder in "mcmus" target */,
+				D4BDA180309A880A00C3D858 /* Exceptions for "dmus" folder in "mcmusTests" target */,
 			);
 			path = dmus;
 			sourceTree = "<group>";
@@ -89,8 +89,8 @@
 		D47788FE309D80B30074B85B /* dmusTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				D47788FF309D80C70074B85B /* Exceptions for "dmusTests" folder in "dmus" target */,
-				D4778900309D80C70074B85B /* Exceptions for "dmusTests" folder in "dmusTests" target */,
+				D47788FF309D80C70074B85B /* Exceptions for "dmusTests" folder in "mcmus" target */,
+				D4778900309D80C70074B85B /* Exceptions for "dmusTests" folder in "mcmusTests" target */,
 			);
 			path = dmusTests;
 			sourceTree = "<group>";
@@ -146,7 +146,7 @@
 			isa = PBXGroup;
 			children = (
 				D3A5000000000000000000A2 /* MC Mus.app */,
-				D3A5000000000000000000F1 /* dmusTests.xctest */,
+				D3A5000000000000000000F1 /* mcmusTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -161,9 +161,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		D3A5000000000000000000C0 /* dmus */ = {
+		D3A5000000000000000000C0 /* mcmus */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D3A5000000000000000000D0 /* Build configuration list for PBXNativeTarget "dmus" */;
+			buildConfigurationList = D3A5000000000000000000D0 /* Build configuration list for PBXNativeTarget "mcmus" */;
 			buildPhases = (
 				D3A5000000000000000000B1 /* Sources */,
 				D3A5000000000000000000B0 /* Frameworks */,
@@ -178,17 +178,17 @@
 				D3A5000000000000000000A3 /* dmus */,
 				D47788FE309D80B30074B85B /* dmusTests */,
 			);
-			name = dmus;
+			name = mcmus;
 			packageProductDependencies = (
 				D474B29530993FBB00FA3132 /* dmusBase */,
 			);
-			productName = dmus;
+			productName = mcmus;
 			productReference = D3A5000000000000000000A2 /* MC Mus.app */;
 			productType = "com.apple.product-type.application";
 		};
-		D3A5000000000000000000F2 /* dmusTests */ = {
+		D3A5000000000000000000F2 /* mcmusTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D3A5000000000000000000F6 /* Build configuration list for PBXNativeTarget "dmusTests" */;
+			buildConfigurationList = D3A5000000000000000000F6 /* Build configuration list for PBXNativeTarget "mcmusTests" */;
 			buildPhases = (
 				D3A5000000000000000000F3 /* Sources */,
 				D3A5000000000000000000F4 /* Frameworks */,
@@ -200,13 +200,13 @@
 				D474B29E30994E7D00FA3132 /* PBXTargetDependency */,
 				D474B2A030994E7D00FA3132 /* PBXTargetDependency */,
 			);
-			name = dmusTests;
+			name = mcmusTests;
 			packageProductDependencies = (
 				D474B29930994E7300FA3132 /* dmusBase */,
 				D474B29B30994E7300FA3132 /* dmusBaseTestSupport */,
 			);
-			productName = dmusTests;
-			productReference = D3A5000000000000000000F1 /* dmusTests.xctest */;
+			productName = mcmusTests;
+			productReference = D3A5000000000000000000F1 /* mcmusTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -241,8 +241,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				D3A5000000000000000000C0 /* dmus */,
-				D3A5000000000000000000F2 /* dmusTests */,
+				D3A5000000000000000000C0 /* mcmus */,
+				D3A5000000000000000000F2 /* mcmusTests */,
 			);
 		};
 /* End PBXProject section */
@@ -570,7 +570,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		D3A5000000000000000000D0 /* Build configuration list for PBXNativeTarget "dmus" */ = {
+		D3A5000000000000000000D0 /* Build configuration list for PBXNativeTarget "mcmus" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D3A5000000000000000000D1 /* Debug */,
@@ -588,7 +588,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D3A5000000000000000000F6 /* Build configuration list for PBXNativeTarget "dmusTests" */ = {
+		D3A5000000000000000000F6 /* Build configuration list for PBXNativeTarget "mcmusTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D3A5000000000000000000F7 /* Debug */,
