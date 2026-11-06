@@ -27,6 +27,8 @@ On macOS, dmus shall target macOS 15 Sequoia or later.
 
 On iOS, dmus shall target iOS 18 (including iPadOS 18) or later.
 
+Dmus shall set the app category in Xcode to "Music".
+
 Dmus shall use the Swift language.
 
 On macOS, dmus shall use the AppKit framework for its user interface, rather
