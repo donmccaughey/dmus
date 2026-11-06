@@ -82,16 +82,15 @@ The dmus project shall place each class or struct representing a significant
 application concept in its own code file; extensions and small classes and
 structs may share a code file when they have a single consumer.
 
+The dmus project shall add the prefix `-iOS` or `-macOS` to the base name of
+code files that serve the same purpose in the app but cannot be shared between
+the iOS and macOS versions of the app. For example, the `MainViewController`
+class in iOS inherits from `UIViewController` while in macOS it inherits from
+`NSViewController`.
+
 The dmus project shall create [wrapper interfaces](wrappers-for-testing.md) for
 system services that are difficult to test in isolation, such as the file
 system, network, audio playback, time and random number generation.
-
-Where the code is part of an Xcode project, the dmus project shall place unit
-test files in the same folder as the code files under test.
-
-Where the code is part of a Swift package, the dmus project shall place unit
-test files under the standard package `Tests/` directory with a subdirectory
-structure that parallels that of the corresponding code files under test.
 
 
 ## Code locations
@@ -107,12 +106,17 @@ The dmus project shall place model code in the `dmusBase` Swift package in the
 `Model` target and corresponding unit tests in the `ModelTests` target.
 
 The dmus project shall organize user interface code around major UI elements
-and/or features. The primary files panel code shall live in `dmus/files/`. The
-primary queue panel code shall live in `dmus/queue/`. The settings dialog code
-shall live in `dmus/settings/`.
+and/or features. The primary files panel code shall live in `dmus/files/`. Main
+view and main window code shall live in `dmus/main/`. The primary queue panel
+code shall live in `dmus/queue/`. The settings dialog code shall live in
+`dmus/settings/`. Views, controls and UI utility code shared across major UI
+elements or feature shall live in `dmus/components/`.
 
 The dmus project shall place all other code, app configuration and app asset
 files in the `dmus/` subdirectory.
+
+The dmus project shall place unit tests for code under the `dmus/` directory in
+the `dmusTests/` directory, mirroring the directory organization in `dmus/`.
 
 
 # System service wrappers
