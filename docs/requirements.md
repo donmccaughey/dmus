@@ -479,22 +479,51 @@ shall disable the find button. Note that this find button only serves as a
 placeholder and is always disabled; on iOS the files table stack contains the
 active find button.
 
-On iOS, while its music library is not empty, the files panel shall hide the
+On iOS, while the music library is not empty, the files panel shall hide the
 title "Files" and the find button at the top of the panel.
 
-The files panel shall get its music library and load did fail state from the
+The files panel shall get the music library and load did fail state from the
 app's music library store.
 
-While its music library is empty, the files panel shall show a content
+While the music library is empty, the files panel shall show a content
 unavailable view with title "No music", description "The music library is
 empty." and a folder system icon.
 
-While its music library is not empty, the files panel shall hide the content
+While the music library is not empty, the files panel shall hide the content
 unavailable view.
 
-While its music library is empty and load did fail is true, the files panel
+While the music library is empty and load did fail is true, the files panel
 shall set the description of the content unavailable view to "The music library
 did not load.".
+
+
+### Share panel
+
+The **share panel** is a view that displays file sharing control and state on
+macOS.
+
+The **share switch control** is a toggle switch control that enables and
+disables file sharing between the macOS and iOS apps. The share switch control
+shall consist of the label "File Sharing" on the left side of the panel and a
+toggle switch control on the right side of the panel. The toggle switch control
+shall be off by default.
+
+The **sharing status line** is a single line read-only text label below the
+share switch that displays file sharing status information. The sharing status
+line shall use a smaller font and lighter color than the label of the share
+switch control.
+
+On macOS, while the music library is empty, the files panel shall hide the share
+panel.
+
+On macOS, while the music library is not empty, the files panel shall show the
+share panel at the top of the files panel.
+
+On macOS, while the share switch control is off, the sharing status line shall
+show the text "Not sharing."
+
+On macOS, while the share switch control is on, the sharing status line shall
+show the text "No device connected."
 
 
 ### Files tree
@@ -508,11 +537,11 @@ to hide them.
 A **track item** is an item in the files tree that contains a track and shows
 the track name.
 
-On macOS, while its music library is empty, the files panel shall hide the files
+On macOS, while the music library is empty, the files panel shall hide the files
 tree.
 
-On macOS, while its music library is not empty, the files panel shall show a
-files tree backed by its music library.
+On macOS, while the music library is not empty, the files panel shall show the
+files tree backed by the music library, filling the space below the share panel.
 
 On macOS, when the user drags a folder item, the files tree shall start a drag
 carrying the folder of the item.
@@ -549,11 +578,11 @@ right side of the row.
 On iOS, when the user taps the "(+)" button on a track row, dmus shall add that
 track to the queue.
 
-On iOS, while its music library is empty, the files panel shall hide the files
+On iOS, while the music library is empty, the files panel shall hide the files
 table stack.
 
-On iOS, while its music library is not empty, the files panel shall show a files
-table stack backed by its music library.
+On iOS, while the music library is not empty, the files panel shall show a files
+table stack backed by the music library.
 
 On iOS, the folder table shall draw the navigation bar with the same opaque
 background as a panel title, regardless of the folder table's scroll position.

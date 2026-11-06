@@ -14,7 +14,10 @@ final class QueuePanelViewController: NSViewController {
     )
     private let queueTableView = QueueTableView()
     private let dropTargetView = DropTargetView()
-    private lazy var queueView = makeQueueView()
+    private lazy var queueView = NSStackView.headerOverBody(
+        header: PlayerPanelView(player: player),
+        body: queueTableView
+    )
     private lazy var panelView = PanelView(title: "Queue", accessory: clearButton)
 
     init(player: Player) {
@@ -57,19 +60,6 @@ final class QueuePanelViewController: NSViewController {
 
     @objc private func clear() {
         player.clear()
-    }
-
-    private func makeQueueView() -> NSView {
-        let separator = NSBox()
-        separator.boxType = .separator
-        let stack = NSStackView(views: [PlayerPanelView(player: player), separator, queueTableView])
-        stack.orientation = .vertical
-        stack.alignment = .width
-        stack.spacing = 0
-        stack.distribution = .fill
-        separator.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        queueTableView.setContentHuggingPriority(.defaultLow, for: .vertical)
-        return stack
     }
 }
 

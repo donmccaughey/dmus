@@ -8,6 +8,7 @@ final class FilesPanelViewController: NSViewController {
     private let findButton = NSButton(title: "Find", target: nil, action: nil)
     private let emptyStateView = EmptyStateView(title: "No music", systemImage: "folder", description: "")
     private let treeView = FilesTreeView()
+    private lazy var libraryView = NSStackView.headerOverBody(header: SharePanelView(), body: treeView)
     private lazy var panelView = PanelView(title: "Files", accessory: findButton)
 
     init(store: MusicLibraryStore) {
@@ -43,7 +44,7 @@ final class FilesPanelViewController: NSViewController {
             panelView.setContent(emptyStateView)
         } else {
             treeView.setLibrary(library)
-            panelView.setContent(treeView)
+            panelView.setContent(libraryView)
         }
     }
 }
