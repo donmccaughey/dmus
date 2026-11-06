@@ -51,7 +51,7 @@ iPad Pro 11-inch is `2EFD3632-0EFD-4BEE-B638-7AA561250E90`.
   Two lines are always there and are simulator noise (a libxpc "assertion
   failed" and a CFBundle "No factory registered"), as are two
   app_launch_measurement "Failed to send CA Event" lines on some launches
-  and an AXRuntimeCommon "Unknown client: Dmus" once System Events has
+  and an AXRuntimeCommon "Unknown client: MC Mus" once System Events has
   clicked in the app; an Auto Layout conflict would appear as "Unable to
   simultaneously satisfy constraints".
   `launch` prints the host PID, which `kill -0` can watch.
@@ -146,7 +146,7 @@ changes shape on rotation, so re-query it (`get {position, size} of window
 - The iPad multitasking control ("•••" at the top centre of an app) and
   everything it opens ignore `click at`; use the held CGEvent press. It
   shows Full Screen, Split View and Slide Over, and a shelf along the bottom
-  with one thumbnail per Dmus window plus "New Window". The shelf also
+  with one thumbnail per MC Mus window plus "New Window". The shelf also
   lists windows saved from earlier runs, which only connect when chosen.
   After Split View, pick the second app from the Home screen or the Dock.
 - A simulator that last ran the SwiftUI build keeps the scene session
@@ -158,7 +158,7 @@ changes shape on rotation, so re-query it (`get {position, size} of window
   relaunches, reinstalls and a bundle version change. `simctl uninstall`
   and rerun.
 - Every view frame in the running app:
-  `lldb -p $(pgrep -f Dmus.app/Dmus) --batch -o 'expr -l objc -O -- [[[UIApplication sharedApplication] keyWindow] recursiveDescription]' -o detach -o quit`.
+  `lldb -p $(pgrep -f "MC Mus.app/MC Mus") --batch -o 'expr -l objc -O -- [[[UIApplication sharedApplication] keyWindow] recursiveDescription]' -o detach -o quit`.
 - `click at` fires buttons (the row "+" and chevron, Back, Find, Clear, the
   player controls) but is too brief to select a table row, in the UIKit
   folder tables. To tap a row, post a CGEvent left mouse down at the point,

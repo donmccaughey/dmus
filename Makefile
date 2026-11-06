@@ -5,8 +5,10 @@ IOS_CHECK_DEVICE ?= iPhone 16e
 app_files = $(shell find dmus -type f -not -name '.*')
 arch = $(shell uname -m)
 package_files = $(shell find dmusBase -type f -not -name '.*')
+product = MC Mus
 project_files = dmus.xcodeproj/project.pbxproj
 release_dir = $(TMP)/Release
+app = $(release_dir)/$(product).app
 src_files = \
 		 .git/hooks/pre-commit \
 		$(app_files) \
@@ -26,7 +28,7 @@ check : $(TMP)/checked-iOS.stamp $(TMP)/checked-macOS.stamp
 
 
 .PHONY : release
-release : $(TMP)/Dmus-$(ver).dmg
+release : $(TMP)/made-disk-image.stamp
 
 
 .PHONY : list-simulators
@@ -52,7 +54,9 @@ $(TMP)/Release :
 	mkdir -p $@
 
 
-# use a stamp file because `$(release_dir)/Dmus.app` is a directory
+# use a stamp file since the app bundle is a directory and thus doesn't have an
+# `st_mtime` usable for change detection; also, the app bundle name contains a
+# space and thus can't be a target name
 $(TMP)/built-release.stamp : \
 		$(TMP)/checked-iOS.stamp \
 		$(TMP)/checked-macOS.stamp \
@@ -86,5 +90,8 @@ $(TMP)/checked-macOS.stamp : $(src_files) | $$(dir $$@)
 	touch $@
 
 
-$(TMP)/Dmus-$(ver).dmg : $(TMP)/built-release.stamp scripts/make-dmg.sh
-	scripts/make-dmg.sh $(release_dir)/Dmus.app $(TMP)
+# use a stamp file since the disk image name contains a space and thus can't be
+# a target name
+$(TMP)/made-disk-image.stamp : $(TMP)/built-release.stamp scripts/make-dmg.sh
+	scripts/make-dmg.sh "$(app)" $(TMP)
+	touch $@

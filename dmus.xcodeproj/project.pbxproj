@@ -13,7 +13,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		D3A5000000000000000000A2 /* Dmus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dmus.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3A5000000000000000000A2 /* MC Mus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MC Mus.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3A5000000000000000000F1 /* dmusTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = dmusTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D41DFEB0308C305900FEA684 /* CLAUDE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CLAUDE.md; sourceTree = "<group>"; };
 		D41DFEB1308C305900FEA684 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -145,7 +145,7 @@
 		D3A5000000000000000000A1 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D3A5000000000000000000A2 /* Dmus.app */,
+				D3A5000000000000000000A2 /* MC Mus.app */,
 				D3A5000000000000000000F1 /* dmusTests.xctest */,
 			);
 			name = Products;
@@ -183,7 +183,7 @@
 				D474B29530993FBB00FA3132 /* dmusBase */,
 			);
 			productName = dmus;
-			productReference = D3A5000000000000000000A2 /* Dmus.app */;
+			productReference = D3A5000000000000000000A2 /* MC Mus.app */;
 			productType = "com.apple.product-type.application";
 		};
 		D3A5000000000000000000F2 /* dmusTests */ = {
@@ -329,7 +329,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = cc.donm.mcmus;
-				PRODUCT_NAME = Dmus;
+				PRODUCT_NAME = "MC Mus";
 				SDKROOT = auto;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
@@ -375,7 +375,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = cc.donm.mcmus;
-				PRODUCT_NAME = Dmus;
+				PRODUCT_NAME = "MC Mus";
 				SDKROOT = auto;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";

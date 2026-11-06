@@ -16,7 +16,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "D3A5000000000000000000C0"
-               BuildableName = "Dmus.app"
+               BuildableName = "MC Mus.app"
                BlueprintName = "dmus"
                ReferencedContainer = "container:dmus.xcodeproj">
             </BuildableReference>
@@ -75,7 +75,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D3A5000000000000000000C0"
-            BuildableName = "Dmus.app"
+            BuildableName = "MC Mus.app"
             BlueprintName = "dmus"
             ReferencedContainer = "container:dmus.xcodeproj">
          </BuildableReference>
@@ -92,7 +92,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D3A5000000000000000000C0"
-            BuildableName = "Dmus.app"
+            BuildableName = "MC Mus.app"
             BlueprintName = "dmus"
             ReferencedContainer = "container:dmus.xcodeproj">
          </BuildableReference>

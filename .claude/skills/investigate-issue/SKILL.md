@@ -68,7 +68,7 @@ macOS:
 
 ```bash
 xcodebuild -scheme dmus -configuration Debug -destination 'platform=macOS' build 2>&1 | tail -20
-APP="$(xcodebuild -scheme dmus -configuration Debug -destination 'platform=macOS' -showBuildSettings 2>/dev/null | awk '/ BUILT_PRODUCTS_DIR =/{print $3}')/Dmus.app"
+APP="$(xcodebuild -scheme dmus -configuration Debug -destination 'platform=macOS' -showBuildSettings 2>/dev/null | awk -F' = ' '/ BUILT_PRODUCTS_DIR =/{print $2}')/MC Mus.app"
 open "$APP"
 ```
 
@@ -83,7 +83,7 @@ For menus or dialogs, drive them with `osascript` (System Events) before capturi
 Quit when done:
 
 ```bash
-osascript -e 'quit app "dmus"'
+osascript -e 'quit app "MC Mus"'
 ```
 
 iOS Simulator, with the `launch-ios-app` skill's script, which builds,

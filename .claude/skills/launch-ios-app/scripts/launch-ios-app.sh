@@ -80,8 +80,8 @@ fi
 
 settings=$(xcodebuild -project "$project_dir/dmus.xcodeproj" -scheme dmus \
     -destination "$destination" -showBuildSettings 2>/dev/null)
-products_dir=$(print -r -- "$settings" | awk '/ BUILT_PRODUCTS_DIR =/{print $3}')
-product_name=$(print -r -- "$settings" | awk '/ FULL_PRODUCT_NAME =/{print $3}')
+products_dir=$(print -r -- "$settings" | awk -F' = ' '/ BUILT_PRODUCTS_DIR =/{print $2}')
+product_name=$(print -r -- "$settings" | awk -F' = ' '/ FULL_PRODUCT_NAME =/{print $2}')
 app="$products_dir/$product_name"
 if [[ ! -d "$app" ]]; then
     echo "no build at $app; rerun with --build" >&2

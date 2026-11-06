@@ -40,10 +40,11 @@ script in ways that reintroduce them.
   and blocks forever on the permission prompt when run unattended. The script
   compiles a tiny Swift tool around `CGWindowListCopyWindowInfo`, which needs
   no permission, and polls it by PID.
-- **Process name.** The product is `Dmus`, not `dmus`. `pkill -x dmus` and
-  `tell process "dmus"` silently match nothing.
+- **Process name.** The product is `MC Mus`, with a space, not `mcmus`.
+  `pkill -x mcmus` and `tell process "mcmus"` silently match nothing; quote
+  the name: `pkill -x "MC Mus"`, `tell process "MC Mus"`.
 - **Launch the binary, not the bundle.** Running
-  `Dmus.app/Contents/MacOS/Dmus` directly gives the PID as `$!` and captures
+  `MC Mus.app/Contents/MacOS/MC Mus` directly gives the PID as `$!` and captures
   stderr to a log. `open -n` loses both and needs a `pgrep` that may pick up
   the user's own running copy of the app.
 - **Screenshots by window ID.** `screencapture -l <id>` captures only that
@@ -69,7 +70,7 @@ script in ways that reintroduce them.
 - Either mode with an empty Files panel after a few seconds means the load
   result carried an error; check the log path the script prints.
 
-If the user already has Dmus open, leave it alone. The script only ever
+If the user already has MC Mus open, leave it alone. The script only ever
 signals the PID it launched.
 
 ## Driving the launched app
@@ -80,7 +81,7 @@ usually running too):
 
 - `tell (first process whose unix id is <pid>)` for menus, AX queries and
   `click button "Play"`; real `NSButton`s fire from an AX click.
-- The Settings window's controls sit directly in `window "Dmus Settings"`:
+- The Settings window's controls sit directly in `window "MC Mus Settings"`:
   `static text 2` is the path, `button "Choose…"` the button.
 - `NSRunningApplication.activate()` on the pid orders the main window in
   front of an open Settings window; reopen Settings from the menu before
