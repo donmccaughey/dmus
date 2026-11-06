@@ -55,7 +55,7 @@ script in ways that reintroduce them.
   read it back through cfprefsd, not the plist file, which lags:
 
   ```bash
-  dom=~/Library/Containers/cc.donm.dmus/Data/Library/Preferences/cc.donm.dmus
+  dom=~/Library/Containers/cc.donm.mcmus/Data/Library/Preferences/cc.donm.mcmus
   defaults delete "$dom" "NSWindow Frame main"
   defaults read "$dom" "NSWindow Frame main"
   ```

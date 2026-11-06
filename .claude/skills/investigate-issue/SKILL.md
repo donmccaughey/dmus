@@ -56,7 +56,7 @@ In these recipes `$SCRATCHPAD` is the session scratchpad directory from the syst
 prompt; set it before running them. The schemes are `dmus` and `dmus-demo`
 (the latter launches with `--demo`). `dmusTests` is a Swift Testing logic test
 bundle with no host app; the `dmus` scheme runs it. The bundle identifier is
-`cc.donm.dmus`.
+`cc.donm.mcmus`.
 
 Unit tests:
 

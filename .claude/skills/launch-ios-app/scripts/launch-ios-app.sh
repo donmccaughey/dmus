@@ -6,7 +6,7 @@ set -euo pipefail
 
 default_device="iPhone 16e"
 default_os="18.4"
-bundle_id="cc.donm.dmus"
+bundle_id="cc.donm.mcmus"
 
 usage() {
     cat <<USAGE

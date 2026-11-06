@@ -3,7 +3,7 @@ import AppKit
 import Model
 
 nonisolated extension NSPasteboard.PasteboardType {
-    static let folderChild = NSPasteboard.PasteboardType("cc.donm.dmus.folder-child")
+    static let folderChild = NSPasteboard.PasteboardType("cc.donm.mcmus.folder-child")
 }
 
 nonisolated extension FolderChild {

@@ -6,7 +6,7 @@
 	<array>
 		<dict>
 			<key>UTTypeIdentifier</key>
-			<string>cc.donm.dmus.folder-child</string>
+			<string>cc.donm.mcmus.folder-child</string>
 			<key>UTTypeDescription</key>
 			<string>Dmus folder or track</string>
 			<key>UTTypeConformsTo</key>
