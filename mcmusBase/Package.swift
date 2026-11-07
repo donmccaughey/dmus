@@ -28,7 +28,7 @@ let package = Package(
             dependencies: ["Wrappers", "WrappersTestSupport"]
         ),
         // model
-        .target(name: "Model", dependencies: ["Wrappers"]),
+        .target(name: "Model", dependencies: ["Wrappers"], publicHeadersPath: "."),
         .testTarget(
             name: "ModelTests",
             dependencies: ["Model", "Wrappers", "WrappersTestSupport"]
