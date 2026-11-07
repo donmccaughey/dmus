@@ -47,12 +47,16 @@ final class QueuePanelViewController: NSViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        observeChanges { [weak self] in
-            self?.update()
-        }
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(update),
+            name: Queue.didChangeNotification,
+            object: player.queue
+        )
+        update()
     }
 
-    private func update() {
+    @objc private func update() {
         let queuedTracks = player.queue.queuedTracks
         clearButton.isEnabled = !queuedTracks.isEmpty
         emptyQueueView.isHidden = !queuedTracks.isEmpty

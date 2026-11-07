@@ -32,9 +32,13 @@ final class SettingsWindowController: NSWindowController {
         window.contentView = contentView
         window.center()
 
-        observeChanges { [weak self] in
-            self?.update()
-        }
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(update),
+            name: MusicLibraryStore.musicRootDirectoryDidChangeNotification,
+            object: store
+        )
+        update()
     }
 
     @available(*, unavailable)
@@ -61,7 +65,7 @@ final class SettingsWindowController: NSWindowController {
         return contentView
     }
 
-    private func update() {
+    @objc private func update() {
         pathField.setText(store.musicRootDirectory?.url.path ?? "")
     }
 

@@ -76,14 +76,31 @@ extension QueueTests {
         #expect(queue.isEmpty)
     }
 
-    @Test func mutationsNotifyOnChange() {
+    @Test func mutationsPostDidChange() {
         let queue = Queue()
-        var changes = 0
-        queue.onChange = { changes += 1 }
+        let changes = NotificationCounter(name: Queue.didChangeNotification, object: queue)
         queue.add(song)
         queue.add(Folder(path: "/Music/Artist", name: "Artist", children: [single]))
         queue.removeFirst()
         queue.clear()
-        #expect(changes == 4)
+        #expect(changes.count == 4)
+    }
+
+    @Test func addingChildrenPostsOnce() {
+        let album = Folder(path: "/Music/Artist/Album", name: "Album", children: [song])
+        let queue = Queue()
+        let changes = NotificationCounter(name: Queue.didChangeNotification, object: queue)
+        queue.add([single, album])
+        #expect(queue.tracks == [single, song])
+        #expect(changes.count == 1)
+    }
+
+    @Test func addingNothingPostsNothing() {
+        let queue = Queue()
+        let changes = NotificationCounter(name: Queue.didChangeNotification, object: queue)
+        queue.add(Folder())
+        queue.removeFirst()
+        queue.clear()
+        #expect(changes.count == 0)
     }
 }

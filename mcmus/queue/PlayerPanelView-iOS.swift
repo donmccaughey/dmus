@@ -50,9 +50,19 @@ final class PlayerPanelView: UIView {
         // symbols outgrow them.
         maximumContentSizeCategory = .accessibilityLarge
 
-        observeChanges { [weak self] in
-            self?.update()
-        }
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(update),
+            name: Queue.didChangeNotification,
+            object: player.queue
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(update),
+            name: Player.didChangeNotification,
+            object: player
+        )
+        update()
     }
 
     @available(*, unavailable)
@@ -60,7 +70,7 @@ final class PlayerPanelView: UIView {
         fatalError("init(coder:) is not supported")
     }
 
-    private func update() {
+    @objc private func update() {
         let isEnabled = !player.queue.isEmpty
         for button in [backButton, playStopButton, nextButton] {
             button.isEnabled = isEnabled

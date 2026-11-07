@@ -38,9 +38,19 @@ final class PlayerPanelView: NSView {
         ])
         setContentHuggingPriority(.required, for: .vertical)
 
-        observeChanges { [weak self] in
-            self?.update()
-        }
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(update),
+            name: Queue.didChangeNotification,
+            object: player.queue
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(update),
+            name: Player.didChangeNotification,
+            object: player
+        )
+        update()
     }
 
     @available(*, unavailable)
@@ -48,7 +58,7 @@ final class PlayerPanelView: NSView {
         fatalError("init(coder:) is not supported")
     }
 
-    private func update() {
+    @objc private func update() {
         let isEnabled = !player.queue.isEmpty
         for button in [backButton, playStopButton, nextButton] {
             button.isEnabled = isEnabled

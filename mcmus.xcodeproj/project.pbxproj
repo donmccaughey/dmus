@@ -30,7 +30,6 @@
 				components/PanelArrangement.swift,
 				"files/FolderChild+Pasteboard.swift",
 				MusicLibraryStore.swift,
-				Observing.swift,
 				queue/LowerLineWidths.swift,
 			);
 			target = D3A5000000000000000000F2 /* mcmusTests */;

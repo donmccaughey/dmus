@@ -28,12 +28,16 @@ final class FilesPanelViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        observeChanges { [weak self] in
-            self?.update()
-        }
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(update),
+            name: MusicLibraryStore.libraryDidChangeNotification,
+            object: store
+        )
+        update()
     }
 
-    private func update() {
+    @objc private func update() {
         let library = store.library
         if library.isEmpty {
             emptyFilesView.descriptionText = store.loadDidFail

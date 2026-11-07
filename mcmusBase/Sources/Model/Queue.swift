@@ -1,38 +1,40 @@
 import Foundation
-import Observation
 
-@Observable
 public final class Queue {
-    private(set) public var queuedTracks: [QueuedTrack] = [] {
-        didSet { onChange?() }
-    }
+    public static let didChangeNotification = Notification.Name("QueueDidChange")
 
-    // Views give the queue its add commands directly, so the owning player
-    // listens here to keep the audio wrapper's next track current.
-    @ObservationIgnored public var onChange: (() -> Void)?
+    private(set) public var queuedTracks: [QueuedTrack] = []
 
     public init() {}
-    
+
     public var tracks: [Track] { queuedTracks.map(\.track) }
 
     public var isEmpty: Bool { queuedTracks.isEmpty }
 
     public func add(_ child: FolderChild) {
-        queuedTracks.append(contentsOf: child.trackDescendants.map { QueuedTrack(track: $0) })
+        add([child])
     }
 
     public func add(_ children: [FolderChild]) {
-        for child in children {
-            add(child)
-        }
+        let tracks = children.flatMap(\.trackDescendants)
+        guard !tracks.isEmpty else { return }
+        queuedTracks.append(contentsOf: tracks.map { QueuedTrack(track: $0) })
+        postDidChange()
     }
 
     public func removeFirst() {
         guard !queuedTracks.isEmpty else { return }
         queuedTracks.removeFirst()
+        postDidChange()
     }
 
     public func clear() {
+        guard !queuedTracks.isEmpty else { return }
         queuedTracks.removeAll()
+        postDidChange()
+    }
+
+    private func postDidChange() {
+        NotificationCenter.default.post(name: Self.didChangeNotification, object: self)
     }
 }

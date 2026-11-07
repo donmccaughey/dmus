@@ -1,9 +1,12 @@
 import Foundation
-import Observation
 import Wrappers
 
-@Observable @MainActor
-public final class Player {
+@MainActor
+public final class Player: NSObject {
+    // Posted when isPlaying changes; timeIndex ticks twice a second while
+    // playing and no view shows it, so it posts nothing.
+    public static let didChangeNotification = Notification.Name("PlayerDidChange")
+
     public let audio: any Audio
     public let queue: Queue
     private(set) public var timeIndex: TimeInterval = 0
@@ -13,14 +16,20 @@ public final class Player {
     public init(audio: any Audio) {
         self.audio = audio
         queue = Queue()
-        queue.onChange = { [weak self] in self?.queueDidChange() }
+        super.init()
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(queueDidChange),
+            name: Queue.didChangeNotification,
+            object: queue
+        )
         audio.onTrackFinished = { [weak self] in self?.audioDidFinishCurrentTrack() }
         audio.onPlaybackPositionChanged = { [weak self] position in
             self?.audioPositionDidChange(to: position)
         }
     }
 
-    public convenience init() {
+    public override convenience init() {
         self.init(audio: AudioReal())
     }
 
@@ -35,7 +44,7 @@ public final class Player {
     public func play() {
         guard let currentTrack, !isPlaying else { return }
         audio.play(currentTrack.url, from: timeIndex, thenPlay: nextTrack?.url)
-        isPlaying = true
+        setIsPlaying(true)
     }
 
     public func stop() {
@@ -75,7 +84,14 @@ public final class Player {
 
     private func stopAudio() {
         audio.stop()
-        isPlaying = false
+        setIsPlaying(false)
+    }
+
+    // Every caller has checked that the value changes, so this posts once per
+    // command, after the command's other state is settled.
+    private func setIsPlaying(_ isPlaying: Bool) {
+        self.isPlaying = isPlaying
+        NotificationCenter.default.post(name: Self.didChangeNotification, object: self)
     }
 
     // The player's own commands tell the audio wrapper what to play next
@@ -86,7 +102,7 @@ public final class Player {
         isMutatingQueue = false
     }
 
-    private func queueDidChange() {
+    @objc private func queueDidChange() {
         guard isPlaying, !isMutatingQueue else { return }
         audio.replaceNextTrack(with: nextTrack?.url)
     }
@@ -98,7 +114,7 @@ public final class Player {
         timeIndex = 0
         mutateQueue { queue.removeFirst() }
         if queue.isEmpty {
-            isPlaying = false
+            setIsPlaying(false)
         } else {
             audio.replaceNextTrack(with: nextTrack?.url)
         }

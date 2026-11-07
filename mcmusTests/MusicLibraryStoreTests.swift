@@ -44,6 +44,17 @@ struct MusicLibraryStoreTests {
         #expect(!store.loadDidFail)
     }
 
+    @Test func applyingResultPostsLibraryDidChange() {
+        let store = MusicLibraryStore()
+        let libraryChanges = NotificationCounter(name: MusicLibraryStore.libraryDidChangeNotification, object: store)
+        let rootChanges = NotificationCounter(name: MusicLibraryStore.musicRootDirectoryDidChangeNotification, object: store)
+
+        store.apply(LoadResult(library: library, errors: []))
+
+        #expect(libraryChanges.count == 1)
+        #expect(rootChanges.count == 0)
+    }
+
     #if os(macOS)
     func trackNames(in store: MusicLibraryStore) -> [String] {
         store.library.rootFolder.children.compactMap { ($0 as? Track)?.trackName }
@@ -94,6 +105,26 @@ struct MusicLibraryStoreTests {
 
         #expect(!store.loadDidFail)
         #expect(trackNames(in: store) == ["New"])
+    }
+
+    @Test func changingRootPostsRootChangeFirstAndLibraryChangeWhenLoaded() async {
+        let fileSystem = FileSystemFake()
+        fileSystem.addPath("/Other/Music/New.mp3")
+        let preferences = PreferencesFake(musicRootDirectoryBookmark: FileSystemFake.bookmark(forPath: "/Saved/Music"))
+        let store = MusicLibraryStore(fileSystem: fileSystem, preferences: preferences)
+        store.loadInBackground(isDemo: false)
+        await store.loadTask?.value
+        let rootChanges = NotificationCounter(name: MusicLibraryStore.musicRootDirectoryDidChangeNotification, object: store)
+        let libraryChanges = NotificationCounter(name: MusicLibraryStore.libraryDidChangeNotification, object: store)
+
+        store.changeMusicRootDirectory(to: URL(filePath: "/Other/Music", directoryHint: .isDirectory))
+
+        #expect(rootChanges.count == 1)
+        #expect(libraryChanges.count == 0)
+
+        await store.loadTask?.value
+
+        #expect(libraryChanges.count == 1)
     }
 
     @Test func choosingCurrentRootAgainDoesNothing() async {

@@ -207,4 +207,29 @@ struct PlayerTests {
         player.queue.add(second)
         #expect(audio.calls.isEmpty)
     }
+
+    @Test func playingAndStoppingEachPostDidChange() {
+        let player = makePlayer([first])
+        let changes = NotificationCounter(name: Player.didChangeNotification, object: player)
+        player.play()
+        #expect(changes.count == 1)
+        player.stop()
+        #expect(changes.count == 2)
+    }
+
+    @Test func positionReportsDoNotPostDidChange() {
+        let player = makePlayingPlayer([first])
+        let changes = NotificationCounter(name: Player.didChangeNotification, object: player)
+        audio.reportPosition(42.25)
+        #expect(player.timeIndex == 42.25)
+        #expect(changes.count == 0)
+    }
+
+    @Test func finishedLastTrackPostsDidChange() {
+        let player = makePlayingPlayer([first])
+        let changes = NotificationCounter(name: Player.didChangeNotification, object: player)
+        audio.finishCurrentTrack()
+        #expect(!player.isPlaying)
+        #expect(changes.count == 1)
+    }
 }

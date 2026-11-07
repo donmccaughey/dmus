@@ -1,10 +1,13 @@
 import Foundation
 import Model
-import Observation
 import Wrappers
 
-@Observable
 final class MusicLibraryStore {
+    static let libraryDidChangeNotification = Notification.Name("MusicLibraryStoreLibraryDidChange")
+    // Separate from the library, so a root change alone leaves the files
+    // panel, and the macOS outline's expansion, untouched.
+    static let musicRootDirectoryDidChangeNotification = Notification.Name("MusicLibraryStoreMusicRootDirectoryDidChange")
+
     private(set) var library = MusicLibrary()
     private(set) var loadErrors: [any Error] = []
     private(set) var musicRootDirectory: MusicRootDirectory?
@@ -27,6 +30,7 @@ final class MusicLibraryStore {
     func apply(_ result: LoadResult) {
         library = result.library
         loadErrors = result.errors
+        NotificationCenter.default.post(name: Self.libraryDidChangeNotification, object: self)
     }
 
     func loadInBackground(isDemo: Bool) {
@@ -49,7 +53,7 @@ final class MusicLibraryStore {
         guard url.path != musicRootDirectory?.url.path else { return }
         musicRootDirectory?.stopAccessing(fileSystem: fileSystem)
         let musicRootDirectory = MusicRootDirectory.choose(url, fileSystem: fileSystem, preferences: preferences)
-        self.musicRootDirectory = musicRootDirectory
+        setMusicRootDirectory(musicRootDirectory)
         let fileSystem = fileSystem
         loadTask?.cancel()
         loadTask = Task.detached(priority: .utility) {
@@ -61,6 +65,7 @@ final class MusicLibraryStore {
 
     private func setMusicRootDirectory(_ musicRootDirectory: MusicRootDirectory?) {
         self.musicRootDirectory = musicRootDirectory
+        NotificationCenter.default.post(name: Self.musicRootDirectoryDidChangeNotification, object: self)
     }
 
     // A superseded load still walks to completion since loadMusicLibrary does
