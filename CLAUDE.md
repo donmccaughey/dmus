@@ -1,4 +1,4 @@
-# Dmus
+# MC Mus
 
 An offline music player for macOS and iOS. Requirements are in
 `docs/requirements.md`. Ignore documents in `docs/drafts/` unless instructed

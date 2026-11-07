@@ -1,6 +1,6 @@
 ---
 name: launch-mac-app
-description: Launch the Dmus macOS Debug build from the command line, wait for its window, screenshot it, and quit it cleanly, in normal or --demo mode. Use this whenever you need to run, launch, open, smoke-test, or screenshot the Mac app to verify a change, including when the `run` skill or a plan's verification step calls for running the app. Encodes launch-flag ordering and window-lookup pitfalls that otherwise make a working build look hung.
+description: Launch the MC Mus macOS Debug build from the command line, wait for its window, screenshot it, and quit it cleanly, in normal or --demo mode. Use this whenever you need to run, launch, open, smoke-test, or screenshot the Mac app to verify a change, including when the `run` skill or a plan's verification step calls for running the app. Encodes launch-flag ordering and window-lookup pitfalls that otherwise make a working build look hung.
 allowed-tools: Bash(.claude/skills/launch-mac-app/scripts/launch-mac-app.sh:*), Bash(xcodebuild:*), Bash(screencapture:*), Bash(kill:*), Bash(pgrep:*)
 ---
 

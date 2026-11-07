@@ -1,6 +1,6 @@
 ---
 name: launch-ios-app
-description: Launch the Dmus iOS Debug build on a simulator from the command line, set its orientation, screenshot the device upright, and terminate it cleanly, in normal or --demo mode. Use this whenever you need to run, launch, open, smoke-test, or screenshot the iOS app to verify a change, including when the `run` skill or a plan's verification step calls for running the app on iOS. Encodes the device-resolution, rotation and screenshot-orientation pitfalls that otherwise waste a session.
+description: Launch the MC Mus iOS Debug build on a simulator from the command line, set its orientation, screenshot the device upright, and terminate it cleanly, in normal or --demo mode. Use this whenever you need to run, launch, open, smoke-test, or screenshot the iOS app to verify a change, including when the `run` skill or a plan's verification step calls for running the app on iOS. Encodes the device-resolution, rotation and screenshot-orientation pitfalls that otherwise waste a session.
 allowed-tools: Bash(.claude/skills/launch-ios-app/scripts/launch-ios-app.sh:*), Bash(xcodebuild:*), Bash(xcrun simctl:*), Bash(osascript:*), Bash(screencapture:*), Bash(sips:*), Bash(pgrep:*)
 ---
 
@@ -59,7 +59,7 @@ iPad Pro 11-inch is `2EFD3632-0EFD-4BEE-B638-7AA561250E90`.
   orientation, and `simctl io screenshot` always writes the framebuffer in
   physical portrait dimensions with the content drawn rotated, so the image
   size says nothing. `screen-orientation.swift` (compiled on first use into
-  `$TMPDIR/dmus-launch-ios-app`) finds the home indicator instead: bottom
+  `$TMPDIR/mcmus-launch-ios-app`) finds the home indicator instead: bottom
   edge is portrait, left edge is landscape left, right edge is landscape
   right. The script rotates the saved screenshot upright with `sips -r`.
 - **Rotation is Simulator.app's ⌘← / ⌘→.** Simulator has no scripting

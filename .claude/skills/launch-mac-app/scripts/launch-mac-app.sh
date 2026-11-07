@@ -1,5 +1,5 @@
 #!/bin/zsh
-# Launch the Debug build of Dmus for macOS, wait for its window, optionally
+# Launch the Debug build of MC Mus for macOS, wait for its window, optionally
 # screenshot it, and quit it. Prints PID, window ID and log path.
 set -euo pipefail
 
@@ -31,7 +31,7 @@ done
 
 script_dir="${0:A:h}"
 project_dir="${script_dir:h:h:h:h}"
-cache_dir="${TMPDIR:-/tmp}/dmus-launch-mac-app"
+cache_dir="${TMPDIR:-/tmp}/mcmus-launch-mac-app"
 mkdir -p "$cache_dir"
 
 if (( build )); then

@@ -1,5 +1,5 @@
 #!/bin/zsh
-# Launch the Debug build of Dmus on an iOS simulator, set the orientation,
+# Launch the Debug build of MC Mus on an iOS simulator, set the orientation,
 # optionally screenshot the device, and terminate the app. Prints the device
 # UDID, the app's PID, the log path, and the simulator window's frame.
 set -euo pipefail
@@ -41,7 +41,7 @@ done
 
 script_dir="${0:A:h}"
 project_dir="${script_dir:h:h:h:h}"
-cache_dir="${TMPDIR:-/tmp}/dmus-launch-ios-app"
+cache_dir="${TMPDIR:-/tmp}/mcmus-launch-ios-app"
 mkdir -p "$cache_dir"
 
 resolve_device() {

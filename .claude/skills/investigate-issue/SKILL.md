@@ -1,12 +1,12 @@
 ---
 name: investigate-issue
-description: Read a Dmus GitHub issue by number, verify or reproduce it, and post the steps and result as a comment on the issue. Use when asked to investigate, verify, confirm, or reproduce an issue.
+description: Read an MC Mus GitHub issue by number, verify or reproduce it, and post the steps and result as a comment on the issue. Use when asked to investigate, verify, confirm, or reproduce an issue.
 argument-hint: [issue-number]
 disable-model-invocation: true
 allowed-tools: Bash(gh issue view:*), Bash(gh issue comment:*), Bash(gh api:*), Bash(xcodebuild:*), Bash(xcrun simctl:*), Bash(open:*), Bash(osascript:*), Bash(screencapture:*), Bash(git log:*), Bash(git rev-parse:*), Bash(git status:*), Bash(ls:*), Bash(mdls:*), Bash(GetFileInfo:*), Bash(sw_vers:*), Bash(.claude/skills/launch-ios-app/scripts/launch-ios-app.sh:*)
 ---
 
-Investigate GitHub issue #$ARGUMENTS in `donmccaughey/dmus` and post a comment on
+Investigate GitHub issue #$ARGUMENTS in `donmccaughey/mcmus` and post a comment on
 it describing how it was verified or reproduced and what was found. This is an
 investigation only: do not edit source files, do not close, label, or retitle the
 issue, and do not propose a fix beyond a one-line pointer to the responsible code.

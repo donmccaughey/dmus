@@ -1,4 +1,4 @@
-# dmus
+# MC Mus
 
 An offline music player.
 

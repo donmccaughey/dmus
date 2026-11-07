@@ -1,12 +1,12 @@
 ---
 name: plan-issue
-description: Read a Dmus GitHub issue by number, design a plan to fix it in plan mode, post the plan as a comment on the issue, and ask the user what to do next. Use when asked to plan, design, or scope a fix for an issue.
+description: Read an MC Mus GitHub issue by number, design a plan to fix it in plan mode, post the plan as a comment on the issue, and ask the user what to do next. Use when asked to plan, design, or scope a fix for an issue.
 argument-hint: [issue-number]
 disable-model-invocation: true
 allowed-tools: EnterPlanMode, ExitPlanMode, AskUserQuestion, Read, Grep, Glob, Bash(gh issue view:*), Bash(gh issue comment:*), Bash(gh api:*), Bash(git log:*), Bash(git rev-parse:*), Bash(git status:*), Bash(git diff:*), Bash(git grep:*), Bash(ls:*)
 ---
 
-Plan a fix for GitHub issue #$ARGUMENTS in `donmccaughey/dmus`, post the plan as a
+Plan a fix for GitHub issue #$ARGUMENTS in `donmccaughey/mcmus`, post the plan as a
 comment on the issue, and then ask the user what to do with it. The whole skill
 runs in plan mode: do not edit source files, do not commit, and do not close,
 label, or retitle the issue. The only things written are the plan file that plan
@@ -106,7 +106,7 @@ call `AskUserQuestion` with these options:
   id from the URL:
 
   ```bash
-  gh api --method PATCH /repos/donmccaughey/dmus/issues/comments/<id> -F body=@"$SCRATCHPAD/issue-$ARGUMENTS-plan.md"
+  gh api --method PATCH /repos/donmccaughey/mcmus/issues/comments/<id> -F body=@"$SCRATCHPAD/issue-$ARGUMENTS-plan.md"
   ```
 
   Then ask again.

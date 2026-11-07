@@ -1,21 +1,21 @@
-# Rewrite Dmus in Objective-C
+# Rewrite MC Mus in Objective-C
 
 ## Context
 
-Dmus is about 4,600 lines of Swift in three places:
+MC Mus is about 4,600 lines of Swift in three places:
 
-- `dmusBase/`, a local SwiftPM package: `Wrappers` (280 lines),
+- `mcmusBase/`, a local SwiftPM package: `Wrappers` (280 lines),
   `WrappersTestSupport` (230), `Model` (520), and the Swift Testing targets
   `ModelTests` (72 tests, 920 lines) and `WrappersTests` (a placeholder).
-- `dmus/`, one multiplatform app target (macOS AppKit and iOS UIKit, all
+- `mcmus/`, one multiplatform app target (macOS AppKit and iOS UIKit, all
   created in code): 38 files, about 2,300 lines, a tenth of them `#Preview`
   blocks.
-- `dmusTests/`, a logic-test bundle with no host app (24 tests) that compiles
+- `mcmusTests/`, a logic-test bundle with no host app (24 tests) that compiles
   five app sources directly through pbxproj membership exceptions.
 
-The whole project is to be rewritten in Objective-C, and `dmusBase` is to
+The whole project is to be rewritten in Objective-C, and `mcmusBase` is to
 become a statically linked library: a native static library target in
-`dmus.xcodeproj` rather than a package, since `Package.swift` is itself Swift.
+`mcmus.xcodeproj` rather than a package, since `Package.swift` is itself Swift.
 The rewrite is incremental. Every step builds for both platforms, passes
 `make check`, and leaves both apps launchable.
 
@@ -43,7 +43,7 @@ and when it is dealt with.
   or generics. The order is wrappers, model, fakes, then the app's leaf
   views, its controllers, and the app shell last. The remaining Swift always
   imports finished Objective-C beneath it, and no Objective-C file ever
-  imports the generated `Dmus-Swift.h`. The app's dependency graph allows
+  imports the generated `MC_Mus-Swift.h`. The app's dependency graph allows
   this: its only cycle is the iOS app delegate and scene delegate, which
   move together.
 - **The package survives until its sources are all Objective-C.** A SwiftPM
@@ -57,12 +57,12 @@ and when it is dealt with.
   in an Xcode test bundle where Swift Testing and XCTest can sit side by
   side; this avoids depending on Objective-C test targets inside SwiftPM.
 - **End state of the library.** Two static library targets in
-  `dmus.xcodeproj`, mirroring the package's two products: `dmusBase`
-  (`libdmusBase.a`, from `dmusBase/Wrappers/` and `dmusBase/Model/`) and
-  `dmusBaseTestSupport` (`libdmusBaseTestSupport.a`, from
-  `dmusBase/WrappersTestSupport/`), plus one logic-test bundle
-  `dmusBaseTests` (from `dmusBase/ModelTests/` and
-  `dmusBase/WrappersTests/`). Each folder is a file-system-synchronized group
+  `mcmus.xcodeproj`, mirroring the package's two products: `mcmusBase`
+  (`libmcmusBase.a`, from `mcmusBase/Wrappers/` and `mcmusBase/Model/`) and
+  `mcmusBaseTestSupport` (`libmcmusBaseTestSupport.a`, from
+  `mcmusBase/WrappersTestSupport/`), plus one logic-test bundle
+  `mcmusBaseTests` (from `mcmusBase/ModelTests/` and
+  `mcmusBase/WrappersTests/`). Each folder is a file-system-synchronized group
   owned by one target, so no exception sets are needed. The rule that
   `Wrappers` does not import `Model`, which the package enforced, becomes a
   convention.
@@ -110,7 +110,7 @@ because Swift has nothing closer to offer.
 | Enum with associated values, recursive | `FolderChild` (`.folder(Folder)`, `.track(Track)`) and every `switch` over it: `Queue.add`, `Folder.trackDescendants`, `FilesTreeNode`, `FolderChildCell.show`, `FolderTableViewController`; every test fixture | An `@objc` protocol `FolderChild` (`name`, `children`, `trackDescendants`) adopted by `Folder` and `Track`. Model switches become polymorphic calls; the three view sites that care which kind they have use a class check. Tests build children directly and compare child arrays through `isEqual`. | Reshape (step 4) |
 | Value types (`struct`, `Hashable`, copy semantics) | `Track`, `Folder`, `QueuedTrack`, `MusicLibrary`, `LoadResult`, `MusicRootDirectory`; `FileInfo`, `ResolvedBookmark`, `FileSystemReal`, `PreferencesReal` | Final `NSObject` subclasses: read-only properties, designated initializers. Hand-written `isEqual`/`hash` on `Track`, `Folder` (deep, with a pointer fast path, a shallow hash and nil-safe `path` comparison; `FilesTableStackController.setRootFolder` relies on it to keep the navigation position across reloads) and `QueuedTrack`. | Reshape (steps 3 and 4) |
 | `Codable` | Drag payload in `FolderChild+Pasteboard.swift`; `DemoEntry` in `LoadDemoMusicLibrary.swift` | Drag payload: `NSSecureCoding` and a keyed archive under the same pasteboard type. It must move first, because synthesized `Codable` stops working the moment `FolderChild` is a protocol; drags are app-local, so the format is free to change. Demo data: `NSJSONSerialization` with explicit type checks. | Payload: reshape (step 4). Demo data: translate (step 8). |
-| Observation (`@Observable`, `withObservationTracking`) | `Player`, `Queue`, `MusicLibraryStore`; `dmus/Observing.swift`; every `observeChanges { }` call in the views | The notifications described above. They are delivered synchronously and are not coalesced, so each public model command posts once, after its state is settled (`Queue.add(_ children:)` appends once instead of looping; `apply` sets both properties, then posts). `Observing.swift` and its three tests are deleted; notification tests replace them. | Reshape (step 5). Must precede step 8: `withObservationTracking` sees nothing in an Objective-C object, so the UI would compile and silently stop updating. |
+| Observation (`@Observable`, `withObservationTracking`) | `Player`, `Queue`, `MusicLibraryStore`; `mcmus/Observing.swift`; every `observeChanges { }` call in the views | The notifications described above. They are delivered synchronously and are not coalesced, so each public model command posts once, after its state is settled (`Queue.add(_ children:)` appends once instead of looping; `apply` sets both properties, then posts). `Observing.swift` and its three tests are deleted; notification tests replace them. | Reshape (step 5). Must precede step 8: `withObservationTracking` sees nothing in an Objective-C object, so the UI would compile and silently stop updating. |
 | Structured concurrency (`Task.detached`, `Task.isCancelled`, `await`) | `MusicLibraryStore.loadInBackground`, `changeMusicRootDirectory`; its tests (`await store.loadTask?.value`, comparing tasks) | A load generation counter replaces `Task.isCancelled` and the test-visible `loadTask`; loads take a completion handler, which the Swift tests can still `await` and XCTest waits on with an expectation. The mechanism itself becomes a utility-QoS global queue and `dispatch_async` to the main queue. | Seam: reshape (step 6). GCD: translate (step 12); writing GCD in Swift under default main-actor isolation would be throwaway friction. |
 | Actor isolation and `Sendable` | `Player`, `Audio`, `AudioReal` (`isolated deinit`, `MainActor.assumeIsolated`), default main-actor isolation in the app target | Main-thread-only by convention; only fully immutable objects cross threads, and notifications are posted from the main queue only. `AudioReal`'s workarounds disappear. | Translate |
 | Enum with associated values; nested types | `AudioFake.Call`; `FileSystemFake.Kind`, `.Entry` | A top-level class `AudioFakeCall` with factory methods and `isEqual`, so `audio.calls == [.play(…)]` still reads the same in the Swift tests; top-level `FileSystemFakeKind` and `FileSystemFakeEntry`. | Reshape (step 3) |
@@ -122,7 +122,7 @@ because Swift has nothing closer to offer.
 | Tuples, caseless enums as namespaces, enum initializers | `LowerLineWidths.split`, `MainMenu`, `PanelArrangement(fitting:)` | A C struct and function; a function returning the menu; an `NS_ENUM` and a C function. | Translate |
 | Extensions on system types | `NSView`/`UIView.addFillingSubview`, `UIButton.bordered`, `NSPasteboard.PasteboardType.folderChild`, `[FolderChild].sortedByName` | Categories; a string constant; a function shared by the two loaders, which must ask for a stable sort. | Translate |
 | Free functions | `loadMusicLibrary`, `loadDemoMusicLibrary` | C functions, same files. | Translate (step 8) |
-| `@main` | Both `DmusAppDelegate` files | One `dmus/main.m` with a body per platform. macOS keeps today's explicit delegate creation before `NSApplicationMain`; iOS passes the delegate class name to `UIApplicationMain`. | Translate (step 17) |
+| `@main` | Both `MCMusAppDelegate` files | One `mcmus/main.m` with a body per platform. macOS keeps today's explicit delegate creation before `NSApplicationMain`; iOS passes the delegate class name to `UIApplicationMain`. | Translate (step 17) |
 | `#if os(…)` | Whole-file in every platform view; inside `FileSystem`, `MusicRootDirectory`, `MusicLibraryStore`, `AudioReal` | `#if TARGET_OS_OSX` / `TARGET_OS_IOS`, in both header and implementation. Twin files keep the `-iOS` / `-macOS` suffix on both. | Translate |
 | Swift Testing | All 97 tests | XCTest: a suite's stored fixtures move to `setUp`, `#require` becomes an assertion with `continueAfterFailure = NO`, `async` tests wait on expectations. | Steps 11 and 13 |
 | Swift-only workarounds | `EmptyStateView-iOS` (convenience-initializer dance around `init(configuration:)`) | A plain designated initializer. (The copy-mutate-assign of button and content-unavailable configurations stays: in Objective-C they are classes behind `copy` properties.) | Translate |
@@ -165,10 +165,10 @@ Smaller semantic differences to watch while translating:
 ### Phase 1: prepare, in Swift
 
 1. **Spike, on a throwaway branch.** Prove the build mechanics with
-   `PanelArrangement` (10 lines, compiled into both the app and `dmusTests`,
+   `PanelArrangement` (10 lines, compiled into both the app and `mcmusTests`,
    3 tests) before anything depends on them, and record the findings here:
    (a) the mixed app target: `PanelArrangement.h`/`.m`, bridging headers for
-   the app and for `dmusTests`, the exception-set edit, with the Swift
+   the app and for `mcmusTests`, the exception-set edit, with the Swift
    `MainViewController-iOS.swift` and the Swift tests still compiling;
    (b) a SwiftPM C-family target with `publicHeadersPath: "."`, imported by
    the Swift 6 `Model` target and a Swift Testing test;
@@ -178,20 +178,20 @@ Smaller semantic differences to watch while translating:
    subfolders, whether `-ObjC` is needed, whether Xcode rewrote the schemes,
    and the executed test counts. Nothing from the branch is merged.
 2. **Requirements, baselines, project hygiene.** In `docs/requirements.md`
-   replace "Dmus shall use the Swift language." with the Objective-C
+   replace "MC Mus shall use the Swift language." with the Objective-C
    equivalent. Record the baseline: executed tests per suite and platform
-   (source counts: `ModelTests` 72, `WrappersTests` 1, `dmusTests` 24; fewer
+   (source counts: `ModelTests` 72, `WrappersTests` 1, `mcmusTests` 24; fewer
    run on iOS), and screenshots from `launch-mac-app` and `launch-ios-app`
    in normal and `--demo` mode (iOS in both orientations; macOS with a
    folder dragged to the queue). With the iOS app running in the simulator,
    repeat the class-name and selector checks against UIKit with `lldb`. Fix
-   two things that would undermine later steps: `dmusTests/` is synchronized
+   two things that would undermine later steps: `mcmusTests/` is synchronized
    into the *app* target and excluded file by file, so a new test file
    compiles into the app until it is added to two exception sets (make the
    folder a synchronized group of the test target and delete both sets);
-   and `dmusTests/` is missing from `src_files` in the `Makefile`, so
+   and `mcmusTests/` is missing from `src_files` in the `Makefile`, so
    `make check` does not rerun for a test-only change. Move
-   `dmus/MusicLibraryStoreTests.swift` to `dmusTests/`.
+   `mcmus/MusicLibraryStoreTests.swift` to `mcmusTests/`.
 3. **API tidy.** The "reshape (step 3)" rows of the table: names, default
    arguments, the fakes' shape, error domains and how tests match errors,
    and `FileSystemItemInfo`, `ResolvedBookmark`, `FileSystemReal` and
@@ -234,19 +234,19 @@ in these steps beyond what the importer forces.
 ### Phase 3: package to static library, then its tests
 
 10. **Xcode targets replace the package.** `git mv` the five folders up from
-    `Sources/` and `Tests/` to `dmusBase/`. Add the `dmusBase` and
-    `dmusBaseTestSupport` static library targets and the `dmusBaseTests`
+    `Sources/` and `Tests/` to `mcmusBase/`. Add the `mcmusBase` and
+    `mcmusBaseTestSupport` static library targets and the `mcmusBaseTests`
     bundle, all multiplatform like the app (`SDKROOT = auto`, the same
     `SUPPORTED_PLATFORMS` and deployment targets, `SKIP_INSTALL = YES`,
-    explicit target dependencies). The app links `libdmusBase.a`;
-    `dmusTests` and `dmusBaseTests` link both libraries. Consumers find
+    explicit target dependencies). The app links `libmcmusBase.a`;
+    `mcmusTests` and `mcmusBaseTests` link both libraries. Consumers find
     headers through search paths naming the library folders, so
     `#import "Player.h"` reads as it did in the package. The app,
-    `dmusTests` and `dmusBaseTests` (all still Swift) each get a bridging
+    `mcmusTests` and `mcmusBaseTests` (all still Swift) each get a bridging
     header importing the library headers and lose their `import Model`,
     `import Wrappers` and `import WrappersTestSupport` lines. Delete
-    `Package.swift`, `dmusBase/.swiftpm/` and the package references in the
-    pbxproj; point `dmus.xctestplan` at `dmusBaseTests`; check both schemes;
+    `Package.swift`, `mcmusBase/.swiftpm/` and the package references in the
+    pbxproj; point `mcmus.xctestplan` at `mcmusBaseTests`; check both schemes;
     update the code-location paragraphs of `docs/requirements.md`. No source
     file changes beyond imports. Executed test counts must match step 6.
 11. **Library tests to XCTest**, one file at a time inside the mixed bundle,
@@ -255,16 +255,16 @@ in these steps beyond what the importer forces.
 ### Phase 4: translate the app
 
 The app target is mixed from step 12 to step 17. Swift sees Objective-C
-through `dmus/dmus-Bridging-Header.h`, which grows by one import per
+through `mcmus/mcmus-Bridging-Header.h`, which grows by one import per
 translated header; twin headers guard themselves with `TARGET_OS_…`.
 
 12. **Test-covered sources.** `PanelArrangement`, `LowerLineWidths`,
     `FolderChild+Pasteboard` (as `FolderChildPasteboard`) and
     `MusicLibraryStore` (`NS_SWIFT_UI_ACTOR`, and GCD in place of
     `Task.detached`). The membership exception entries change from `.swift`
-    to `.m`, and `dmusTests`' bridging header imports the new headers so its
+    to `.m`, and `mcmusTests`' bridging header imports the new headers so its
     Swift tests keep running.
-13. **`dmusTests` to XCTest.** The bundle becomes pure Objective-C; delete
+13. **`mcmusTests` to XCTest.** The bundle becomes pure Objective-C; delete
     its bridging header and Swift settings.
 14. **Components.** `NSView+FillingSubview`, `UIView+FillingSubview`,
     `UIButton+Bordered`, `HairlineView`, `EmptyStateView` (both), `PanelView`
@@ -277,8 +277,8 @@ translated header; twin headers guard themselves with `TARGET_OS_…`.
     `FilesPanelViewController`.
 17. **Main, settings and the app shell.** `MainViewController` (both),
     `MainWindowController`, `SettingsWindowController`, `MainMenu`; then the
-    macOS `DmusAppDelegate` with the macOS body of `main.m`; then the iOS
-    `DmusAppDelegate` and `DmusSceneDelegate` together with the iOS body.
+    macOS `MCMusAppDelegate` with the macOS body of `main.m`; then the iOS
+    `MCMusAppDelegate` and `MCMusSceneDelegate` together with the iOS body.
     The Swift delegates are whole-file conditional, so neither platform ever
     links two `main`s. No Swift source remains in the app.
 18. **Remove Swift from the build and finish.** Delete the bridging header,
@@ -307,15 +307,15 @@ translated header; twin headers guard themselves with `TARGET_OS_…`.
   command that posted. `update` methods must not mutate the model, and
   commands post only once their state is consistent.
 - **Static library linking.** The linker drops object files that define only
-  categories unless consumers pass `-ObjC`; `dmusBase` is planned to have
+  categories unless consumers pass `-ObjC`; `mcmusBase` is planned to have
   none. `make release` overrides `CONFIGURATION_BUILD_DIR`, so the libraries
-  land beside `Dmus.app`; check the disk image still gets only the app.
+  land beside `MC Mus.app`; check the disk image still gets only the app.
 - **Header lookup with synchronized groups** is unproven for subfolders and
-  for sources compiled into `dmusTests` by exception set; the spike settles
+  for sources compiled into `mcmusTests` by exception set; the spike settles
   it, with explicit search paths as the fallback.
 - **Xcode rewrites shared schemes** when the pbxproj changes while the
   project is open. Quit Xcode for pbxproj edits (steps 2, 10, 12, 13, 18)
-  and `git diff dmus.xcodeproj/xcshareddata` afterwards; `dmus-demo.xcscheme`
+  and `git diff mcmus.xcodeproj/xcshareddata` afterwards; `mcmus-demo.xcscheme`
   references the test plan too.
 - **Lost compiler checks.** No exhaustive `switch` over `FolderChild`, no
   optional unwrapping, no `Sendable` checking. Nullability annotations, the
@@ -344,5 +344,5 @@ translated header; twin headers guard themselves with `TARGET_OS_…`.
 - Acceptance at step 18: `git ls-files '*.swift'` lists only the two skill
   helpers; `otool -L` on the built macOS and iOS executables shows nothing
   under `/usr/lib/swift`; neither app bundle contains a `libswift*.dylib`;
-  `grep -r NS_SWIFT_ dmus dmusBase dmusTests` prints nothing; `make release`
+  `grep -r NS_SWIFT_ mcmus mcmusBase mcmusTests` prints nothing; `make release`
   produces the Release build and disk image.

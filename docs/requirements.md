@@ -1,8 +1,8 @@
 # Requirements
 
-This document contains requirements for "dmus" (capitalized "Dmus"), a
-cross-platform, offline music player application. Requirements in this document
-are written in [EARS][], the "easy approach to requirements syntax".
+This document contains requirements for "MC Mus", a cross-platform, offline
+music player application. Requirements in this document are written in
+[EARS][], the "easy approach to requirements syntax".
 
 [EARS]: https://github.com/donmccaughey/ears/blob/main/ears-cheat-sheet.md
 
@@ -15,44 +15,44 @@ according to operating system.
 
 # Overview
 
-Dmus shall run on macOS and iOS; where "iOS" includes both iPhone and iPad form
-factors and both iOS and iPadOS operating systems.
+MC Mus shall run on macOS and iOS; where "iOS" includes both iPhone and iPad
+form factors and both iOS and iPadOS operating systems.
 
 
 # Project configuration
 
-Dmus shall use Xcode 26 and be built on macOS 15 Sequoia.
+MC Mus shall use Xcode 26 and be built on macOS 15 Sequoia.
 
-On macOS, dmus shall target macOS 15 Sequoia or later.
+On macOS, MC Mus shall target macOS 15 Sequoia or later.
 
-On iOS, dmus shall target iOS 18 (including iPadOS 18) or later.
+On iOS, MC Mus shall target iOS 18 (including iPadOS 18) or later.
 
-Dmus shall set the app category in Xcode to "Music".
+MC Mus shall set the app category in Xcode to "Music".
 
-Dmus shall use the Swift language.
+MC Mus shall use the Swift language.
 
-On macOS, dmus shall use the AppKit framework for its user interface, rather
+On macOS, MC Mus shall use the AppKit framework for its user interface, rather
 than SwiftUI or Mac Catalyst.
 
-On macOS, dmus shall create all windows, views and menus programmatically and
+On macOS, MC Mus shall create all windows, views and menus programmatically and
 shall not use nibs or storyboards.
 
-On iOS, dmus shall use the UIKit framework for its user interface, rather
+On iOS, MC Mus shall use the UIKit framework for its user interface, rather
 than SwiftUI.
 
-On iOS, dmus shall create all scenes, windows, views and view controllers
+On iOS, MC Mus shall create all scenes, windows, views and view controllers
 programmatically and shall not use nibs or storyboards.
 
-On macOS, dmus shall use the App Sandbox so that it can be distributed through
+On macOS, MC Mus shall use the App Sandbox so that it can be distributed through
 the Mac App Store.
 
-On macOS, dmus shall request only these sandbox entitlements: read-only access
+On macOS, MC Mus shall request only these sandbox entitlements: read-only access
 to user-selected files, app-scoped security bookmarks and read-only access to
 the user's Music folder.
 
-Dmus shall use only APIs available on the minimum deployment targets.
+MC Mus shall use only APIs available on the minimum deployment targets.
 
-On iOS, dmus shall declare support for all four interface orientations:
+On iOS, MC Mus shall declare support for all four interface orientations:
 portrait, portrait upside-down, landscape left and landscape right.
 
 
@@ -66,59 +66,60 @@ Display Name](localized-display-name-2026-10.md) document for details.
 
 # Project organization
 
-The dmus project shall place app code, configuration and assets in the `dmus/`
-subdirectory.
+The MC Mus project shall place app code, configuration and assets in the
+`mcmus/` subdirectory.
 
-The dmus project shall place supporting code modules in the `dmusBase` Swift
-package, which lives in the `dmusBase/` subdirectory.
+The MC Mus project shall place supporting code modules in the `mcmusBase` Swift
+package, which lives in the `mcmusBase/` subdirectory.
 
-The dmus project shall place documentation files in the `docs/` subdirectory.
+The MC Mus project shall place documentation files in the `docs/` subdirectory.
 
 
 ## Code organization
 
-The dmus project shall organize code into packages, modules, libraries and other
-units that have low coupling and high cohesion.
+The MC Mus project shall organize code into packages, modules, libraries and
+other units that have low coupling and high cohesion.
 
-The dmus project shall place each class or struct representing a significant
+The MC Mus project shall place each class or struct representing a significant
 application concept in its own code file; extensions and small classes and
 structs may share a code file when they have a single consumer.
 
-The dmus project shall add the prefix `-iOS` or `-macOS` to the base name of
+The MC Mus project shall add the prefix `-iOS` or `-macOS` to the base name of
 code files that serve the same purpose in the app but cannot be shared between
 the iOS and macOS versions of the app. For example, the `MainViewController`
 class in iOS inherits from `UIViewController` while in macOS it inherits from
 `NSViewController`.
 
-The dmus project shall create [wrapper interfaces](wrappers-for-testing.md) for
-system services that are difficult to test in isolation, such as the file
+The MC Mus project shall create [wrapper interfaces](wrappers-for-testing.md)
+for system services that are difficult to test in isolation, such as the file
 system, network, audio playback, time and random number generation.
 
 
 ## Code locations
 
-The dmus project shall place wrapper interfaces and their real implementations
-in the `dmusBase` Swift package in the `Wrappers` target and corresponding unit
+The MC Mus project shall place wrapper interfaces and their real implementations
+in the `mcmusBase` Swift package in the `Wrappers` target and corresponding unit
 tests in the `WrappersTests` target.
 
-The dmus project shall place the fake implementations of wrapper interfaces in
-the `dmusBase` Swift package in the `WrappersTestSupport` target.
+The MC Mus project shall place the fake implementations of wrapper interfaces in
+the `mcmusBase` Swift package in the `WrappersTestSupport` target.
 
-The dmus project shall place model code in the `dmusBase` Swift package in the
-`Model` target and corresponding unit tests in the `ModelTests` target.
+The MC Mus project shall place model code in the `mcmusBase` Swift package in
+the `Model` target and corresponding unit tests in the `ModelTests` target.
 
-The dmus project shall organize user interface code around major UI elements
-and/or features. The primary files panel code shall live in `dmus/files/`. Main
-view and main window code shall live in `dmus/main/`. The primary queue panel
-code shall live in `dmus/queue/`. The settings dialog code shall live in
-`dmus/settings/`. Views, controls and UI utility code shared across major UI
-elements or feature shall live in `dmus/components/`.
+The MC Mus project shall organize user interface code around major UI elements
+and/or features. The primary files panel code shall live in `mcmus/files/`. Main
+view and main window code shall live in `mcmus/main/`. The primary queue panel
+code shall live in `mcmus/queue/`. The settings dialog code shall live in
+`mcmus/settings/`. Views, controls and UI utility code shared across major UI
+elements or feature shall live in `mcmus/components/`.
 
-The dmus project shall place all other code, app configuration and app asset
-files in the `dmus/` subdirectory.
+The MC Mus project shall place all other code, app configuration and app asset
+files in the `mcmus/` subdirectory.
 
-The dmus project shall place unit tests for code under the `dmus/` directory in
-the `dmusTests/` directory, mirroring the directory organization in `dmus/`.
+The MC Mus project shall place unit tests for code under the `mcmus/` directory
+in the `mcmusTests/` directory, mirroring the directory organization in
+`mcmus/`.
 
 
 # System service wrappers
@@ -145,28 +146,28 @@ operations in the application domain.
 
 # Model
 
-The **music root directory** is the directory on the local filesystem that dmus
-searches for music files.
+The **music root directory** is the directory on the local filesystem that
+MC Mus searches for music files.
 
-On macOS, dmus shall save the music root directory in user defaults as a
+On macOS, MC Mus shall save the music root directory in user defaults as a
 security-scoped bookmark.
 
-On macOS, when the saved bookmark resolves and can be accessed, dmus shall
+On macOS, when the saved bookmark resolves and can be accessed, MC Mus shall
 start accessing the security-scoped music root directory and keep it accessible
 for as long as it is the music root directory.
 
-On macOS, when the saved bookmark resolves but is stale, dmus shall replace the
-saved bookmark with a fresh one.
+On macOS, when the saved bookmark resolves but is stale, MC Mus shall replace
+the saved bookmark with a fresh one.
 
 On macOS, when no bookmark is saved or the saved bookmark does not resolve or
-cannot be accessed, dmus shall use the system music directory for the current
+cannot be accessed, MC Mus shall use the system music directory for the current
 user as the music root directory without saving a bookmark.
 
-On iOS, dmus shall use the `Music/` subdirectory of the standard application
+On iOS, MC Mus shall use the `Music/` subdirectory of the standard application
 support directory as the music root directory, creating it on launch if it does
 not exist.
 
-On iOS, dmus shall exclude the music root directory from backup.
+On iOS, MC Mus shall exclude the music root directory from backup.
 
 A **music directory** is a directory under the music root directory that is not
 hidden and is not a package.
@@ -200,7 +201,7 @@ these properties: **library** is the music library that was loaded; **errors**
 is the list of errors encountered while loading, which is empty when loading
 succeeded completely.
 
-Dmus shall have a **load music library** function that is called with the path
+MC Mus shall have a **load music library** function that is called with the path
 of the music root directory. The load music library function shall create a root
 folder with folders and tracks created by walking the given music root directory
 and return a load result containing a new music library initialized with the
@@ -212,7 +213,7 @@ shall return a load result containing an empty music library and the error.
 If it encounters an error while walking a subdirectory or file, the load music
 library function shall add the error to the load result and continue walking.
 
-Dmus shall have a **load demo music library** function that is called without
+MC Mus shall have a **load demo music library** function that is called without
 arguments. The load demo music library function shall read the `demo-data.json`
 file from the app bundle then create a root folder with folders and tracks
 created by walking the first JSON object in the file with member
@@ -394,72 +395,73 @@ music library; **load errors** is the list of errors from the most recent load,
 initially empty; **load did fail** is a read-only calculated property that is
 true when load errors is not empty.
 
-When the app launches, dmus shall create a music library store and share it with
-other views.
+When the app launches, MC Mus shall create a music library store and share it
+with other views.
 
-When the app launches, dmus shall create a player with an empty queue and share
-the player with other views.
+When the app launches, MC Mus shall create a player with an empty queue and
+share the player with other views.
 
-When the app launches and the `--demo` command line option is not given, dmus
+When the app launches and the `--demo` command line option is not given, MC Mus
 shall call the load music library function in the background, passing it the
 path of the music root directory.
 
-When the app launches and the `--demo` command line option is given, dmus shall
-call the load demo music library function in the background.
+When the app launches and the `--demo` command line option is given, MC Mus
+shall call the load demo music library function in the background.
 
 If locating the music root directory or reading the demo files from the app
-bundle fails, dmus shall treat the failure as a load result containing an empty
-music library and the error.
+bundle fails, MC Mus shall treat the failure as a load result containing an
+empty music library and the error.
 
-When a background load completes, dmus shall apply its load result to the music
-library store on the main thread, replacing the library and the load errors.
+When a background load completes, MC Mus shall apply its load result to the
+music library store on the main thread, replacing the library and the load
+errors.
 
 
 # User interface
 
-Dmus shall use "Dmus" (not "dmus") wherever the app name name is displayed:
-window title, app icon, menus, etc.
+MC Mus shall use "MC Mus" wherever the app name is displayed: window title, app
+icon, menus, etc.
 
-On macOS, dmus shall show a main window on launch.
+On macOS, MC Mus shall show a main window on launch.
 
 The **main window content area** is the part of the main window below the title
 bar; it excludes the title bar and any window border. Main window widths and
 heights in this document are content area dimensions.
 
-On macOS, dmus shall give the main window content area a width of 900 and a
+On macOS, MC Mus shall give the main window content area a width of 900 and a
 height of 600 the first time the app launches.
 
-On macOS, dmus shall give the main window content area a minimum width of 640
+On macOS, MC Mus shall give the main window content area a minimum width of 640
 and a minimum height of 480.
 
-On macOS, dmus shall retain the previous main window width and height between
+On macOS, MC Mus shall retain the previous main window width and height between
 subsequent launches.
 
-On macOS, dmus shall show two equally-sized panels in the main window: the files
-panel on the left side and the queue panel on the right side.
+On macOS, MC Mus shall show two equally-sized panels in the main window: the
+files panel on the left side and the queue panel on the right side.
 
-On macOS, dmus shall only allow one main window without tabs, and shall quit the
-app when the main window is closed.
+On macOS, MC Mus shall only allow one main window without tabs, and shall quit
+the app when the main window is closed.
 
-On iOS, dmus shall show a main view on launch.
+On iOS, MC Mus shall show a main view on launch.
 
-On iOS, while the screen is in right-side-up portrait orientation, dmus shall
+On iOS, while the screen is in right-side-up portrait orientation, MC Mus shall
 show two equally-sized panels in the main view: the files panel shall be on the
 top and the queue panel on the bottom.
 
 On iOS, where the device supports upside-down portrait orientation, while the
-screen is in upside-down portrait orientation, dmus shall show two equally-sized
-panels in the main view: the files panel shall be on the top and the queue panel
-on the bottom.
+screen is in upside-down portrait orientation, MC Mus shall show two
+equally-sized panels in the main view: the files panel shall be on the top and
+the queue panel on the bottom.
 
-On iOS, while the screen is in landscape orientation, dmus shall show two
+On iOS, while the screen is in landscape orientation, MC Mus shall show two
 equally-sized panels in the main view: the files panel shall be on the left side
 and the queue panel on the right side.
 
 A **panel title area** is the area at the top of a panel that holds the title
 text and optionally other controls.
 
-On iOS, dmus shall draw panel titles on an opaque secondary system background.
+On iOS, MC Mus shall draw panel titles on an opaque secondary system background.
 
 
 ## Files panel
@@ -541,18 +543,18 @@ A **folder row** is a folder table row that shows the name of the corresponding
 folder and contains a "[+]" button (SF Symbol `plus.square`) and a ">" button
 (standard disclosure chevron) on the right side of the row.
 
-When the user taps the "[+]" button on a folder row, dmus shall add that folder
-to the queue.
+When the user taps the "[+]" button on a folder row, MC Mus shall add that
+folder to the queue.
 
-When the user taps the ">" button on a folder row, dmus shall push a new
+When the user taps the ">" button on a folder row, MC Mus shall push a new
 folder table backed by that folder onto the files table stack.
 
 A **track row** is a folder table row that shows the track name of the
 corresponding track and contains a "(+)" (SF Symbol `plus.circle`) button on the
 right side of the row.
 
-On iOS, when the user taps the "(+)" button on a track row, dmus shall add that
-track to the queue.
+On iOS, when the user taps the "(+)" button on a track row, MC Mus shall add
+that track to the queue.
 
 On iOS, while the music library is empty, the files panel shall hide the files
 table stack.
@@ -698,7 +700,7 @@ the same order as the queue.
 
 The queue table shall draw itself in the standard "plain" style.
 
-When new tracks are added to the queue, dmus shall scroll the queue table to
+When new tracks are added to the queue, MC Mus shall scroll the queue table to
 the end so that the last of the newly added queued track rows are visible.
 
 
@@ -739,12 +741,12 @@ space, the queued track row shall use elision to truncate the text.
 
 ### Standard menus
 
-On macOS, dmus shall have a menu bar with these menus, in order: the app
-("Dmus") menu, "File", "Edit" and "Window".
+On macOS, MC Mus shall have a menu bar with these menus, in order: the app
+("MC Mus") menu, "File", "Edit" and "Window".
 
-On macOS, the app menu shall contain these items, in order: "About Dmus",
-"Settings…" (⌘,), "Services", "Hide Dmus" (⌘H), "Hide Others" (⌥⌘H), "Show
-All" and "Quit Dmus" (⌘Q).
+On macOS, the app menu shall contain these items, in order: "About MC Mus",
+"Settings…" (⌘,), "Services", "Hide MC Mus" (⌘H), "Hide Others" (⌥⌘H), "Show
+All" and "Quit MC Mus" (⌘Q).
 
 On macOS, the "File" menu shall contain the item "Close" (⌘W).
 
@@ -758,9 +760,10 @@ On macOS, the "Window" menu shall contain these items, in order: "Minimize"
 
 ### Settings menu
 
-On macOS, dmus shall have a "Settings…" menu item under the app ("Dmus") menu.
+On macOS, MC Mus shall have a "Settings…" menu item under the app ("MC Mus")
+menu.
 
-On macOS, when the "Settings…" menu item is selected, dmus shall present the
+On macOS, when the "Settings…" menu item is selected, MC Mus shall present the
 setting dialog.
 
 
@@ -789,7 +792,7 @@ When the user chooses a directory in the file chooser, the settings dialog shall
 update the music files text box.
 
 When the user chooses a different music root directory in the settings dialog,
-dmus shall stop accessing the previous music root directory if it was security
+MC Mus shall stop accessing the previous music root directory if it was security
 scoped, save the new music root directory to user defaults as a security-scoped
 bookmark, start accessing it, load the new music library in the background and
 update the app when the new music library has loaded.
