@@ -8,8 +8,8 @@ MC Mus is about 4,600 lines of Swift in three places:
   `WrappersTestSupport` (230), `Model` (520), and the Swift Testing targets
   `ModelTests` (72 tests, 920 lines) and `WrappersTests` (a placeholder).
 - `mcmus/`, one multiplatform app target (macOS AppKit and iOS UIKit, all
-  created in code): 38 files, about 2,300 lines, a tenth of them `#Preview`
-  blocks.
+  created in code): 40 files, about 2,400 lines, a tenth of them `#Preview`
+  blocks, plus `MusicLibraryStoreTests.swift`, which belongs in `mcmusTests/`.
 - `mcmusTests/`, a logic-test bundle with no host app (24 tests) that compiles
   five app sources directly through pbxproj membership exceptions.
 
@@ -43,9 +43,10 @@ and when it is dealt with.
   or generics. The order is wrappers, model, fakes, then the app's leaf
   views, its controllers, and the app shell last. The remaining Swift always
   imports finished Objective-C beneath it, and no Objective-C file ever
-  imports the generated `MC_Mus-Swift.h`. The app's dependency graph allows
-  this: its only cycle is the iOS app delegate and scene delegate, which
-  move together.
+  imports the generated `MC_Mus-Swift.h`. The app's dependency graph has no
+  cycles: the iOS scene delegate reaches the app delegate through
+  `MCMusAppDelegate.shared`, and both are named by string, to
+  `UIApplicationMain` and in `Info.plist`.
 - **The package survives until its sources are all Objective-C.** A SwiftPM
   target cannot mix languages but a package can: a Swift target may depend on
   a C-family target. `Wrappers`, `Model` and `WrappersTestSupport` are
@@ -74,7 +75,9 @@ and when it is dealt with.
   with AppKit and AVFoundation loaded. `FileInfo` is renamed
   `FileSystemItemInfo`. Nothing in AppKit already responds to the methods and
   properties the view subclasses add (`update`, `setContent:`, `show:`,
-  `addFillingSubview:` …). Both checks are repeated against UIKit in step 2.
+  `addFillingSubview:` …). The check predates `ShareStatusBarView` and
+  `NSStackView+SeparatedRows`; step 2 repeats both checks for them and against
+  UIKit.
 - **NSNotificationCenter replaces Observation** (decided). Views observe by
   selector, filtered on the posting object (no removal needed), and call
   their existing `update` method once by hand and then on each notification.
@@ -84,12 +87,15 @@ and when it is dealt with.
   for `timeIndex`, which ticks twice a second and which no view reads;
   `MusicLibraryStore.libraryDidChangeNotification` and
   `.musicRootDirectoryDidChangeNotification` separately, so a root change
-  does not reload the macOS outline and collapse it.
+  does not reload the macOS outline and collapse it. `Player` drops the
+  `Queue.onChange` block and observes `Queue.didChangeNotification` like the
+  views; its `isMutatingQueue` guard stays.
 - **`FolderChild` becomes a protocol** (decided), adopted by the `Folder` and
   `Track` classes. `Folder.children` holds folders and tracks directly.
 - **Tests are XCTest**; Swift Testing is Swift-only. **`#Preview` blocks are
-  dropped** as each file is translated; the macro is Swift-only, and the
-  launch skills remain the way to look at a view.
+  dropped** as each file is translated, with the `import DeveloperToolsSupport`
+  that serves them; the macro is Swift-only, and the launch skills remain the
+  way to look at a view.
 - **Swift interop annotations are scaffolding.** While Swift callers remain,
   headers carry `NS_SWIFT_NAME`, `NS_SWIFT_UI_ACTOR` and `NS_SWIFT_SENDABLE`
   where needed so Swift call sites keep their spelling and compile without
@@ -109,9 +115,9 @@ because Swift has nothing closer to offer.
 |---|---|---|---|
 | Enum with associated values, recursive | `FolderChild` (`.folder(Folder)`, `.track(Track)`) and every `switch` over it: `Queue.add`, `Folder.trackDescendants`, `FilesTreeNode`, `FolderChildCell.show`, `FolderTableViewController`; every test fixture | An `@objc` protocol `FolderChild` (`name`, `children`, `trackDescendants`) adopted by `Folder` and `Track`. Model switches become polymorphic calls; the three view sites that care which kind they have use a class check. Tests build children directly and compare child arrays through `isEqual`. | Reshape (step 4) |
 | Value types (`struct`, `Hashable`, copy semantics) | `Track`, `Folder`, `QueuedTrack`, `MusicLibrary`, `LoadResult`, `MusicRootDirectory`; `FileInfo`, `ResolvedBookmark`, `FileSystemReal`, `PreferencesReal` | Final `NSObject` subclasses: read-only properties, designated initializers. Hand-written `isEqual`/`hash` on `Track`, `Folder` (deep, with a pointer fast path, a shallow hash and nil-safe `path` comparison; `FilesTableStackController.setRootFolder` relies on it to keep the navigation position across reloads) and `QueuedTrack`. | Reshape (steps 3 and 4) |
-| `Codable` | Drag payload in `FolderChild+Pasteboard.swift`; `DemoEntry` in `LoadDemoMusicLibrary.swift` | Drag payload: `NSSecureCoding` and a keyed archive under the same pasteboard type. It must move first, because synthesized `Codable` stops working the moment `FolderChild` is a protocol; drags are app-local, so the format is free to change. Demo data: `NSJSONSerialization` with explicit type checks. | Payload: reshape (step 4). Demo data: translate (step 8). |
+| `Codable` | Drag payload in `FolderChild+Pasteboard.swift`; `DemoEntry` in `LoadDemoMusicLibrary.swift` | Drag payload: `NSSecureCoding` and a keyed archive under the same pasteboard type. It must move first, because synthesized `Codable` stops working the moment `FolderChild` is a protocol; drags are app-local, so the format is free to change. `FolderChildTests`' JSON round trip becomes an `NSSecureCoding` round trip in `mcmusTests` beside the pasteboard tests. Demo data: `NSJSONSerialization` with explicit type checks. | Payload: reshape (step 4). Demo data: translate (step 8). |
 | Observation (`@Observable`, `withObservationTracking`) | `Player`, `Queue`, `MusicLibraryStore`; `mcmus/Observing.swift`; every `observeChanges { }` call in the views | The notifications described above. They are delivered synchronously and are not coalesced, so each public model command posts once, after its state is settled (`Queue.add(_ children:)` appends once instead of looping; `apply` sets both properties, then posts). `Observing.swift` and its three tests are deleted; notification tests replace them. | Reshape (step 5). Must precede step 8: `withObservationTracking` sees nothing in an Objective-C object, so the UI would compile and silently stop updating. |
-| Structured concurrency (`Task.detached`, `Task.isCancelled`, `await`) | `MusicLibraryStore.loadInBackground`, `changeMusicRootDirectory`; its tests (`await store.loadTask?.value`, comparing tasks) | A load generation counter replaces `Task.isCancelled` and the test-visible `loadTask`; loads take a completion handler, which the Swift tests can still `await` and XCTest waits on with an expectation. The mechanism itself becomes a utility-QoS global queue and `dispatch_async` to the main queue. | Seam: reshape (step 6). GCD: translate (step 12); writing GCD in Swift under default main-actor isolation would be throwaway friction. |
+| Structured concurrency (`Task.detached`, `Task.isCancelled`, `await`) | `MusicLibraryStore.loadInBackground`, `changeMusicRootDirectory` and the `Result<MusicRootDirectory, any Error>` that `load` takes; its tests (`await store.loadTask?.value`, comparing tasks) | A load generation counter replaces `Task.isCancelled` and the test-visible `loadTask`; loads take a completion handler, which the Swift tests can still `await` and XCTest waits on with an expectation; the `Result` becomes a nullable `MusicRootDirectory` and an `NSError`. The mechanism itself becomes a utility-QoS global queue and `dispatch_async` to the main queue. | Seam: reshape (step 6). GCD: translate (step 12); writing GCD in Swift under default main-actor isolation would be throwaway friction. |
 | Actor isolation and `Sendable` | `Player`, `Audio`, `AudioReal` (`isolated deinit`, `MainActor.assumeIsolated`), default main-actor isolation in the app target | Main-thread-only by convention; only fully immutable objects cross threads, and notifications are posted from the main queue only. `AudioReal`'s workarounds disappear. | Translate |
 | Enum with associated values; nested types | `AudioFake.Call`; `FileSystemFake.Kind`, `.Entry` | A top-level class `AudioFakeCall` with factory methods and `isEqual`, so `audio.calls == [.play(…)]` still reads the same in the Swift tests; top-level `FileSystemFakeKind` and `FileSystemFakeEntry`. | Reshape (step 3) |
 | Struct with value semantics as a test double | `FileSystemFake` (a struct holding a `Log` class so copies share a record; `mutating func add`) | A final class; the `Log` indirection goes away. | Reshape (step 3) |
@@ -120,10 +126,10 @@ because Swift has nothing closer to offer.
 | Overloads | `Queue.add` (four overloads by argument type) | `add(_:)` taking any `FolderChild`, and `add(_ children:)`. | Reshape (step 4) |
 | Default arguments | `Player.init`, `MusicLibraryStore.init`, `loadMusicLibrary`, `MusicRootDirectory.locate`, `PanelView.init`, `HairlineView.init`, `UIButton.bordered`, `FileSystemFake.init` and `add`, `PreferencesFake.init` | A convenience initializer or second method where a caller uses the default; dropped where none does. | Library: reshape (step 3). App views: translate. |
 | Tuples, caseless enums as namespaces, enum initializers | `LowerLineWidths.split`, `MainMenu`, `PanelArrangement(fitting:)` | A C struct and function; a function returning the menu; an `NS_ENUM` and a C function. | Translate |
-| Extensions on system types | `NSView`/`UIView.addFillingSubview`, `UIButton.bordered`, `NSPasteboard.PasteboardType.folderChild`, `[FolderChild].sortedByName` | Categories; a string constant; a function shared by the two loaders, which must ask for a stable sort. | Translate |
+| Extensions on system types | `NSView`/`UIView.addFillingSubview`, `UIButton.bordered`, `NSStackView.headerOverBody`/`bodyOverFooter`, `NSPasteboard.PasteboardType.folderChild`, `[FolderChild].sortedByName` | Categories (the `NSStackView` one with class methods); a string constant; a function shared by the two loaders, which must ask for a stable sort. | Translate |
 | Free functions | `loadMusicLibrary`, `loadDemoMusicLibrary` | C functions, same files. | Translate (step 8) |
 | `@main` | Both `MCMusAppDelegate` files | One `mcmus/main.m` with a body per platform. macOS keeps today's explicit delegate creation before `NSApplicationMain`; iOS passes the delegate class name to `UIApplicationMain`. | Translate (step 17) |
-| `#if os(…)` | Whole-file in every platform view; inside `FileSystem`, `MusicRootDirectory`, `MusicLibraryStore`, `AudioReal` | `#if TARGET_OS_OSX` / `TARGET_OS_IOS`, in both header and implementation. Twin files keep the `-iOS` / `-macOS` suffix on both. | Translate |
+| `#if os(…)` | Whole-file in every platform view; inside `FileSystem`, `FileSystemReal`, `FileSystemFake`, `MusicRootDirectory`, `MusicLibraryStore`, `AudioReal`, `MusicRootDirectoryTests` and `MusicLibraryStoreTests` | `#if TARGET_OS_OSX` / `TARGET_OS_IOS`, in both header and implementation. Twin files keep the `-iOS` / `-macOS` suffix on both. | Translate |
 | Swift Testing | All 97 tests | XCTest: a suite's stored fixtures move to `setUp`, `#require` becomes an assertion with `continueAfterFailure = NO`, `async` tests wait on expectations. | Steps 11 and 13 |
 | Swift-only workarounds | `EmptyStateView-iOS` (convenience-initializer dance around `init(configuration:)`) | A plain designated initializer. (The copy-mutate-assign of button and content-unavailable configurations stays: in Objective-C they are classes behind `copy` properties.) | Translate |
 
@@ -184,14 +190,17 @@ Smaller semantic differences to watch while translating:
    run on iOS), and screenshots from `launch-mac-app` and `launch-ios-app`
    in normal and `--demo` mode (iOS in both orientations; macOS with a
    folder dragged to the queue). With the iOS app running in the simulator,
-   repeat the class-name and selector checks against UIKit with `lldb`. Fix
+   repeat the class-name and selector checks against UIKit with `lldb`, and
+   on both platforms run them for `ShareStatusBarView` and the
+   `NSStackView+SeparatedRows` selectors, which postdate the first check. Fix
    two things that would undermine later steps: `mcmusTests/` is synchronized
    into the *app* target and excluded file by file, so a new test file
    compiles into the app until it is added to two exception sets (make the
    folder a synchronized group of the test target and delete both sets);
-   and `mcmusTests/` is missing from `src_files` in the `Makefile`, so
-   `make check` does not rerun for a test-only change. Move
-   `mcmus/MusicLibraryStoreTests.swift` to `mcmusTests/`.
+   and `mcmusTests/`, `mcmus.xctestplan` and the shared schemes are missing
+   from `src_files` in the `Makefile`, so `make check` does not rerun for a
+   test-only change. Move `mcmus/MusicLibraryStoreTests.swift` to
+   `mcmusTests/`.
 3. **API tidy.** The "reshape (step 3)" rows of the table: names, default
    arguments, the fakes' shape, error domains and how tests match errors,
    and `FileSystemItemInfo`, `ResolvedBookmark`, `FileSystemReal` and
@@ -206,9 +215,8 @@ Smaller semantic differences to watch while translating:
    reload.
 5. **Observation to notifications.** As in the table and the decision above.
    Verify on both platforms: library load, add to queue, the play/stop
-   button, Clear, the Settings path field, the macOS outline keeping its
-   expansion when the music folder is re-chosen, and two iPad windows
-   sharing one queue.
+   button, Clear, the Settings path field, and the macOS outline keeping its
+   expansion when the music folder is re-chosen.
 6. **Store seam.** Load generation and completion handler; `Task.detached`
    stays as the mechanism.
 
@@ -267,19 +275,23 @@ translated header; twin headers guard themselves with `TARGET_OS_…`.
 13. **`mcmusTests` to XCTest.** The bundle becomes pure Objective-C; delete
     its bridging header and Swift settings.
 14. **Components.** `NSView+FillingSubview`, `UIView+FillingSubview`,
-    `UIButton+Bordered`, `HairlineView`, `EmptyStateView` (both), `PanelView`
-    (both), `ReadOnlyTextField`, `DropTargetView`.
+    `NSStackView+SeparatedRows`, `UIButton+Bordered`, `HairlineView`,
+    `EmptyStateView` (both), `PanelView` (both), `ReadOnlyTextField`,
+    `DropTargetView`.
 15. **Queue panel.** `QueuedTrackCellView`, `QueueTableView`,
     `PlayerPanelView`, `QueuePanelViewController`, both platforms each.
 16. **Files panel.** macOS: `FilesTreeNode`, `FilesTreeView`,
-    `FilesPanelViewController`. iOS: `FolderChildCell`,
+    `ShareStatusBarView`, `FilesPanelViewController`. iOS: `FolderChildCell`,
     `FolderTableViewController`, `FilesTableStackController`,
     `FilesPanelViewController`.
 17. **Main, settings and the app shell.** `MainViewController` (both),
     `MainWindowController`, `SettingsWindowController`, `MainMenu`; then the
     macOS `MCMusAppDelegate` with the macOS body of `main.m`; then the iOS
-    `MCMusAppDelegate` and `MCMusSceneDelegate` together with the iOS body.
-    The Swift delegates are whole-file conditional, so neither platform ever
+    `MCMusAppDelegate` with the iOS body; then `MCMusSceneDelegate`, which
+    reaches the app delegate through `MCMusAppDelegate.shared`, changing
+    `UISceneDelegateClassName` in `Info.plist` from
+    `$(PRODUCT_MODULE_NAME).MCMusSceneDelegate` to `MCMusSceneDelegate`. The
+    Swift delegates are whole-file conditional, so neither platform ever
     links two `main`s. No Swift source remains in the app.
 18. **Remove Swift from the build and finish.** Delete the bridging header,
     every `SWIFT_*` build setting, `ENABLE_PREVIEWS` and
@@ -338,9 +350,9 @@ translated header; twin headers guard themselves with `TARGET_OS_…`.
 - Behaviour checks, at the steps named above and again at the end: add a
   folder and a track to the queue; play, stop, back, next and Clear against
   the bundled demo clip, watching the queue shrink as tracks end; drag from
-  the files tree to the queue on macOS; choose a music folder in Settings,
-  quit and relaunch to confirm the bookmark; rotate on iPhone; two iPad
-  windows sharing one queue.
+  the files tree to the queue on macOS; toggle the share switch and watch its
+  status text; choose a music folder in Settings, quit and relaunch to
+  confirm the bookmark; rotate on iPhone.
 - Acceptance at step 18: `git ls-files '*.swift'` lists only the two skill
   helpers; `otool -L` on the built macOS and iOS executables shows nothing
   under `/usr/lib/swift`; neither app bundle contains a `libswift*.dylib`;
