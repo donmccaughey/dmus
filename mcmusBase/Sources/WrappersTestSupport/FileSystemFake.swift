@@ -41,7 +41,7 @@ public final class FileSystemFakeEntry: NSObject, Sendable {
     }
 }
 
-public final class FileSystemFake: FileSystem, @unchecked Sendable {
+public final class FileSystemFake: NSObject, FileSystem, @unchecked Sendable {
     public var entries: [FileSystemFakeEntry] = []
     public var unlistableDirectories: Set<String> = []
     public var unreadableEntries: Set<String> = []
@@ -55,7 +55,9 @@ public final class FileSystemFake: FileSystem, @unchecked Sendable {
     private(set) public var started: [String] = []
     private(set) public var stopped: [String] = []
 
-    public init() {}
+    public override init() {
+        super.init()
+    }
 
     public func addPath(_ path: String) {
         addPath(path, kind: .file, localizedName: nil)

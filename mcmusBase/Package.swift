@@ -17,7 +17,11 @@ let package = Package(
     ],
     targets: [
         // wrappers
-        .target(name: "Wrappers"),
+        .target(
+            name: "Wrappers",
+            publicHeadersPath: ".",
+            linkerSettings: [.linkedFramework("AVFoundation")]
+        ),
         .target(name: "WrappersTestSupport", dependencies: ["Wrappers"]),
         .testTarget(
             name: "WrappersTests",

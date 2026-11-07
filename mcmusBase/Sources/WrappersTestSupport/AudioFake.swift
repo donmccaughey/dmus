@@ -1,7 +1,7 @@
 import Foundation
 import Wrappers
 
-public final class AudioFake: Audio {
+public final class AudioFake: NSObject, Audio {
     private(set) public var calls: [AudioFakeCall] = []
     private(set) var currentTrackURL: URL?
     private(set) var nextTrackURL: URL?
@@ -10,8 +10,10 @@ public final class AudioFake: Audio {
     public var onTrackFinished: (() -> Void)?
     public var onPlaybackPositionChanged: ((TimeInterval) -> Void)?
 
-    public init() {}
-    
+    public override init() {
+        super.init()
+    }
+
     public func play(_ trackURL: URL, from timeIndex: TimeInterval, thenPlay nextTrackURL: URL?) {
         calls.append(.play(trackURL, from: timeIndex, thenPlay: nextTrackURL))
         currentTrackURL = trackURL
