@@ -48,7 +48,7 @@ for existing helpers before proposing new ones. Check these in particular:
   written in EARS form to match the document, alongside the code change.
 - `mcmus.xcodeproj/project.pbxproj` when the fix might touch build settings or add
   files. The target uses file-system synchronized groups, so new files under
-  `dmus/` need no project edit.
+  `mcmus/` need no project edit.
 - `CLAUDE.md` for code style, especially the rule against comments that restate
   the code.
 

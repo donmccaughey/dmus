@@ -41,11 +41,11 @@ one you used and why.
   launch the app, observe, and screenshot. See section 4.
 - **How the library walk treats files or directories**: first inspect `~/Music`
   directly with `ls`, `mdls -name kMDItemDisplayName`, and `GetFileInfo`, then
-  trace the code path in `dmus/model/MusicLibrary.swift` and `dmus/model/MusicRootDirectory.swift`.
+  trace the code path in `mcmus/model/MusicLibrary.swift` and `mcmus/model/MusicRootDirectory.swift`.
   Launch the app only if the on-disk evidence and the code do not account for the
   report together.
 - **Project configuration or requirements**: read `mcmus.xcodeproj/project.pbxproj`,
-  `dmus/dmus-iOS.entitlements`, `dmus/dmus-macOS.entitlements`, and `docs/requirements.md`. Use `-showBuildSettings`
+  `mcmus/mcmus-iOS.entitlements`, `mcmus/mcmus-macOS.entitlements`, and `docs/requirements.md`. Use `-showBuildSettings`
   when a setting's effective value matters.
 
 A build failure is itself a finding. Report it rather than working around it.

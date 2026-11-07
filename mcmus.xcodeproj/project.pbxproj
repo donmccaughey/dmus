@@ -24,7 +24,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		D47788FF309D80C70074B85B /* Exceptions for "dmusTests" folder in "mcmus" target */ = {
+		D47788FF309D80C70074B85B /* Exceptions for "mcmusTests" folder in "mcmus" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				components/PanelArrangementTests.swift,
@@ -34,7 +34,7 @@
 			);
 			target = D3A5000000000000000000C0 /* mcmus */;
 		};
-		D4778900309D80C70074B85B /* Exceptions for "dmusTests" folder in "mcmusTests" target */ = {
+		D4778900309D80C70074B85B /* Exceptions for "mcmusTests" folder in "mcmusTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				components/PanelArrangementTests.swift,
@@ -44,7 +44,7 @@
 			);
 			target = D3A5000000000000000000F2 /* mcmusTests */;
 		};
-		D4BDA180309A880A00C3D858 /* Exceptions for "dmus" folder in "mcmusTests" target */ = {
+		D4BDA180309A880A00C3D858 /* Exceptions for "mcmus" folder in "mcmusTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				components/PanelArrangement.swift,
@@ -56,7 +56,7 @@
 			);
 			target = D3A5000000000000000000F2 /* mcmusTests */;
 		};
-		D4FF6D343092CDFA00FE2C42 /* Exceptions for "dmus" folder in "mcmus" target */ = {
+		D4FF6D343092CDFA00FE2C42 /* Exceptions for "mcmus" folder in "mcmus" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -67,13 +67,13 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		D3A5000000000000000000A3 /* dmus */ = {
+		D3A5000000000000000000A3 /* mcmus */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				D4FF6D343092CDFA00FE2C42 /* Exceptions for "dmus" folder in "mcmus" target */,
-				D4BDA180309A880A00C3D858 /* Exceptions for "dmus" folder in "mcmusTests" target */,
+				D4FF6D343092CDFA00FE2C42 /* Exceptions for "mcmus" folder in "mcmus" target */,
+				D4BDA180309A880A00C3D858 /* Exceptions for "mcmus" folder in "mcmusTests" target */,
 			);
-			path = dmus;
+			path = mcmus;
 			sourceTree = "<group>";
 		};
 		D41DFEB6308C307E00FEA684 /* docs */ = {
@@ -86,13 +86,13 @@
 			path = scripts;
 			sourceTree = "<group>";
 		};
-		D47788FE309D80B30074B85B /* dmusTests */ = {
+		D47788FE309D80B30074B85B /* mcmusTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				D47788FF309D80C70074B85B /* Exceptions for "dmusTests" folder in "mcmus" target */,
-				D4778900309D80C70074B85B /* Exceptions for "dmusTests" folder in "mcmusTests" target */,
+				D47788FF309D80C70074B85B /* Exceptions for "mcmusTests" folder in "mcmus" target */,
+				D4778900309D80C70074B85B /* Exceptions for "mcmusTests" folder in "mcmusTests" target */,
 			);
-			path = dmusTests;
+			path = mcmusTests;
 			sourceTree = "<group>";
 		};
 		D4A78311308D0B2500325F1E /* .claude */ = {
@@ -134,8 +134,8 @@
 				D4A78311308D0B2500325F1E /* .claude */,
 				D41DFEB6308C307E00FEA684 /* docs */,
 				D45D240630998E1900F84DF9 /* scripts */,
-				D3A5000000000000000000A3 /* dmus */,
-				D47788FE309D80B30074B85B /* dmusTests */,
+				D3A5000000000000000000A3 /* mcmus */,
+				D47788FE309D80B30074B85B /* mcmusTests */,
 				D474B29330993DD200FA3132 /* mcmusBase */,
 				D474B29430993FBB00FA3132 /* Frameworks */,
 				D3A5000000000000000000A1 /* Products */,
@@ -175,8 +175,8 @@
 				D474B29830994C8700FA3132 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				D3A5000000000000000000A3 /* dmus */,
-				D47788FE309D80B30074B85B /* dmusTests */,
+				D3A5000000000000000000A3 /* mcmus */,
+				D47788FE309D80B30074B85B /* mcmusTests */,
 			);
 			name = mcmus;
 			packageProductDependencies = (
@@ -302,15 +302,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "dmus/dmus-iOS.entitlements";
-				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "dmus/dmus-macOS.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "mcmus/mcmus-iOS.entitlements";
+				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "mcmus/mcmus-macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = K39VF43BJL;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = dmus/Info.plist;
+				INFOPLIST_FILE = mcmus/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "MC Mus";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
@@ -348,15 +348,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "dmus/dmus-iOS.entitlements";
-				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "dmus/dmus-macOS.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "mcmus/mcmus-iOS.entitlements";
+				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "mcmus/mcmus-macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = K39VF43BJL;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = dmus/Info.plist;
+				INFOPLIST_FILE = mcmus/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "MC Mus";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
