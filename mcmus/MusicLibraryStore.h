@@ -8,7 +8,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_UI_ACTOR
 @interface MusicLibraryStore : NSObject
 
 @property (class, nonatomic, readonly) NSNotificationName libraryDidChangeNotification;
@@ -27,17 +26,16 @@ NS_SWIFT_UI_ACTOR
 
 - (void)apply:(LoadResult *)result;
 
-- (void)loadInBackgroundIsDemo:(BOOL)isDemo NS_SWIFT_NAME(loadInBackground(isDemo:));
+- (void)loadInBackgroundIsDemo:(BOOL)isDemo;
 // The completion runs on the main queue once the load has finished,
 // whether or not a later load superseded it.
 - (void)loadInBackgroundIsDemo:(BOOL)isDemo
-                    completion:(nullable void (^)(void))completion NS_SWIFT_NAME(loadInBackground(isDemo:completion:));
+                    completion:(nullable void (^)(void))completion;
 
 #if TARGET_OS_OSX
-- (void)changeMusicRootDirectoryTo:(NSURL *)url NS_SWIFT_NAME(changeMusicRootDirectory(to:));
+- (void)changeMusicRootDirectoryTo:(NSURL *)url;
 - (void)changeMusicRootDirectoryTo:(NSURL *)url
-                        completion:(nullable void (^)(void))completion
-    NS_SWIFT_NAME(changeMusicRootDirectory(to:completion:));
+                        completion:(nullable void (^)(void))completion;
 #endif
 
 @end

@@ -4,7 +4,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_SENDABLE
 @interface Folder : NSObject <FolderChild>
 
 @property (nonatomic, readonly, copy, nullable) NSString *path;

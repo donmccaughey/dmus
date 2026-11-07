@@ -2,7 +2,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_SENDABLE
 @interface FileSystemItemInfo : NSObject
 
 @property (nonatomic, readonly) BOOL isDirectory;
@@ -18,7 +17,6 @@ NS_SWIFT_SENDABLE
 
 @end
 
-NS_SWIFT_SENDABLE
 @interface ResolvedBookmark : NSObject
 
 @property (nonatomic, readonly, copy) NSURL *url;
@@ -29,13 +27,12 @@ NS_SWIFT_SENDABLE
 
 @end
 
-NS_SWIFT_SENDABLE
 @protocol FileSystem <NSObject>
 
 - (nullable NSURL *)getMusicDirectoryURLAndReturnError:(NSError **)error;
 - (nullable NSURL *)getApplicationSupportDirectoryURLAndReturnError:(NSError **)error;
 - (BOOL)createDirectoryAt:(NSURL *)url error:(NSError **)error;
-- (BOOL)excludeFromBackup:(NSURL *)url error:(NSError **)error NS_SWIFT_NAME(excludeFromBackup(_:));
+- (BOOL)excludeFromBackup:(NSURL *)url error:(NSError **)error;
 - (nullable NSArray<NSURL *> *)listDirectory:(NSURL *)directory error:(NSError **)error;
 - (nullable FileSystemItemInfo *)getFileInfo:(NSURL *)url error:(NSError **)error;
 

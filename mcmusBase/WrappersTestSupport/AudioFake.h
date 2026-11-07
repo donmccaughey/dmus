@@ -5,7 +5,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_UI_ACTOR
 @interface AudioFake : NSObject <Audio>
 
 @property (nonatomic, readonly, copy) NSArray<AudioFakeCall *> *calls;

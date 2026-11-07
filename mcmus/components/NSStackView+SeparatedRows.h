@@ -7,8 +7,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSStackView (SeparatedRows)
 
-+ (NSStackView *)headerOverBody:(NSView *)header body:(NSView *)body NS_SWIFT_NAME(headerOverBody(header:body:));
-+ (NSStackView *)bodyOverFooter:(NSView *)body footer:(NSView *)footer NS_SWIFT_NAME(bodyOverFooter(body:footer:));
++ (NSStackView *)headerOverBody:(NSView *)header body:(NSView *)body;
++ (NSStackView *)bodyOverFooter:(NSView *)body footer:(NSView *)footer;
 
 @end
 

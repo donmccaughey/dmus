@@ -4,7 +4,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_UI_ACTOR
 @interface AudioReal : NSObject <Audio>
 
 - (instancetype)init NS_DESIGNATED_INITIALIZER;

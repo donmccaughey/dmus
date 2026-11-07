@@ -10,7 +10,6 @@ typedef NS_ENUM(NSInteger, LoadDemoErrorCode) {
     LoadDemoErrorCodeNoDirectoryEntry = 1,
 };
 
-LoadResult *loadDemoMusicLibrary(NSData *demoData, NSString *trackPath)
-    NS_SWIFT_NAME(loadDemoMusicLibrary(demoData:trackPath:));
+LoadResult *loadDemoMusicLibrary(NSData *demoData, NSString *trackPath);
 
 NS_ASSUME_NONNULL_END

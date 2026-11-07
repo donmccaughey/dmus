@@ -17,15 +17,25 @@ together.
 For example, here is a `FileSystem` interface and the `FileSystemReal`
 implementation:
 
-    nonisolated protocol FileSystem: Sendable {
-        func createDirectory(at url: URL) throws
+    @protocol FileSystem <NSObject>
+
+    - (BOOL)createDirectoryAt:(NSURL *)url error:(NSError **)error;
+
+    @end
+
+    @interface FileSystemReal : NSObject <FileSystem>
+    @end
+
+    @implementation FileSystemReal
+
+    - (BOOL)createDirectoryAt:(NSURL *)url error:(NSError **)error {
+        return [NSFileManager.defaultManager createDirectoryAtURL:url
+                                       withIntermediateDirectories:YES
+                                                        attributes:nil
+                                                             error:error];
     }
-    
-    nonisolated struct FileSystemReal: FileSystem {
-        func createDirectory(at url: URL) throws {
-            try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
-        }
-    }
+
+    @end
 
 Wrapper interfaces should provide methods and properties with high level names
 that describe their purpose in the application domain rather than simply
@@ -39,34 +49,36 @@ should keep their internal logic as minimal and close to direct delegation as
 practical. Some duplication in wrapper methods and properties is reasonable
 where it aids readability at the use site.
 
-For example, the wrapper below provides `getMusicDirectoryURL()` and
-`getMoviesDirectoryURL()` which make the same underlying method call to
-`FileManager`.
+For example, the wrapper below provides `getMusicDirectoryURLAndReturnError:`
+and `getMoviesDirectoryURLAndReturnError:` which make the same underlying
+method call to `NSFileManager`.
 
-    nonisolated protocol FileSystem: Sendable {
-        func getMusicDirectoryURL() throws -> URL
-        func getMoviesDirectoryURL() throws -> URL
+    @protocol FileSystem <NSObject>
+
+    - (nullable NSURL *)getMusicDirectoryURLAndReturnError:(NSError **)error;
+    - (nullable NSURL *)getMoviesDirectoryURLAndReturnError:(NSError **)error;
+
+    @end
+
+    @implementation FileSystemReal
+
+    - (nullable NSURL *)getMusicDirectoryURLAndReturnError:(NSError **)error {
+        return [NSFileManager.defaultManager URLForDirectory:NSMusicDirectory
+                                                    inDomain:NSUserDomainMask
+                                           appropriateForURL:nil
+                                                      create:YES
+                                                       error:error];
     }
 
-    nonisolated struct FileSystemReal: FileSystem {
-        func getMusicDirectoryURL() throws -> URL {
-            try FileManager.default.url(
-                for: .musicDirectory,
-                in: .userDomainMask,
-                appropriateFor: nil,
-                create: true
-            )
-        }
-        
-        func getMoviesDirectoryURL() throws -> URL {
-            try FileManager.default.url(
-                for: .moviesDirectory,
-                in: .userDomainMask,
-                appropriateFor: nil,
-                create: true
-            )
-        }
+    - (nullable NSURL *)getMoviesDirectoryURLAndReturnError:(NSError **)error {
+        return [NSFileManager.defaultManager URLForDirectory:NSMoviesDirectory
+                                                    inDomain:NSUserDomainMask
+                                           appropriateForURL:nil
+                                                      create:YES
+                                                       error:error];
     }
+
+    @end
 
 
 ## Fasçade wrappers

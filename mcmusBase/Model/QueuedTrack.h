@@ -6,7 +6,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 // The same track can be queued more than once, so each entry gets its own
 // identity instead of borrowing the track's.
-NS_SWIFT_SENDABLE
 @interface QueuedTrack : NSObject
 
 @property (nonatomic, readonly, copy) NSUUID *identifier;

@@ -2,7 +2,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_SENDABLE
 @interface AudioFakeCall : NSObject
 
 + (AudioFakeCall *)play:(NSURL *)trackURL from:(NSTimeInterval)timeIndex thenPlay:(nullable NSURL *)nextTrackURL;

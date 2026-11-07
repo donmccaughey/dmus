@@ -4,7 +4,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class Track;
 
-NS_SWIFT_SENDABLE
 @protocol FolderChild <NSObject>
 
 @property (nonatomic, readonly, copy) NSString *name;

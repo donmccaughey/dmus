@@ -7,9 +7,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIButton (Bordered)
 
-+ (UIButton *)borderedWithTitle:(NSString *)title NS_SWIFT_NAME(bordered(title:));
++ (UIButton *)borderedWithTitle:(NSString *)title;
 + (UIButton *)borderedWithTitle:(NSString *)title
-                  primaryAction:(nullable UIAction *)primaryAction NS_SWIFT_NAME(bordered(title:primaryAction:));
+                  primaryAction:(nullable UIAction *)primaryAction;
 
 @end
 

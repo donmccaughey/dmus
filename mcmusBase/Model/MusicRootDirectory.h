@@ -5,7 +5,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_SENDABLE
 @interface MusicRootDirectory : NSObject
 
 @property (nonatomic, readonly, copy) NSURL *url;
@@ -16,14 +15,13 @@ NS_SWIFT_SENDABLE
 
 + (nullable MusicRootDirectory *)locateWithFileSystem:(id<FileSystem>)fileSystem
                                           preferences:(id<Preferences>)preferences
-                                                error:(NSError **)error
-    NS_SWIFT_NAME(locate(fileSystem:preferences:));
+                                                error:(NSError **)error;
 
 #if TARGET_OS_OSX
 + (MusicRootDirectory *)choose:(NSURL *)url
                     fileSystem:(id<FileSystem>)fileSystem
                    preferences:(id<Preferences>)preferences;
-- (void)stopAccessingWithFileSystem:(id<FileSystem>)fileSystem NS_SWIFT_NAME(stopAccessing(fileSystem:));
+- (void)stopAccessingWithFileSystem:(id<FileSystem>)fileSystem;
 #endif
 
 @end

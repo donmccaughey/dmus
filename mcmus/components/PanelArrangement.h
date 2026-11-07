@@ -5,4 +5,4 @@ typedef NS_CLOSED_ENUM(NSInteger, PanelArrangement) {
     PanelArrangementStacked,
 };
 
-PanelArrangement PanelArrangementFitting(CGSize size) NS_SWIFT_NAME(PanelArrangement.init(fitting:));
+PanelArrangement PanelArrangementFitting(CGSize size);

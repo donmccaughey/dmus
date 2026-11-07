@@ -6,7 +6,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_UI_ACTOR
 @interface Player : NSObject
 
 // Posted when isPlaying changes; timeIndex ticks twice a second while

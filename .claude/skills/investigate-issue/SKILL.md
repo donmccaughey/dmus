@@ -41,7 +41,7 @@ one you used and why.
   launch the app, observe, and screenshot. See section 4.
 - **How the library walk treats files or directories**: first inspect `~/Music`
   directly with `ls`, `mdls -name kMDItemDisplayName`, and `GetFileInfo`, then
-  trace the code path in `mcmus/model/MusicLibrary.swift` and `mcmus/model/MusicRootDirectory.swift`.
+  trace the code path in `mcmusBase/Model/LoadMusicLibrary.m` and `mcmusBase/Model/MusicRootDirectory.m`.
   Launch the app only if the on-disk evidence and the code do not account for the
   report together.
 - **Project configuration or requirements**: read `mcmus.xcodeproj/project.pbxproj`,
@@ -54,8 +54,8 @@ A build failure is itself a finding. Report it rather than working around it.
 
 In these recipes `$SCRATCHPAD` is the session scratchpad directory from the system
 prompt; set it before running them. The schemes are `mcmus` and `mcmus-demo`
-(the latter launches with `--demo`). `mcmusTests` is a Swift Testing logic test
-bundle with no host app; the `mcmus` scheme runs it. The bundle identifier is
+(the latter launches with `--demo`). `mcmusTests` and `mcmusBaseTests` are XCTest
+logic test bundles with no host app; the `mcmus` scheme runs both. The bundle identifier is
 `cc.donm.mcmus`.
 
 Unit tests:

@@ -4,7 +4,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_SENDABLE
 @interface PreferencesFake : NSObject <Preferences>
 
 @property (nonatomic, copy, nullable) NSData *musicRootDirectoryBookmark;

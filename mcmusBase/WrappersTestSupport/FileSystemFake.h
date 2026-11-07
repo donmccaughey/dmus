@@ -18,7 +18,6 @@ typedef NS_ENUM(NSInteger, FileSystemFakeKind) {
     FileSystemFakeKindOther,
 };
 
-NS_SWIFT_SENDABLE
 @interface FileSystemFakeEntry : NSObject
 
 @property (nonatomic, readonly, copy) NSString *path;
@@ -32,7 +31,6 @@ NS_SWIFT_SENDABLE
 
 @end
 
-NS_SWIFT_SENDABLE
 @interface FileSystemFake : NSObject <FileSystem>
 
 @property (nonatomic, copy) NSArray<FileSystemFakeEntry *> *entries;

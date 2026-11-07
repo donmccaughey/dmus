@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) BOOL isEmpty;
 
 - (void)add:(id<FolderChild>)child;
-- (void)addChildren:(NSArray<id<FolderChild>> *)children NS_SWIFT_NAME(add(_:));
+- (void)addChildren:(NSArray<id<FolderChild>> *)children;
 - (void)removeFirst;
 - (void)clear;
 
