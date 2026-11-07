@@ -25,7 +25,7 @@ struct QueueTests {
         queue.add(song)
         queue.add(song)
         #expect(queue.tracks == [song, song])
-        #expect(queue.queuedTracks[0].id != queue.queuedTracks[1].id)
+        #expect(queue.queuedTracks[0].identifier != queue.queuedTracks[1].identifier)
     }
 
     @Test func addingFolderAppendsTrackDescendantsInPreorder() {

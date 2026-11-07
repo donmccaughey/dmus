@@ -23,9 +23,6 @@ struct LoadMusicLibraryTests {
         ))
     }
 
-    func fakeErrors(in result: LoadResult) -> [FileSystemFakeError] {
-        result.errors.compactMap { $0 as? FileSystemFakeError }
-    }
 
     @Test func emptyDirectoryGivesEmptyLibrary() {
         let library = load(FileSystemFake())
@@ -37,8 +34,8 @@ struct LoadMusicLibraryTests {
     }
 
     @Test func tracksInRootHaveNoAlbumOrArtist() {
-        var fileSystem = FileSystemFake()
-        fileSystem.add("/Music/Song.mp3")
+        let fileSystem = FileSystemFake()
+        fileSystem.addPath("/Music/Song.mp3")
 
         let result = loadResult(fileSystem)
 
@@ -49,10 +46,10 @@ struct LoadMusicLibraryTests {
     }
 
     @Test func folderNamesBecomeAlbumAndArtist() {
-        var fileSystem = FileSystemFake()
-        fileSystem.add("/Music/Artist", .directory)
-        fileSystem.add("/Music/Artist/Album", .directory)
-        fileSystem.add("/Music/Artist/Album/01 Song.mp3")
+        let fileSystem = FileSystemFake()
+        fileSystem.addPath("/Music/Artist", kind: .directory)
+        fileSystem.addPath("/Music/Artist/Album", kind: .directory)
+        fileSystem.addPath("/Music/Artist/Album/01 Song.mp3")
 
         let library = load(fileSystem)
 
@@ -66,9 +63,9 @@ struct LoadMusicLibraryTests {
     }
 
     @Test func trackInTopLevelFolderHasAlbumButNoArtist() {
-        var fileSystem = FileSystemFake()
-        fileSystem.add("/Music/Album", .directory)
-        fileSystem.add("/Music/Album/Song.m4a")
+        let fileSystem = FileSystemFake()
+        fileSystem.addPath("/Music/Album", kind: .directory)
+        fileSystem.addPath("/Music/Album/Song.m4a")
 
         let library = load(fileSystem)
 
@@ -80,11 +77,11 @@ struct LoadMusicLibraryTests {
     }
 
     @Test func deeperFoldersUseNearestTwoAncestors() throws {
-        var fileSystem = FileSystemFake()
-        fileSystem.add("/Music/Genre", .directory)
-        fileSystem.add("/Music/Genre/Artist", .directory)
-        fileSystem.add("/Music/Genre/Artist/Album", .directory)
-        fileSystem.add("/Music/Genre/Artist/Album/Song.mp3")
+        let fileSystem = FileSystemFake()
+        fileSystem.addPath("/Music/Genre", kind: .directory)
+        fileSystem.addPath("/Music/Genre/Artist", kind: .directory)
+        fileSystem.addPath("/Music/Genre/Artist/Album", kind: .directory)
+        fileSystem.addPath("/Music/Genre/Artist/Album/Song.mp3")
 
         let library = load(fileSystem)
 
@@ -97,12 +94,12 @@ struct LoadMusicLibraryTests {
     }
 
     @Test func onlyMusicFilesBecomeTracks() {
-        var fileSystem = FileSystemFake()
-        fileSystem.add("/Music/cover.jpg")
-        fileSystem.add("/Music/notes.txt")
-        fileSystem.add("/Music/README")
-        fileSystem.add("/Music/Loud.MP3")
-        fileSystem.add("/Music/Quiet.M4A")
+        let fileSystem = FileSystemFake()
+        fileSystem.addPath("/Music/cover.jpg")
+        fileSystem.addPath("/Music/notes.txt")
+        fileSystem.addPath("/Music/README")
+        fileSystem.addPath("/Music/Loud.MP3")
+        fileSystem.addPath("/Music/Quiet.M4A")
 
         let library = load(fileSystem)
 
@@ -113,10 +110,10 @@ struct LoadMusicLibraryTests {
     }
 
     @Test func packagesAreSkipped() {
-        var fileSystem = FileSystemFake()
-        fileSystem.add("/Music/Music Library.musiclibrary", .package)
-        fileSystem.add("/Music/Music Library.musiclibrary/Song.mp3")
-        fileSystem.add("/Music/Song.mp3")
+        let fileSystem = FileSystemFake()
+        fileSystem.addPath("/Music/Music Library.musiclibrary", kind: .package)
+        fileSystem.addPath("/Music/Music Library.musiclibrary/Song.mp3")
+        fileSystem.addPath("/Music/Song.mp3")
 
         let library = load(fileSystem)
 
@@ -126,9 +123,9 @@ struct LoadMusicLibraryTests {
     }
 
     @Test func entriesThatAreNeitherFilesNorDirectoriesAreSkipped() {
-        var fileSystem = FileSystemFake()
-        fileSystem.add("/Music/Link.mp3", .other)
-        fileSystem.add("/Music/Song.mp3")
+        let fileSystem = FileSystemFake()
+        fileSystem.addPath("/Music/Link.mp3", kind: .other)
+        fileSystem.addPath("/Music/Song.mp3")
 
         let library = load(fileSystem)
 
@@ -138,10 +135,10 @@ struct LoadMusicLibraryTests {
     }
 
     @Test func localizedNamesAreUsedForDisplay() {
-        var fileSystem = FileSystemFake()
-        fileSystem.add("/Music/Musica", .directory, localizedName: "Música")
-        fileSystem.add("/Music/Musica/Hidden.mp3", localizedName: "Hidden")
-        fileSystem.add("/Music/Musica/Shown.mp3", localizedName: "Shown.mp3")
+        let fileSystem = FileSystemFake()
+        fileSystem.addPath("/Music/Musica", kind: .directory, localizedName: "Música")
+        fileSystem.addPath("/Music/Musica/Hidden.mp3", kind: .file, localizedName: "Hidden")
+        fileSystem.addPath("/Music/Musica/Shown.mp3", kind: .file, localizedName: "Shown.mp3")
 
         let library = load(fileSystem)
 
@@ -154,11 +151,11 @@ struct LoadMusicLibraryTests {
     }
 
     @Test func childrenAreSortedNaturallyByName() {
-        var fileSystem = FileSystemFake()
-        fileSystem.add("/Music/Track 10.mp3")
-        fileSystem.add("/Music/track 2.mp3")
-        fileSystem.add("/Music/B folder", .directory)
-        fileSystem.add("/Music/a folder", .directory)
+        let fileSystem = FileSystemFake()
+        fileSystem.addPath("/Music/Track 10.mp3")
+        fileSystem.addPath("/Music/track 2.mp3")
+        fileSystem.addPath("/Music/B folder", kind: .directory)
+        fileSystem.addPath("/Music/a folder", kind: .directory)
 
         let library = load(fileSystem)
 
@@ -168,7 +165,7 @@ struct LoadMusicLibraryTests {
     }
 
     @Test func unlistableRootGivesEmptyLibraryAndReportsFailure() {
-        var fileSystem = FileSystemFake()
+        let fileSystem = FileSystemFake()
         fileSystem.unlistableDirectories = ["/Music"]
 
         let result = loadResult(fileSystem)
@@ -176,13 +173,13 @@ struct LoadMusicLibraryTests {
         #expect(result.library.isEmpty)
         #expect(result.library.rootFolder.path == "/Music")
         #expect(result.errors.count == 1)
-        #expect(fakeErrors(in: result) == [FileSystemFakeError(path: "/Music")])
+        #expect(fileSystemFakeErrorPaths(in: result.errors) == ["/Music"])
     }
 
     @Test func unlistableSubfolderBecomesEmptyFolderAndReportsFailure() {
-        var fileSystem = FileSystemFake()
-        fileSystem.add("/Music/Broken", .directory)
-        fileSystem.add("/Music/Song.mp3")
+        let fileSystem = FileSystemFake()
+        fileSystem.addPath("/Music/Broken", kind: .directory)
+        fileSystem.addPath("/Music/Song.mp3")
         fileSystem.unlistableDirectories = ["/Music/Broken"]
 
         let result = loadResult(fileSystem)
@@ -192,13 +189,13 @@ struct LoadMusicLibraryTests {
             track("Song", path: "/Music/Song.mp3"),
         ])
         #expect(result.errors.count == 1)
-        #expect(fakeErrors(in: result) == [FileSystemFakeError(path: "/Music/Broken")])
+        #expect(fileSystemFakeErrorPaths(in: result.errors) == ["/Music/Broken"])
     }
 
     @Test func unreadableEntryIsSkippedAndReportsFailure() {
-        var fileSystem = FileSystemFake()
-        fileSystem.add("/Music/Bad.mp3")
-        fileSystem.add("/Music/Good.mp3")
+        let fileSystem = FileSystemFake()
+        fileSystem.addPath("/Music/Bad.mp3")
+        fileSystem.addPath("/Music/Good.mp3")
         fileSystem.unreadableEntries = ["/Music/Bad.mp3"]
 
         let result = loadResult(fileSystem)
@@ -207,6 +204,6 @@ struct LoadMusicLibraryTests {
             track("Good", path: "/Music/Good.mp3"),
         ])
         #expect(result.errors.count == 1)
-        #expect(fakeErrors(in: result) == [FileSystemFakeError(path: "/Music/Bad.mp3")])
+        #expect(fileSystemFakeErrorPaths(in: result.errors) == ["/Music/Bad.mp3"])
     }
 }

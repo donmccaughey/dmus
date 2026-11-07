@@ -1,14 +1,12 @@
 import Foundation
 
-public struct FileSystemReal: FileSystem {
+public final class FileSystemReal: NSObject, FileSystem {
     // Prefetched by listDirectory so getFileInfo reads from the URL's cache
     // instead of going back to disk for each entry.
     private static let fileInfoKeys: Set<URLResourceKey> = [
         .isDirectoryKey, .isRegularFileKey, .isPackageKey, .localizedNameKey
     ]
 
-    public init() {}
-    
     public func getMusicDirectoryURL() throws -> URL {
         let url = try FileManager.default.url(
             for: .musicDirectory,
@@ -50,9 +48,9 @@ public struct FileSystemReal: FileSystem {
         )
     }
 
-    public func getFileInfo(_ url: URL) throws -> FileInfo {
+    public func getFileInfo(_ url: URL) throws -> FileSystemItemInfo {
         let values = try url.resourceValues(forKeys: Self.fileInfoKeys)
-        return FileInfo(
+        return FileSystemItemInfo(
             isDirectory: values.isDirectory == true,
             isRegularFile: values.isRegularFile == true,
             isPackage: values.isPackage == true,

@@ -1,10 +1,8 @@
 import Foundation
 
-public struct PreferencesReal: Preferences {
+public final class PreferencesReal: NSObject, Preferences {
     private static let musicRootDirectoryBookmarkKey = "musicRootDirectoryBookmark"
 
-    public init() {}
-    
     public func getMusicRootDirectoryBookmark() -> Data? {
         UserDefaults.standard.data(forKey: Self.musicRootDirectoryBookmarkKey)
     }

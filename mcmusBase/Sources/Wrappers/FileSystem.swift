@@ -1,11 +1,11 @@
 import Foundation
 
-public struct FileInfo: Sendable {
+public final class FileSystemItemInfo: NSObject, Sendable {
     public let isDirectory: Bool
     public let isRegularFile: Bool
     public let isPackage: Bool
     public let localizedName: String?
-    
+
     public init(isDirectory: Bool, isRegularFile: Bool, isPackage: Bool, localizedName: String?) {
         self.isDirectory = isDirectory
         self.isRegularFile = isRegularFile
@@ -14,7 +14,7 @@ public struct FileInfo: Sendable {
     }
 }
 
-public struct ResolvedBookmark: Sendable {
+public final class ResolvedBookmark: NSObject, Sendable {
     public let url: URL
     public let isStale: Bool
 
@@ -30,7 +30,7 @@ public protocol FileSystem: Sendable {
     func createDirectory(at url: URL) throws
     func excludeFromBackup(_ url: URL) throws
     func listDirectory(_ directory: URL) throws -> [URL]
-    func getFileInfo(_ url: URL) throws -> FileInfo
+    func getFileInfo(_ url: URL) throws -> FileSystemItemInfo
 
     // Security-scoped bookmarks are a macOS App Sandbox feature; iOS
     // keeps its music inside the app container and needs none of this.

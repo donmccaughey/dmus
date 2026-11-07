@@ -18,11 +18,11 @@ public final class Queue {
     public var isEmpty: Bool { queuedTracks.isEmpty }
 
     public func add(_ track: Track) {
-        queuedTracks.append(QueuedTrack(track))
+        queuedTracks.append(QueuedTrack(track: track))
     }
 
     public func add(_ folder: Folder) {
-        queuedTracks.append(contentsOf: folder.trackDescendants.map { QueuedTrack($0) })
+        queuedTracks.append(contentsOf: folder.trackDescendants.map { QueuedTrack(track: $0) })
     }
 
     public func add(_ child: FolderChild) {

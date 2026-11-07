@@ -11,8 +11,8 @@ public struct MusicRootDirectory: Sendable {
     }
 
     public static func locate(
-        fileSystem: any FileSystem = FileSystemReal(),
-        preferences: any Preferences = PreferencesReal()
+        fileSystem: any FileSystem,
+        preferences: any Preferences
     ) throws -> MusicRootDirectory {
         #if os(macOS)
         if let bookmark = preferences.getMusicRootDirectoryBookmark(),

@@ -1,10 +1,8 @@
 import Foundation
 
-public enum FolderChild: Hashable, Sendable, Identifiable, Codable {
+public enum FolderChild: Hashable, Sendable, Codable {
     case folder(Folder)
     case track(Track)
-
-    public var id: Self { self }
 
     public var name: String {
         switch self {

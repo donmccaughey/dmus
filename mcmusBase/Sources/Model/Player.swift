@@ -10,14 +10,18 @@ public final class Player {
     private(set) public var isPlaying = false
     private var isMutatingQueue = false
 
-    public init(audio: any Audio = AudioReal(), queue: Queue = Queue()) {
+    public init(audio: any Audio) {
         self.audio = audio
-        self.queue = queue
+        queue = Queue()
         queue.onChange = { [weak self] in self?.queueDidChange() }
         audio.onTrackFinished = { [weak self] in self?.audioDidFinishCurrentTrack() }
         audio.onPlaybackPositionChanged = { [weak self] position in
             self?.audioPositionDidChange(to: position)
         }
+    }
+
+    public convenience init() {
+        self.init(audio: AudioReal())
     }
 
     public var currentTrack: Track? {

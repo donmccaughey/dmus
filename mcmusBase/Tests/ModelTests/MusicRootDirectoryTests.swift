@@ -5,7 +5,7 @@ import WrappersTestSupport
 
 #if os(macOS)
 struct MusicRootDirectoryTests {
-    let savedBookmark = FileSystemFake.bookmark(for: "/Saved/Music")
+    let savedBookmark = FileSystemFake.bookmark(forPath: "/Saved/Music")
     let systemMusicDirectory = URL(filePath: "/Users/me/Music", directoryHint: .isDirectory)
 
     @Test func usesResolvedBookmarkAndStartsAccess() throws {
@@ -17,27 +17,27 @@ struct MusicRootDirectoryTests {
         #expect(root.url.path == "/Saved/Music")
         #expect(root.url.hasDirectoryPath)
         #expect(root.isSecurityScoped)
-        #expect(fileSystem.log.started == ["/Saved/Music"])
-        #expect(fileSystem.log.bookmarked.isEmpty)
+        #expect(fileSystem.started == ["/Saved/Music"])
+        #expect(fileSystem.bookmarked.isEmpty)
         #expect(preferences.musicRootDirectoryBookmark == savedBookmark)
     }
 
     @Test func refreshesStaleBookmark() throws {
         let preferences = PreferencesFake(musicRootDirectoryBookmark: savedBookmark)
-        var fileSystem = FileSystemFake()
+        let fileSystem = FileSystemFake()
         fileSystem.staleBookmarks = ["/Saved/Music"]
 
         let root = try MusicRootDirectory.locate(fileSystem: fileSystem, preferences: preferences)
 
         #expect(root.url.path == "/Saved/Music")
         #expect(root.isSecurityScoped)
-        #expect(fileSystem.log.bookmarked == ["/Saved/Music"])
+        #expect(fileSystem.bookmarked == ["/Saved/Music"])
         #expect(preferences.musicRootDirectoryBookmark == savedBookmark)
     }
 
     @Test func fallsBackToSystemMusicDirectoryWhenBookmarkDoesNotResolve() throws {
         let preferences = PreferencesFake(musicRootDirectoryBookmark: savedBookmark)
-        var fileSystem = FileSystemFake()
+        let fileSystem = FileSystemFake()
         fileSystem.unresolvableBookmarks = ["/Saved/Music"]
         fileSystem.musicDirectoryURL = systemMusicDirectory
 
@@ -45,13 +45,13 @@ struct MusicRootDirectoryTests {
 
         #expect(root.url.path == "/Users/me/Music")
         #expect(!root.isSecurityScoped)
-        #expect(fileSystem.log.started.isEmpty)
+        #expect(fileSystem.started.isEmpty)
         #expect(preferences.musicRootDirectoryBookmark == savedBookmark)
     }
 
     @Test func fallsBackToSystemMusicDirectoryWhenAccessIsDenied() throws {
         let preferences = PreferencesFake(musicRootDirectoryBookmark: savedBookmark)
-        var fileSystem = FileSystemFake()
+        let fileSystem = FileSystemFake()
         fileSystem.inaccessiblePaths = ["/Saved/Music"]
         fileSystem.musicDirectoryURL = systemMusicDirectory
 
@@ -59,28 +59,30 @@ struct MusicRootDirectoryTests {
 
         #expect(root.url.path == "/Users/me/Music")
         #expect(!root.isSecurityScoped)
-        #expect(fileSystem.log.started.isEmpty)
+        #expect(fileSystem.started.isEmpty)
     }
 
     @Test func usesSystemMusicDirectoryWhenNoBookmarkIsSaved() throws {
         let preferences = PreferencesFake()
-        var fileSystem = FileSystemFake()
+        let fileSystem = FileSystemFake()
         fileSystem.musicDirectoryURL = systemMusicDirectory
 
         let root = try MusicRootDirectory.locate(fileSystem: fileSystem, preferences: preferences)
 
         #expect(root.url.path == "/Users/me/Music")
         #expect(!root.isSecurityScoped)
-        #expect(fileSystem.log.started.isEmpty)
+        #expect(fileSystem.started.isEmpty)
         #expect(preferences.musicRootDirectoryBookmark == nil)
     }
 
     @Test func failsWhenSystemMusicDirectoryIsUnavailable() {
         let preferences = PreferencesFake()
 
-        #expect(throws: FileSystemFakeError(path: "getMusicDirectoryURL")) {
+        let error = #expect(throws: (any Error).self) {
             try MusicRootDirectory.locate(fileSystem: FileSystemFake(), preferences: preferences)
         }
+
+        #expect(error.map(fileSystemFakeErrorPath) == "getMusicDirectoryURL")
         #expect(preferences.musicRootDirectoryBookmark == nil)
     }
 
@@ -93,13 +95,13 @@ struct MusicRootDirectoryTests {
 
         #expect(root.url.path == "/Other/Music")
         #expect(root.isSecurityScoped)
-        #expect(preferences.musicRootDirectoryBookmark == FileSystemFake.bookmark(for: "/Other/Music"))
-        #expect(fileSystem.log.started == ["/Other/Music"])
+        #expect(preferences.musicRootDirectoryBookmark == FileSystemFake.bookmark(forPath: "/Other/Music"))
+        #expect(fileSystem.started == ["/Other/Music"])
     }
 
     @Test func choosingKeepsSessionAccessWhenBookmarkCannotBeMade() {
         let preferences = PreferencesFake()
-        var fileSystem = FileSystemFake()
+        let fileSystem = FileSystemFake()
         fileSystem.unbookmarkablePaths = ["/Other/Music"]
         let chosen = URL(filePath: "/Other/Music", directoryHint: .isDirectory)
 
@@ -108,7 +110,7 @@ struct MusicRootDirectoryTests {
         #expect(root.url.path == "/Other/Music")
         #expect(!root.isSecurityScoped)
         #expect(preferences.musicRootDirectoryBookmark == nil)
-        #expect(fileSystem.log.started.isEmpty)
+        #expect(fileSystem.started.isEmpty)
     }
 
     @Test func stopAccessingStopsOnlySecurityScopedRoot() {
@@ -116,10 +118,10 @@ struct MusicRootDirectoryTests {
         let url = URL(filePath: "/Saved/Music", directoryHint: .isDirectory)
 
         MusicRootDirectory(url: url, isSecurityScoped: false).stopAccessing(fileSystem: fileSystem)
-        #expect(fileSystem.log.stopped.isEmpty)
+        #expect(fileSystem.stopped.isEmpty)
 
         MusicRootDirectory(url: url, isSecurityScoped: true).stopAccessing(fileSystem: fileSystem)
-        #expect(fileSystem.log.stopped == ["/Saved/Music"])
+        #expect(fileSystem.stopped == ["/Saved/Music"])
     }
 }
 #endif

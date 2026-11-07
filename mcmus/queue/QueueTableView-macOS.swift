@@ -32,11 +32,11 @@ final class QueueTableView: NSScrollView {
     func setQueuedTracks(_ queuedTracks: [QueuedTrack]) {
         dataSource.queuedTracks = queuedTracks
         tableView.reloadData()
-        guard let last = queuedTracks.last, last.id != lastQueuedTrackID else {
-            lastQueuedTrackID = queuedTracks.last?.id
+        guard let last = queuedTracks.last, last.identifier != lastQueuedTrackID else {
+            lastQueuedTrackID = queuedTracks.last?.identifier
             return
         }
-        lastQueuedTrackID = last.id
+        lastQueuedTrackID = last.identifier
         scrollToEnd()
     }
 

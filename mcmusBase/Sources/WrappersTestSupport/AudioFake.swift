@@ -2,13 +2,7 @@ import Foundation
 import Wrappers
 
 public final class AudioFake: Audio {
-    public enum Call: Equatable {
-        case play(URL, from: TimeInterval, thenPlay: URL?)
-        case replaceNextTrack(URL?)
-        case stop
-    }
-
-    private(set) public var calls: [Call] = []
+    private(set) public var calls: [AudioFakeCall] = []
     private(set) var currentTrackURL: URL?
     private(set) var nextTrackURL: URL?
     private(set) var isPlaying = false

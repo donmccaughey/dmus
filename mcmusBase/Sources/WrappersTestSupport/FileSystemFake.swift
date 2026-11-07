@@ -1,38 +1,48 @@
 import Foundation
 import Wrappers
 
-public  struct FileSystemFakeError: Error, Equatable {
+public let FileSystemFakeErrorDomain = "FileSystemFakeErrorDomain"
+
+public enum FileSystemFakeErrorCode: Int {
+    case operationFailed = 1
+}
+
+public struct FileSystemFakeError: CustomNSError {
+    public static let errorDomain = FileSystemFakeErrorDomain
+
     let path: String
-    
+
     public init(path: String) {
         self.path = path
     }
+
+    public var errorCode: Int { FileSystemFakeErrorCode.operationFailed.rawValue }
+
+    public var errorUserInfo: [String: Any] { [NSFilePathErrorKey: path] }
 }
 
-public struct FileSystemFake: FileSystem {
-    public enum Kind : Sendable{
-        case directory
-        case file
-        case package
-        // Neither a directory nor a regular file, such as a symlink or socket.
-        case other
-    }
+public enum FileSystemFakeKind: Sendable {
+    case directory
+    case file
+    case package
+    // Neither a directory nor a regular file, such as a symlink or socket.
+    case other
+}
 
-    public struct Entry : Sendable{
-        let path: String
-        let kind: Kind
-        let localizedName: String?
-    }
+public final class FileSystemFakeEntry: NSObject, Sendable {
+    public let path: String
+    public let kind: FileSystemFakeKind
+    public let localizedName: String?
 
-    // A class so copies of the fake handed to the code under test share one
-    // record that the test can read back.
-    public final class Log: @unchecked Sendable {
-        public var bookmarked: [String] = []
-        public var started: [String] = []
-        public var stopped: [String] = []
+    public init(path: String, kind: FileSystemFakeKind, localizedName: String?) {
+        self.path = path
+        self.kind = kind
+        self.localizedName = localizedName
     }
+}
 
-    public var entries: [Entry] = []
+public final class FileSystemFake: FileSystem, @unchecked Sendable {
+    public var entries: [FileSystemFakeEntry] = []
     public var unlistableDirectories: Set<String> = []
     public var unreadableEntries: Set<String> = []
     public var uncreatableDirectories: Set<String> = []
@@ -41,27 +51,25 @@ public struct FileSystemFake: FileSystem {
     public var staleBookmarks: Set<String> = []
     public var inaccessiblePaths: Set<String> = []
     public var musicDirectoryURL: URL?
-    public let log = Log()
+    private(set) public var bookmarked: [String] = []
+    private(set) public var started: [String] = []
+    private(set) public var stopped: [String] = []
 
-    public init(
-        entries: [Entry] = [],
-        unlistableDirectories: Set<String> = [],
-        unreadableEntries: Set<String> = [],
-        uncreatableDirectories: Set<String> = [],
-        musicDirectoryURL: URL? = nil
-    ) {
-        self.entries = entries
-        self.unlistableDirectories = unlistableDirectories
-        self.unreadableEntries = unreadableEntries
-        self.uncreatableDirectories = uncreatableDirectories
-        self.musicDirectoryURL = musicDirectoryURL
-    }
-    
-    public mutating func add(_ path: String, _ kind: Kind = .file, localizedName: String? = nil) {
-        entries.append(Entry(path: path, kind: kind, localizedName: localizedName))
+    public init() {}
+
+    public func addPath(_ path: String) {
+        addPath(path, kind: .file, localizedName: nil)
     }
 
-    public static func bookmark(for path: String) -> Data {
+    public func addPath(_ path: String, kind: FileSystemFakeKind) {
+        addPath(path, kind: kind, localizedName: nil)
+    }
+
+    public func addPath(_ path: String, kind: FileSystemFakeKind, localizedName: String?) {
+        entries.append(FileSystemFakeEntry(path: path, kind: kind, localizedName: localizedName))
+    }
+
+    public static func bookmark(forPath path: String) -> Data {
         Data(path.utf8)
     }
 
@@ -102,11 +110,11 @@ public struct FileSystemFake: FileSystem {
             }
     }
 
-    public func getFileInfo(_ url: URL) throws -> FileInfo {
+    public func getFileInfo(_ url: URL) throws -> FileSystemItemInfo {
         guard !unreadableEntries.contains(url.path),
               let entry = entries.first(where: { $0.path == url.path })
         else { throw FileSystemFakeError(path: url.path) }
-        return FileInfo(
+        return FileSystemItemInfo(
             isDirectory: entry.kind == .directory || entry.kind == .package,
             isRegularFile: entry.kind == .file,
             isPackage: entry.kind == .package,
@@ -119,8 +127,8 @@ public struct FileSystemFake: FileSystem {
         if unbookmarkablePaths.contains(url.path) {
             throw FileSystemFakeError(path: url.path)
         }
-        log.bookmarked.append(url.path)
-        return Self.bookmark(for: url.path)
+        bookmarked.append(url.path)
+        return Self.bookmark(forPath: url.path)
     }
 
     public func resolveSecurityScopedBookmark(_ bookmark: Data) throws -> ResolvedBookmark {
@@ -138,12 +146,12 @@ public struct FileSystemFake: FileSystem {
         if inaccessiblePaths.contains(url.path) {
             return false
         }
-        log.started.append(url.path)
+        started.append(url.path)
         return true
     }
 
     public func stopAccessing(_ url: URL) {
-        log.stopped.append(url.path)
+        stopped.append(url.path)
     }
     #endif
 }

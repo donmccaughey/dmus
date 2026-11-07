@@ -13,12 +13,13 @@ final class MusicLibraryStore {
     private let fileSystem: any FileSystem
     private let preferences: any Preferences
 
-    init(
-        fileSystem: any FileSystem = FileSystemReal(),
-        preferences: any Preferences = PreferencesReal()
-    ) {
+    init(fileSystem: any FileSystem, preferences: any Preferences) {
         self.fileSystem = fileSystem
         self.preferences = preferences
+    }
+
+    convenience init() {
+        self.init(fileSystem: FileSystemReal(), preferences: PreferencesReal())
     }
 
     var loadDidFail: Bool { !loadErrors.isEmpty }
@@ -101,6 +102,10 @@ final class MusicLibraryStore {
     }
 }
 
-private struct MissingDemoResource: Error {
+private struct MissingDemoResource: CustomNSError {
+    static let errorDomain = "MissingDemoResourceErrorDomain"
+
     let name: String
+
+    var errorUserInfo: [String: Any] { [NSFilePathErrorKey: name] }
 }

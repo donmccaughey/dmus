@@ -205,16 +205,18 @@ struct LoadDemoMusicLibraryTests {
         ])
     }
 
-    @Test func invalidJSONGivesEmptyLibraryAndReportsFailure() {
+    @Test func invalidJSONGivesEmptyLibraryAndReportsFailure() throws {
         let result = loadResult("not json")
 
         #expect(result.library.isEmpty)
         #expect(result.library.rootFolder.path == nil)
         #expect(result.errors.count == 1)
-        #expect(result.errors.first is DecodingError)
+        let error = try #require(result.errors.first) as NSError
+        #expect(error.domain == NSCocoaErrorDomain)
+        #expect(error.code == NSPropertyListReadCorruptError)
     }
 
-    @Test func missingDirectoryEntryGivesEmptyLibraryAndReportsFailure() {
+    @Test func missingDirectoryEntryGivesEmptyLibraryAndReportsFailure() throws {
         let result = loadResult("""
         [{"type":"report","directories":0,"files":0}]
         """)
@@ -222,6 +224,8 @@ struct LoadDemoMusicLibraryTests {
         #expect(result.library.isEmpty)
         #expect(result.library.rootFolder.path == nil)
         #expect(result.errors.count == 1)
-        #expect(result.errors.first as? LoadDemoError == .noDirectoryEntry)
+        let error = try #require(result.errors.first) as NSError
+        #expect(error.domain == LoadDemoErrorDomain)
+        #expect(error.code == LoadDemoErrorCode.noDirectoryEntry.rawValue)
     }
 }

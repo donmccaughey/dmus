@@ -9,7 +9,7 @@ public func loadDemoMusicLibrary(demoData: Data, trackPath: String) -> LoadResul
         }
         rootEntry = entry
     } catch {
-        return LoadResult(library: MusicLibrary(), errors: [error])
+        return LoadResult(library: MusicLibrary(), errors: [underlyingCocoaError(error)])
     }
     let rootPath = rootEntry.name ?? "/"
     let children = demoChildren(
@@ -29,8 +29,27 @@ private struct DemoEntry: Decodable {
     let contents: [DemoEntry]?
 }
 
-public enum LoadDemoError: Error, Equatable {
+public let LoadDemoErrorDomain = "LoadDemoErrorDomain"
+
+public enum LoadDemoErrorCode: Int {
+    case noDirectoryEntry = 1
+}
+
+public enum LoadDemoError: CustomNSError {
     case noDirectoryEntry
+
+    public static let errorDomain = LoadDemoErrorDomain
+
+    public var errorCode: Int { LoadDemoErrorCode.noDirectoryEntry.rawValue }
+}
+
+// Callers match errors by domain and code, and the JSON parser's own error
+// carries those; the decoder only wraps it.
+nonisolated private func underlyingCocoaError(_ error: any Error) -> any Error {
+    if case DecodingError.dataCorrupted(let context) = error, let underlying = context.underlyingError {
+        return underlying
+    }
+    return error
 }
 
 // The demo data has only names, so the localized display name rule cannot

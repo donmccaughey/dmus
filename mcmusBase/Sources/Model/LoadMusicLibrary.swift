@@ -1,10 +1,7 @@
 import Foundation
 import Wrappers
 
-public func loadMusicLibrary(
-    musicRootDirectory: URL,
-    fileSystem: any FileSystem = FileSystemReal()
-) -> LoadResult {
+public func loadMusicLibrary(musicRootDirectory: URL, fileSystem: any FileSystem) -> LoadResult {
     var errors: [any Error] = []
     let children = loadChildren(
         of: musicRootDirectory,
@@ -37,7 +34,7 @@ nonisolated private func loadChildren(
 
     var children: [FolderChild] = []
     for url in contents {
-        let info: FileInfo
+        let info: FileSystemItemInfo
         do {
             info = try fileSystem.getFileInfo(url)
         } catch {
