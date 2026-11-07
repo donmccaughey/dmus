@@ -20,7 +20,7 @@
 		D45D240330998DFB00F84DF9 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		D474B29330993DD200FA3132 /* mcmusBase */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = mcmusBase; sourceTree = "<group>"; };
 		D4A78314308D0B4000325F1E /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
-		D4EE45C53099A628002C6BF9 /* dmus.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = dmus.xctestplan; sourceTree = "<group>"; };
+		D4EE45C53099A628002C6BF9 /* mcmus.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = mcmus.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -128,7 +128,7 @@
 			children = (
 				D4A78314308D0B4000325F1E /* .gitignore */,
 				D41DFEB0308C305900FEA684 /* CLAUDE.md */,
-				D4EE45C53099A628002C6BF9 /* dmus.xctestplan */,
+				D4EE45C53099A628002C6BF9 /* mcmus.xctestplan */,
 				D45D240330998DFB00F84DF9 /* Makefile */,
 				D41DFEB1308C305900FEA684 /* README.md */,
 				D4A78311308D0B2500325F1E /* .claude */,
@@ -227,7 +227,7 @@
 					};
 				};
 			};
-			buildConfigurationList = D3A5000000000000000000E1 /* Build configuration list for PBXProject "dmus" */;
+			buildConfigurationList = D3A5000000000000000000E1 /* Build configuration list for PBXProject "mcmus" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -579,7 +579,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D3A5000000000000000000E1 /* Build configuration list for PBXProject "dmus" */ = {
+		D3A5000000000000000000E1 /* Build configuration list for PBXProject "mcmus" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D3A5000000000000000000E2 /* Debug */,

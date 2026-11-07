@@ -6,7 +6,7 @@ app_files = $(shell find dmus -type f -not -name '.*')
 arch = $(shell uname -m)
 package_files = $(shell find mcmusBase -type f -not -name '.*')
 product = MC Mus
-project_files = dmus.xcodeproj/project.pbxproj
+project_files = mcmus.xcodeproj/project.pbxproj
 release_dir = $(TMP)/Release
 app = $(release_dir)/$(product).app
 src_files = \
@@ -33,7 +33,7 @@ release : $(TMP)/made-disk-image.stamp
 
 .PHONY : list-simulators
 list-simulators :
-	xcodebuild -project dmus.xcodeproj -scheme mcmus -showdestinations
+	xcodebuild -project mcmus.xcodeproj -scheme mcmus -showdestinations
 
 
 .PHONY : clean
@@ -63,7 +63,7 @@ $(TMP)/built-release.stamp : \
 		| $(release_dir)
 	rm -rf $(release_dir)
 	xcodebuild build \
-		-project dmus.xcodeproj \
+		-project mcmus.xcodeproj \
 		-scheme mcmus \
 		-configuration Release \
 		-destination 'generic/platform=macOS' \
@@ -74,7 +74,7 @@ $(TMP)/built-release.stamp : \
 
 $(TMP)/checked-iOS.stamp : $(src_files) | $$(dir $$@)
 	xcodebuild test \
-		-project dmus.xcodeproj \
+		-project mcmus.xcodeproj \
 		-scheme mcmus \
 		-destination 'platform=iOS Simulator,name=$(IOS_CHECK_DEVICE)' \
 		-quiet
@@ -83,7 +83,7 @@ $(TMP)/checked-iOS.stamp : $(src_files) | $$(dir $$@)
 
 $(TMP)/checked-macOS.stamp : $(src_files) | $$(dir $$@)
 	xcodebuild test \
-		-project dmus.xcodeproj \
+		-project mcmus.xcodeproj \
 		-scheme mcmus \
 		-destination 'platform=macOS,arch=$(arch)' \
 		-quiet

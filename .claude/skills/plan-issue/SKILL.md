@@ -46,7 +46,7 @@ for existing helpers before proposing new ones. Check these in particular:
 - `docs/requirements.md`: find the requirement the issue bears on. If the desired
   behavior is not captured there, the plan must include the requirements edit,
   written in EARS form to match the document, alongside the code change.
-- `dmus.xcodeproj/project.pbxproj` when the fix might touch build settings or add
+- `mcmus.xcodeproj/project.pbxproj` when the fix might touch build settings or add
   files. The target uses file-system synchronized groups, so new files under
   `dmus/` need no project edit.
 - `CLAUDE.md` for code style, especially the rule against comments that restate

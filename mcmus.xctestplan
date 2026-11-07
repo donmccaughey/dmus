@@ -14,7 +14,7 @@
   "testTargets" : [
     {
       "target" : {
-        "containerPath" : "container:dmus.xcodeproj",
+        "containerPath" : "container:mcmus.xcodeproj",
         "identifier" : "D3A5000000000000000000F2",
         "name" : "mcmusTests"
       }

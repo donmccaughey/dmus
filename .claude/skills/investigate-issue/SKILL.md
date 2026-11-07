@@ -44,7 +44,7 @@ one you used and why.
   trace the code path in `dmus/model/MusicLibrary.swift` and `dmus/model/MusicRootDirectory.swift`.
   Launch the app only if the on-disk evidence and the code do not account for the
   report together.
-- **Project configuration or requirements**: read `dmus.xcodeproj/project.pbxproj`,
+- **Project configuration or requirements**: read `mcmus.xcodeproj/project.pbxproj`,
   `dmus/dmus-iOS.entitlements`, `dmus/dmus-macOS.entitlements`, and `docs/requirements.md`. Use `-showBuildSettings`
   when a setting's effective value matters.
 
