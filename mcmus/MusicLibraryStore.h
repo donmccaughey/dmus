@@ -1,0 +1,45 @@
+#import <Foundation/Foundation.h>
+
+#import "FileSystem.h"
+#import "LoadResult.h"
+#import "MusicLibrary.h"
+#import "MusicRootDirectory.h"
+#import "Preferences.h"
+
+NS_ASSUME_NONNULL_BEGIN
+
+NS_SWIFT_UI_ACTOR
+@interface MusicLibraryStore : NSObject
+
+@property (class, nonatomic, readonly) NSNotificationName libraryDidChangeNotification;
+// Separate from the library, so a root change alone leaves the files
+// panel, and the macOS outline's expansion, untouched.
+@property (class, nonatomic, readonly) NSNotificationName musicRootDirectoryDidChangeNotification;
+
+@property (nonatomic, readonly) MusicLibrary *library;
+@property (nonatomic, readonly, copy) NSArray<NSError *> *loadErrors;
+@property (nonatomic, readonly) BOOL loadDidFail;
+@property (nonatomic, readonly, nullable) MusicRootDirectory *musicRootDirectory;
+
+- (instancetype)initWithFileSystem:(id<FileSystem>)fileSystem
+                       preferences:(id<Preferences>)preferences NS_DESIGNATED_INITIALIZER;
+- (instancetype)init;
+
+- (void)apply:(LoadResult *)result;
+
+- (void)loadInBackgroundIsDemo:(BOOL)isDemo NS_SWIFT_NAME(loadInBackground(isDemo:));
+// The completion runs on the main queue once the load has finished,
+// whether or not a later load superseded it.
+- (void)loadInBackgroundIsDemo:(BOOL)isDemo
+                    completion:(nullable void (^)(void))completion NS_SWIFT_NAME(loadInBackground(isDemo:completion:));
+
+#if TARGET_OS_OSX
+- (void)changeMusicRootDirectoryTo:(NSURL *)url NS_SWIFT_NAME(changeMusicRootDirectory(to:));
+- (void)changeMusicRootDirectoryTo:(NSURL *)url
+                        completion:(nullable void (^)(void))completion
+    NS_SWIFT_NAME(changeMusicRootDirectory(to:completion:));
+#endif
+
+@end
+
+NS_ASSUME_NONNULL_END

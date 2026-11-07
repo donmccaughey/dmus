@@ -16,3 +16,8 @@
 #import "Queue.h"
 #import "QueuedTrack.h"
 #import "Track.h"
+
+#import "FolderChildPasteboard.h"
+#import "LowerLineWidths.h"
+#import "MusicLibraryStore.h"
+#import "PanelArrangement.h"

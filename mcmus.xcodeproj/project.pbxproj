@@ -76,10 +76,10 @@
 		D4BDA180309A880A00C3D858 /* Exceptions for "mcmus" folder in "mcmusTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				components/PanelArrangement.swift,
-				"files/FolderChild+Pasteboard.swift",
-				MusicLibraryStore.swift,
-				queue/LowerLineWidths.swift,
+				components/PanelArrangement.m,
+				files/FolderChildPasteboard.m,
+				MusicLibraryStore.m,
+				queue/LowerLineWidths.m,
 			);
 			target = D3A5000000000000000000F2 /* mcmusTests */;
 		};
