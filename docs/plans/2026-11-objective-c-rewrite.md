@@ -125,7 +125,7 @@ because Swift has nothing closer to offer.
 | Names Objective-C cannot use | `FileInfo` (Carbon); `QueuedTrack.id` (`id` is the object type) | `FileSystemItemInfo`; `identifier`. `Identifiable` on `QueuedTrack` and `FolderChild` is a SwiftUI leftover and is removed. | Reshape (step 3) |
 | Overloads | `Queue.add` (four overloads by argument type) | `add(_:)` taking any `FolderChild`, and `add(_ children:)`. | Reshape (step 4) |
 | Default arguments | `Player.init`, `MusicLibraryStore.init`, `loadMusicLibrary`, `MusicRootDirectory.locate`, `PanelView.init`, `HairlineView.init`, `UIButton.bordered`, `FileSystemFake.init` and `add`, `PreferencesFake.init` | A convenience initializer or second method where a caller uses the default; dropped where none does. | Library: reshape (step 3). App views: translate. |
-| Tuples, caseless enums as namespaces, enum initializers | `LowerLineWidths.split`, `MainMenu`, `PanelArrangement(fitting:)` | A C struct and function; a function returning the menu; an `NS_ENUM` and a C function. | Translate |
+| Tuples, caseless enums as namespaces, enum initializers | `LowerLineWidths.split`, `MainMenu`, `PanelArrangement(fitting:)` | A C struct and function; a function returning the menu; an `NS_CLOSED_ENUM` (an `NS_ENUM` imports non-frozen, see the step 1 findings) and a C function. | Translate |
 | Extensions on system types | `NSView`/`UIView.addFillingSubview`, `UIButton.bordered`, `NSStackView.headerOverBody`/`bodyOverFooter`, `NSPasteboard.PasteboardType.folderChild`, `[FolderChild].sortedByName` | Categories (the `NSStackView` one with class methods); a string constant; a function shared by the two loaders, which must ask for a stable sort. | Translate |
 | Free functions | `loadMusicLibrary`, `loadDemoMusicLibrary` | C functions, same files. | Translate (step 8) |
 | `@main` | Both `MCMusAppDelegate` files | One `mcmus/main.m` with a body per platform. macOS keeps today's explicit delegate creation before `NSApplicationMain`; iOS passes the delegate class name to `UIApplicationMain`. | Translate (step 17) |
@@ -183,6 +183,67 @@ Smaller semantic differences to watch while translating:
    destinations. Note whether quoted imports resolve across synchronized
    subfolders, whether `-ObjC` is needed, whether Xcode rewrote the schemes,
    and the executed test counts. Nothing from the branch is merged.
+
+   **Findings (2026-11-06, Xcode 26.3, branch `spike/objc-build-mechanics`,
+   commit 6c386a4; not merged).** `make check` and both launch skills pass
+   on the branch; the iOS app arranges its panels correctly from the
+   Objective-C `PanelArrangement` in both orientations.
+
+   - *Header lookup needs no search paths.* Every quoted import resolved
+     through `<target>-project-headers.hmap`, which Xcode fills with every
+     header in every synchronized folder of the project, keyed by basename
+     and regardless of owning target or subfolder: `mcmusTests`' map listed
+     `PanelArrangement.h` (`mcmus/components/`), the spike library's class
+     and its category header (in a `categories/` subfolder) and both
+     bridging headers. So `#import "Player.h"` works from anywhere in the
+     project once the library folders are synchronized groups, step 10's
+     search paths are unnecessary, and header basenames must stay unique
+     project-wide.
+   - *(a) Mixed app target.* `PanelArrangement.h`/`.m` with
+     `SWIFT_OBJC_BRIDGING_HEADER` set on the app (`mcmus/mcmus-Bridging-Header.h`)
+     and on `mcmusTests` (`mcmusTests/mcmusTests-Bridging-Header.h`), and
+     the "mcmus folder in mcmusTests target" exception entry changed from
+     `.swift` to `.m` (the header needs no entry). The Swift view and the
+     three Swift tests compiled unchanged, with the C function imported as
+     `PanelArrangement(fitting:)` through
+     `NS_SWIFT_NAME(PanelArrangement.init(fitting:))`. One surprise: an
+     `NS_ENUM` from a bridging header imports as a non-frozen enum, so the
+     exhaustive `switch` in `MainViewController-iOS.swift` warned that it
+     "may have additional unknown values; this is an error in the Swift 6
+     language mode"; `NS_CLOSED_ENUM` imports frozen and silences it.
+   - *(b) SwiftPM C target.* `.target(name: "Spike", publicHeadersPath: ".")`
+     with headers beside the `.m` files gave `module Spike { umbrella
+     "<dir>" export * }`. The Swift 6 `Model` target imported it with
+     `import Spike`, `ModelTests` imported it directly, and three Swift
+     Testing tests ran. An `NS_SWIFT_SENDABLE` immutable class used from a
+     nonisolated function and an `NS_SWIFT_UI_ACTOR` class used from a
+     `@MainActor` function compiled without warnings in Swift 6 mode, so
+     step 7 should not need `swiftLanguageModes: [.v5]`.
+   - *(c) Static library and Objective-C test bundle.* A
+     `com.apple.product-type.library.static` target and a
+     `bundle.unit-test` target with no `SWIFT_*` settings, both with the
+     app's multiplatform settings (`SDKROOT = auto`, the three platforms,
+     `SKIP_INSTALL = YES`), the test bundle depending on the library through
+     a `PBXContainerItemProxy`/`PBXTargetDependency` pair and linking
+     `libspikeLib.a` from its Frameworks phase. Adding the bundle to
+     `mcmus.xctestplan` was enough for it to run on both destinations; the
+     shared schemes were not edited. **`-ObjC` is needed:** without it the
+     category test failed with "unrecognized selector" while the class test
+     passed, and `OTHER_LDFLAGS = -ObjC` on the test bundle fixed it, so any
+     category in `mcmusBase` obliges every consumer to pass it. The Swift
+     app also linked the library (Frameworks-phase entry plus dependency,
+     `SpikeGreeter.h` imported from its bridging header) and the class
+     landed in the app binary, which derisks step 10.
+   - *Schemes.* `xcodebuild` never touched them. Opening the project in
+     Xcode with the hand-written targets, waiting 45 s and quitting changed
+     neither the schemes nor the pbxproj; the rewrite in the memory note
+     comes from editing the pbxproj *while* Xcode has it open.
+   - *Debug builds put the app's code in `MC Mus.debug.dylib`* beside a stub
+     executable (`ENABLE_DEBUG_DYLIB`), so step 18's `otool -L` and symbol
+     checks must inspect the dylib or the Release build.
+   - *Executed tests* (macOS / iOS): `mcmusTests` 24 / 16, `WrappersTests`
+     1 / 1, `ModelTests` 75 / 66 (72 / 63 plus the 3 spike tests), the spike
+     bundle 2 / 2. Baseline on `main` the same day: 24 / 16, 1 / 1, 72 / 63.
 2. **Requirements, baselines, project hygiene.** In `docs/requirements.md`
    replace "MC Mus shall use the Swift language." with the Objective-C
    equivalent. Record the baseline: executed tests per suite and platform
@@ -248,7 +309,7 @@ in these steps beyond what the importer forces.
     `SUPPORTED_PLATFORMS` and deployment targets, `SKIP_INSTALL = YES`,
     explicit target dependencies). The app links `libmcmusBase.a`;
     `mcmusTests` and `mcmusBaseTests` link both libraries. Consumers find
-    headers through search paths naming the library folders, so
+    headers through Xcode's project header map (step 1 findings), so
     `#import "Player.h"` reads as it did in the package. The app,
     `mcmusTests` and `mcmusBaseTests` (all still Swift) each get a bridging
     header importing the library headers and lose their `import Model`,
@@ -322,9 +383,10 @@ translated header; twin headers guard themselves with `TARGET_OS_…`.
   categories unless consumers pass `-ObjC`; `mcmusBase` is planned to have
   none. `make release` overrides `CONFIGURATION_BUILD_DIR`, so the libraries
   land beside `MC Mus.app`; check the disk image still gets only the app.
-- **Header lookup with synchronized groups** is unproven for subfolders and
-  for sources compiled into `mcmusTests` by exception set; the spike settles
-  it, with explicit search paths as the fallback.
+- **Header lookup with synchronized groups** is settled by the spike: the
+  project header map finds every header by basename across targets and
+  subfolders, which also means a duplicate basename anywhere in the project
+  silently shadows another.
 - **Xcode rewrites shared schemes** when the pbxproj changes while the
   project is open. Quit Xcode for pbxproj edits (steps 2, 10, 12, 13, 18)
   and `git diff mcmus.xcodeproj/xcshareddata` afterwards; `mcmus-demo.xcscheme`
