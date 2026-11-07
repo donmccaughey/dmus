@@ -1,5 +1,4 @@
 import Foundation
-import Model
 
 // FolderChild is a protocol, so child arrays compare element by element
 // through isEqual.

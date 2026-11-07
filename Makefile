@@ -4,7 +4,7 @@ IOS_CHECK_DEVICE ?= iPhone 16e
 
 app_files = $(shell find mcmus -type f -not -name '.*')
 arch = $(shell uname -m)
-package_files = $(shell find mcmusBase -type f -not -name '.*')
+base_files = $(shell find mcmusBase -type f -not -name '.*')
 product = MC Mus
 project_files = \
 		mcmus.xcodeproj/project.pbxproj \
@@ -16,7 +16,7 @@ test_files = $(shell find mcmusTests -type f -not -name '.*')
 src_files = \
 		 .git/hooks/pre-commit \
 		$(app_files) \
-		$(package_files) \
+		$(base_files) \
 		$(project_files) \
 		$(test_files)
 ver = 1.0

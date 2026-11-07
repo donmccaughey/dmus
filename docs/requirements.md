@@ -69,8 +69,8 @@ Display Name](localized-display-name-2026-10.md) document for details.
 The MC Mus project shall place app code, configuration and assets in the
 `mcmus/` subdirectory.
 
-The MC Mus project shall place supporting code modules in the `mcmusBase` Swift
-package, which lives in the `mcmusBase/` subdirectory.
+The MC Mus project shall place supporting code modules in the `mcmusBase/`
+subdirectory, built as static libraries by targets of `mcmus.xcodeproj`.
 
 The MC Mus project shall place documentation files in the `docs/` subdirectory.
 
@@ -98,14 +98,16 @@ system, network, audio playback, time and random number generation.
 ## Code locations
 
 The MC Mus project shall place wrapper interfaces and their real implementations
-in the `mcmusBase` Swift package in the `Wrappers` target and corresponding unit
-tests in the `WrappersTests` target.
+in `mcmusBase/Wrappers/`, part of the `mcmusBase` static library, and
+corresponding unit tests in `mcmusBase/WrappersTests/`, part of the
+`mcmusBaseTests` test bundle.
 
 The MC Mus project shall place the fake implementations of wrapper interfaces in
-the `mcmusBase` Swift package in the `WrappersTestSupport` target.
+`mcmusBase/WrappersTestSupport/`, the `mcmusBaseTestSupport` static library.
 
-The MC Mus project shall place model code in the `mcmusBase` Swift package in
-the `Model` target and corresponding unit tests in the `ModelTests` target.
+The MC Mus project shall place model code in `mcmusBase/Model/`, part of the
+`mcmusBase` static library, and corresponding unit tests in
+`mcmusBase/ModelTests/`, part of the `mcmusBaseTests` test bundle.
 
 The MC Mus project shall organize user interface code around major UI elements
 and/or features. The primary files panel code shall live in `mcmus/files/`. Main

@@ -1,6 +1,5 @@
 #if os(macOS)
 import AppKit
-import Model
 import Testing
 
 struct FolderChildPasteboardTests {

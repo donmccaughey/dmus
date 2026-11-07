@@ -1,5 +1,4 @@
 import Foundation
-import Model
 import Testing
 
 struct FolderTests {

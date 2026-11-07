@@ -1,8 +1,6 @@
 #if os(macOS)
 import AppKit
 import DeveloperToolsSupport
-import Model
-import Wrappers
 
 final class QueuePanelViewController: NSViewController {
     private let player: Player

@@ -1,5 +1,4 @@
 #if os(iOS)
-import Model
 import UIKit
 
 @main

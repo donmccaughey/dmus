@@ -1,6 +1,5 @@
 #if os(macOS)
 import AppKit
-import Model
 
 @main
 final class MCMusAppDelegate: NSObject, NSApplicationDelegate {

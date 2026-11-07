@@ -1,6 +1,5 @@
 #if os(macOS)
 import AppKit
-import Model
 
 final class QueuedTrackCellView: NSTableCellView {
     static let reuseIdentifier = NSUserInterfaceItemIdentifier("QueuedTrackCell")

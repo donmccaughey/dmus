@@ -1,6 +1,5 @@
 #if os(macOS)
 import AppKit
-import Model
 
 nonisolated extension NSPasteboard.PasteboardType {
     static let folderChild = NSPasteboard.PasteboardType("cc.donm.mcmus.folder-child")

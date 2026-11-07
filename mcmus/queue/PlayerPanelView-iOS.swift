@@ -1,6 +1,5 @@
 #if os(iOS)
 import DeveloperToolsSupport
-import Model
 import UIKit
 
 final class PlayerPanelView: UIView {

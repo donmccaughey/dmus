@@ -1,7 +1,6 @@
 #if os(macOS)
 import AppKit
 import DeveloperToolsSupport
-import Model
 
 final class QueueTableView: NSScrollView {
     private let tableView = NSTableView()

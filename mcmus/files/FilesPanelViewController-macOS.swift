@@ -1,7 +1,6 @@
 #if os(macOS)
 import AppKit
 import DeveloperToolsSupport
-import Model
 
 final class FilesPanelViewController: NSViewController {
     private let store: MusicLibraryStore

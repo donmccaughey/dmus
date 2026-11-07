@@ -1,5 +1,4 @@
 import Foundation
-import WrappersTestSupport
 
 // Errors are matched by domain, code and user info rather than by type, which
 // is all an Objective-C thrower can offer.

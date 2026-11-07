@@ -1,5 +1,4 @@
 #if os(macOS)
-import Model
 
 // NSOutlineView keys expansion state and drags on item identity, but Folder
 // and Track compare by value, so the tree gets identity-only stand-ins.

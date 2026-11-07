@@ -1,6 +1,5 @@
 #if os(macOS)
 import AppKit
-import Model
 import UniformTypeIdentifiers
 
 final class SettingsWindowController: NSWindowController {

@@ -1,6 +1,5 @@
 #if os(macOS)
 import AppKit
-import Model
 
 final class MainWindowController: NSWindowController, NSWindowDelegate {
     init(store: MusicLibraryStore, player: Player) {

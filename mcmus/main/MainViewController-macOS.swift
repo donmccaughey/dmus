@@ -1,6 +1,5 @@
 #if os(macOS)
 import AppKit
-import Model
 
 final class MainViewController: NSViewController {
     private let store: MusicLibraryStore
