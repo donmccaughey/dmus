@@ -21,14 +21,14 @@
     },
     {
       "target" : {
-        "containerPath" : "container:dmusBase",
+        "containerPath" : "container:mcmusBase",
         "identifier" : "WrappersTests",
         "name" : "WrappersTests"
       }
     },
     {
       "target" : {
-        "containerPath" : "container:dmusBase",
+        "containerPath" : "container:mcmusBase",
         "identifier" : "ModelTests",
         "name" : "ModelTests"
       }

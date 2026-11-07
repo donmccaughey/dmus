@@ -3,15 +3,15 @@
 import PackageDescription
 
 let package = Package(
-    name: "dmusBase",
+    name: "mcmusBase",
     platforms: [.iOS(.v18), .macOS(.v15)],
     products: [
         .library(
-            name: "dmusBase",
+            name: "mcmusBase",
             targets: ["Model", "Wrappers"]
         ),
         .library(
-            name: "dmusBaseTestSupport",
+            name: "mcmusBaseTestSupport",
             targets: ["WrappersTestSupport"]
         ),
     ],

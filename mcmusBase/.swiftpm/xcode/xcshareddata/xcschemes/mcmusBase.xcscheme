@@ -15,9 +15,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "dmusBase"
-               BuildableName = "dmusBase"
-               BlueprintName = "dmusBase"
+               BlueprintIdentifier = "mcmusBase"
+               BuildableName = "mcmusBase"
+               BlueprintName = "mcmusBase"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -50,9 +50,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "dmusBase"
-            BuildableName = "dmusBase"
-            BlueprintName = "dmusBase"
+            BlueprintIdentifier = "mcmusBase"
+            BuildableName = "mcmusBase"
+            BlueprintName = "mcmusBase"
             ReferencedContainer = "container:">
          </BuildableReference>
       </MacroExpansion>

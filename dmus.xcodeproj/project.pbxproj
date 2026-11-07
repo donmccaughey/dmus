@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D474B29630993FBB00FA3132 /* dmusBase in Frameworks */ = {isa = PBXBuildFile; productRef = D474B29530993FBB00FA3132 /* dmusBase */; };
-		D474B29A30994E7300FA3132 /* dmusBase in Frameworks */ = {isa = PBXBuildFile; productRef = D474B29930994E7300FA3132 /* dmusBase */; };
-		D474B29C30994E7300FA3132 /* dmusBaseTestSupport in Frameworks */ = {isa = PBXBuildFile; productRef = D474B29B30994E7300FA3132 /* dmusBaseTestSupport */; };
+		D474B29630993FBB00FA3132 /* mcmusBase in Frameworks */ = {isa = PBXBuildFile; productRef = D474B29530993FBB00FA3132 /* mcmusBase */; };
+		D474B29A30994E7300FA3132 /* mcmusBase in Frameworks */ = {isa = PBXBuildFile; productRef = D474B29930994E7300FA3132 /* mcmusBase */; };
+		D474B29C30994E7300FA3132 /* mcmusBaseTestSupport in Frameworks */ = {isa = PBXBuildFile; productRef = D474B29B30994E7300FA3132 /* mcmusBaseTestSupport */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -18,7 +18,7 @@
 		D41DFEB0308C305900FEA684 /* CLAUDE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CLAUDE.md; sourceTree = "<group>"; };
 		D41DFEB1308C305900FEA684 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		D45D240330998DFB00F84DF9 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
-		D474B29330993DD200FA3132 /* dmusBase */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = dmusBase; sourceTree = "<group>"; };
+		D474B29330993DD200FA3132 /* mcmusBase */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = mcmusBase; sourceTree = "<group>"; };
 		D4A78314308D0B4000325F1E /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		D4EE45C53099A628002C6BF9 /* dmus.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = dmus.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -107,7 +107,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D474B29630993FBB00FA3132 /* dmusBase in Frameworks */,
+				D474B29630993FBB00FA3132 /* mcmusBase in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -115,8 +115,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D474B29C30994E7300FA3132 /* dmusBaseTestSupport in Frameworks */,
-				D474B29A30994E7300FA3132 /* dmusBase in Frameworks */,
+				D474B29C30994E7300FA3132 /* mcmusBaseTestSupport in Frameworks */,
+				D474B29A30994E7300FA3132 /* mcmusBase in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -136,7 +136,7 @@
 				D45D240630998E1900F84DF9 /* scripts */,
 				D3A5000000000000000000A3 /* dmus */,
 				D47788FE309D80B30074B85B /* dmusTests */,
-				D474B29330993DD200FA3132 /* dmusBase */,
+				D474B29330993DD200FA3132 /* mcmusBase */,
 				D474B29430993FBB00FA3132 /* Frameworks */,
 				D3A5000000000000000000A1 /* Products */,
 			);
@@ -180,7 +180,7 @@
 			);
 			name = mcmus;
 			packageProductDependencies = (
-				D474B29530993FBB00FA3132 /* dmusBase */,
+				D474B29530993FBB00FA3132 /* mcmusBase */,
 			);
 			productName = mcmus;
 			productReference = D3A5000000000000000000A2 /* MC Mus.app */;
@@ -202,8 +202,8 @@
 			);
 			name = mcmusTests;
 			packageProductDependencies = (
-				D474B29930994E7300FA3132 /* dmusBase */,
-				D474B29B30994E7300FA3132 /* dmusBaseTestSupport */,
+				D474B29930994E7300FA3132 /* mcmusBase */,
+				D474B29B30994E7300FA3132 /* mcmusBaseTestSupport */,
 			);
 			productName = mcmusTests;
 			productReference = D3A5000000000000000000F1 /* mcmusTests.xctest */;
@@ -284,15 +284,15 @@
 /* Begin PBXTargetDependency section */
 		D474B29830994C8700FA3132 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = D474B29730994C8700FA3132 /* dmusBase */;
+			productRef = D474B29730994C8700FA3132 /* mcmusBase */;
 		};
 		D474B29E30994E7D00FA3132 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = D474B29D30994E7D00FA3132 /* dmusBase */;
+			productRef = D474B29D30994E7D00FA3132 /* mcmusBase */;
 		};
 		D474B2A030994E7D00FA3132 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = D474B29F30994E7D00FA3132 /* dmusBaseTestSupport */;
+			productRef = D474B29F30994E7D00FA3132 /* mcmusBaseTestSupport */;
 		};
 /* End PBXTargetDependency section */
 
@@ -600,29 +600,29 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		D474B29530993FBB00FA3132 /* dmusBase */ = {
+		D474B29530993FBB00FA3132 /* mcmusBase */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = dmusBase;
+			productName = mcmusBase;
 		};
-		D474B29730994C8700FA3132 /* dmusBase */ = {
+		D474B29730994C8700FA3132 /* mcmusBase */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = dmusBase;
+			productName = mcmusBase;
 		};
-		D474B29930994E7300FA3132 /* dmusBase */ = {
+		D474B29930994E7300FA3132 /* mcmusBase */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = dmusBase;
+			productName = mcmusBase;
 		};
-		D474B29B30994E7300FA3132 /* dmusBaseTestSupport */ = {
+		D474B29B30994E7300FA3132 /* mcmusBaseTestSupport */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = dmusBaseTestSupport;
+			productName = mcmusBaseTestSupport;
 		};
-		D474B29D30994E7D00FA3132 /* dmusBase */ = {
+		D474B29D30994E7D00FA3132 /* mcmusBase */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = dmusBase;
+			productName = mcmusBase;
 		};
-		D474B29F30994E7D00FA3132 /* dmusBaseTestSupport */ = {
+		D474B29F30994E7D00FA3132 /* mcmusBaseTestSupport */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = dmusBaseTestSupport;
+			productName = mcmusBaseTestSupport;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

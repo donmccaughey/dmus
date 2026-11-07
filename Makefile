@@ -4,7 +4,7 @@ IOS_CHECK_DEVICE ?= iPhone 16e
 
 app_files = $(shell find dmus -type f -not -name '.*')
 arch = $(shell uname -m)
-package_files = $(shell find dmusBase -type f -not -name '.*')
+package_files = $(shell find mcmusBase -type f -not -name '.*')
 product = MC Mus
 project_files = dmus.xcodeproj/project.pbxproj
 release_dir = $(TMP)/Release
