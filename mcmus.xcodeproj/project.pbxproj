@@ -24,33 +24,12 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		D47788FF309D80C70074B85B /* Exceptions for "mcmusTests" folder in "mcmus" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				components/PanelArrangementTests.swift,
-				"files/FolderChild+PasteboardTests.swift",
-				ObservingTests.swift,
-				queue/LowerLineWidthsTests.swift,
-			);
-			target = D3A5000000000000000000C0 /* mcmus */;
-		};
-		D4778900309D80C70074B85B /* Exceptions for "mcmusTests" folder in "mcmusTests" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				components/PanelArrangementTests.swift,
-				"files/FolderChild+PasteboardTests.swift",
-				ObservingTests.swift,
-				queue/LowerLineWidthsTests.swift,
-			);
-			target = D3A5000000000000000000F2 /* mcmusTests */;
-		};
 		D4BDA180309A880A00C3D858 /* Exceptions for "mcmus" folder in "mcmusTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				components/PanelArrangement.swift,
 				"files/FolderChild+Pasteboard.swift",
 				MusicLibraryStore.swift,
-				MusicLibraryStoreTests.swift,
 				Observing.swift,
 				queue/LowerLineWidths.swift,
 			);
@@ -60,7 +39,6 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
-				MusicLibraryStoreTests.swift,
 			);
 			target = D3A5000000000000000000C0 /* mcmus */;
 		};
@@ -88,10 +66,6 @@
 		};
 		D47788FE309D80B30074B85B /* mcmusTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				D47788FF309D80C70074B85B /* Exceptions for "mcmusTests" folder in "mcmus" target */,
-				D4778900309D80C70074B85B /* Exceptions for "mcmusTests" folder in "mcmusTests" target */,
-			);
 			path = mcmusTests;
 			sourceTree = "<group>";
 		};
@@ -176,7 +150,6 @@
 			);
 			fileSystemSynchronizedGroups = (
 				D3A5000000000000000000A3 /* mcmus */,
-				D47788FE309D80B30074B85B /* mcmusTests */,
 			);
 			name = mcmus;
 			packageProductDependencies = (
@@ -199,6 +172,9 @@
 			dependencies = (
 				D474B29E30994E7D00FA3132 /* PBXTargetDependency */,
 				D474B2A030994E7D00FA3132 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				D47788FE309D80B30074B85B /* mcmusTests */,
 			);
 			name = mcmusTests;
 			packageProductDependencies = (

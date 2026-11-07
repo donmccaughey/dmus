@@ -262,6 +262,24 @@ Smaller semantic differences to watch while translating:
    from `src_files` in the `Makefile`, so `make check` does not rerun for a
    test-only change. Move `mcmus/MusicLibraryStoreTests.swift` to
    `mcmusTests/`.
+
+   **Baseline (2026-11-06, Xcode 26.3, after this step's hygiene changes).**
+   Executed tests, macOS / iOS (iPhone 16e, iOS 18.4): `mcmusTests` 24 / 16,
+   `WrappersTests` 1 / 1, `ModelTests` 72 / 63; the same counts as before the
+   changes. Screenshots are in `docs/plans/2026-11-objective-c-rewrite-baseline/`:
+   macOS normal, demo, and demo with "3 Doors Down" dragged to the queue;
+   iOS normal and demo in portrait and landscape. Runtime checks, run under
+   `lldb` in the launched apps with `objc_getClass`, `objc_getProtocol` and
+   `class_respondsToSelector` (positive controls included): none of the 67
+   type names, including `FileSystemItemInfo`, `AudioFakeCall`,
+   `FileSystemFakeKind`, `FileSystemFakeEntry` and `FolderChildPasteboard`,
+   is a class or protocol in either app's runtime (AppKit, UIKit and
+   AVFoundation loaded), and none of the selectors the subclasses and
+   categories add, now including `ShareStatusBarView`'s and
+   `NSStackView+SeparatedRows`' class methods, already exists on its
+   superclass. `mcmusTests/` is now a synchronized group of `mcmusTests` alone
+   and its two exception sets are gone; `make check` reruns for changes to
+   `mcmusTests/`, `mcmus.xctestplan` and the shared schemes.
 3. **API tidy.** The "reshape (step 3)" rows of the table: names, default
    arguments, the fakes' shape, error domains and how tests match errors,
    and `FileSystemItemInfo`, `ResolvedBookmark`, `FileSystemReal` and

@@ -6,14 +6,19 @@ app_files = $(shell find mcmus -type f -not -name '.*')
 arch = $(shell uname -m)
 package_files = $(shell find mcmusBase -type f -not -name '.*')
 product = MC Mus
-project_files = mcmus.xcodeproj/project.pbxproj
+project_files = \
+		mcmus.xcodeproj/project.pbxproj \
+		$(wildcard mcmus.xcodeproj/xcshareddata/xcschemes/*.xcscheme) \
+		mcmus.xctestplan
 release_dir = $(TMP)/Release
 app = $(release_dir)/$(product).app
+test_files = $(shell find mcmusTests -type f -not -name '.*')
 src_files = \
 		 .git/hooks/pre-commit \
 		$(app_files) \
 		$(package_files) \
-		$(project_files)
+		$(project_files) \
+		$(test_files)
 ver = 1.0
 
 

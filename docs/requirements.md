@@ -29,7 +29,7 @@ On iOS, MC Mus shall target iOS 18 (including iPadOS 18) or later.
 
 MC Mus shall set the app category in Xcode to "Music".
 
-MC Mus shall use the Swift language.
+MC Mus shall use the Objective-C language.
 
 On macOS, MC Mus shall use the AppKit framework for its user interface, rather
 than SwiftUI or Mac Catalyst.
