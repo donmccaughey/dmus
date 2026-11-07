@@ -42,3 +42,12 @@
 #import "QueueTableView-macOS.h"
 #import "QueuedTrackCellView-iOS.h"
 #import "QueuedTrackCellView-macOS.h"
+
+#import "FilesPanelViewController-iOS.h"
+#import "FilesPanelViewController-macOS.h"
+#import "FilesTableStackController.h"
+#import "FilesTreeNode.h"
+#import "FilesTreeView.h"
+#import "FolderChildCell.h"
+#import "FolderTableViewController.h"
+#import "ShareStatusBarView.h"
