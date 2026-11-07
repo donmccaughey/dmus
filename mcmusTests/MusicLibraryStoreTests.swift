@@ -66,8 +66,7 @@ struct MusicLibraryStoreTests {
         let preferences = PreferencesFake(musicRootDirectoryBookmark: FileSystemFake.bookmark(forPath: "/Saved/Music"))
         let store = MusicLibraryStore(fileSystem: fileSystem, preferences: preferences)
 
-        store.loadInBackground(isDemo: false)
-        await store.loadTask?.value
+        await store.loadInBackgroundAndWait(isDemo: false)
 
         #expect(store.musicRootDirectory?.url.path == "/Saved/Music")
         #expect(!store.loadDidFail)
@@ -77,12 +76,12 @@ struct MusicLibraryStoreTests {
     @Test func backgroundLoadReportsLocateFailure() async {
         let store = MusicLibraryStore(fileSystem: FileSystemFake(), preferences: PreferencesFake())
 
-        store.loadInBackground(isDemo: false)
-        await store.loadTask?.value
+        await store.loadInBackgroundAndWait(isDemo: false)
 
         #expect(store.musicRootDirectory == nil)
         #expect(store.loadDidFail)
         #expect(store.library.isEmpty)
+        #expect(store.loadErrors.map { fileSystemFakeErrorPath(of: $0) } == ["getMusicDirectoryURL"])
     }
 
     @Test func changingRootSavesBookmarkSwapsAccessAndReloads() async {
@@ -91,17 +90,21 @@ struct MusicLibraryStoreTests {
         fileSystem.addPath("/Other/Music/New.mp3")
         let preferences = PreferencesFake(musicRootDirectoryBookmark: FileSystemFake.bookmark(forPath: "/Saved/Music"))
         let store = MusicLibraryStore(fileSystem: fileSystem, preferences: preferences)
-        store.loadInBackground(isDemo: false)
-        await store.loadTask?.value
+        await store.loadInBackgroundAndWait(isDemo: false)
 
-        store.changeMusicRootDirectory(to: URL(filePath: "/Other/Music", directoryHint: .isDirectory))
+        // The root changes before the call returns; the library follows when
+        // the load lands.
+        await withCheckedContinuation { loaded in
+            store.changeMusicRootDirectory(to: URL(filePath: "/Other/Music", directoryHint: .isDirectory)) {
+                loaded.resume()
+            }
 
-        #expect(preferences.musicRootDirectoryBookmark == FileSystemFake.bookmark(forPath: "/Other/Music"))
-        #expect(fileSystem.stopped == ["/Saved/Music"])
-        #expect(fileSystem.started == ["/Saved/Music", "/Other/Music"])
-        #expect(store.musicRootDirectory?.url.path == "/Other/Music")
-
-        await store.loadTask?.value
+            #expect(preferences.musicRootDirectoryBookmark == FileSystemFake.bookmark(forPath: "/Other/Music"))
+            #expect(fileSystem.stopped == ["/Saved/Music"])
+            #expect(fileSystem.started == ["/Saved/Music", "/Other/Music"])
+            #expect(store.musicRootDirectory?.url.path == "/Other/Music")
+            #expect(trackNames(in: store) == ["Old"])
+        }
 
         #expect(!store.loadDidFail)
         #expect(trackNames(in: store) == ["New"])
@@ -112,17 +115,18 @@ struct MusicLibraryStoreTests {
         fileSystem.addPath("/Other/Music/New.mp3")
         let preferences = PreferencesFake(musicRootDirectoryBookmark: FileSystemFake.bookmark(forPath: "/Saved/Music"))
         let store = MusicLibraryStore(fileSystem: fileSystem, preferences: preferences)
-        store.loadInBackground(isDemo: false)
-        await store.loadTask?.value
+        await store.loadInBackgroundAndWait(isDemo: false)
         let rootChanges = NotificationCounter(name: MusicLibraryStore.musicRootDirectoryDidChangeNotification, object: store)
         let libraryChanges = NotificationCounter(name: MusicLibraryStore.libraryDidChangeNotification, object: store)
 
-        store.changeMusicRootDirectory(to: URL(filePath: "/Other/Music", directoryHint: .isDirectory))
+        await withCheckedContinuation { loaded in
+            store.changeMusicRootDirectory(to: URL(filePath: "/Other/Music", directoryHint: .isDirectory)) {
+                loaded.resume()
+            }
 
-        #expect(rootChanges.count == 1)
-        #expect(libraryChanges.count == 0)
-
-        await store.loadTask?.value
+            #expect(rootChanges.count == 1)
+            #expect(libraryChanges.count == 0)
+        }
 
         #expect(libraryChanges.count == 1)
     }
@@ -131,16 +135,33 @@ struct MusicLibraryStoreTests {
         let preferences = PreferencesFake(musicRootDirectoryBookmark: FileSystemFake.bookmark(forPath: "/Saved/Music"))
         let fileSystem = FileSystemFake()
         let store = MusicLibraryStore(fileSystem: fileSystem, preferences: preferences)
-        store.loadInBackground(isDemo: false)
-        await store.loadTask?.value
-        let loadTask = store.loadTask
+        await store.loadInBackgroundAndWait(isDemo: false)
+        let libraryChanges = NotificationCounter(name: MusicLibraryStore.libraryDidChangeNotification, object: store)
         preferences.musicRootDirectoryBookmark = nil
 
-        store.changeMusicRootDirectory(to: URL(filePath: "/Saved/Music", directoryHint: .isDirectory))
+        await store.changeMusicRootDirectoryAndWait(to: URL(filePath: "/Saved/Music", directoryHint: .isDirectory))
 
         #expect(preferences.musicRootDirectoryBookmark == nil)
         #expect(fileSystem.stopped.isEmpty)
-        #expect(store.loadTask == loadTask)
+        #expect(libraryChanges.count == 0)
+    }
+    #endif
+}
+
+// The store reports completion through a handler, which an Objective-C caller
+// can take; these wrap it for tests that await the load.
+extension MusicLibraryStore {
+    func loadInBackgroundAndWait(isDemo: Bool) async {
+        await withCheckedContinuation { loaded in
+            loadInBackground(isDemo: isDemo) { loaded.resume() }
+        }
+    }
+
+    #if os(macOS)
+    func changeMusicRootDirectoryAndWait(to url: URL) async {
+        await withCheckedContinuation { loaded in
+            changeMusicRootDirectory(to: url) { loaded.resume() }
+        }
     }
     #endif
 }
