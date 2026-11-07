@@ -33,3 +33,12 @@
 #import "ReadOnlyTextField.h"
 #import "UIButton+Bordered.h"
 #import "UIView+FillingSubview.h"
+
+#import "PlayerPanelView-iOS.h"
+#import "PlayerPanelView-macOS.h"
+#import "QueuePanelViewController-iOS.h"
+#import "QueuePanelViewController-macOS.h"
+#import "QueueTableView-iOS.h"
+#import "QueueTableView-macOS.h"
+#import "QueuedTrackCellView-iOS.h"
+#import "QueuedTrackCellView-macOS.h"
