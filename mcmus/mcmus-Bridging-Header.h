@@ -51,3 +51,12 @@
 #import "FolderChildCell.h"
 #import "FolderTableViewController.h"
 #import "ShareStatusBarView.h"
+
+#import "MCMusAppDelegate-iOS.h"
+#import "MCMusAppDelegate-macOS.h"
+#import "MCMusSceneDelegate.h"
+#import "MainMenu.h"
+#import "MainViewController-iOS.h"
+#import "MainViewController-macOS.h"
+#import "MainWindowController.h"
+#import "SettingsWindowController.h"

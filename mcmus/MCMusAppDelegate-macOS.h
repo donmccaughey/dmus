@@ -1,0 +1,13 @@
+#import <TargetConditionals.h>
+
+#if TARGET_OS_OSX
+#import <AppKit/AppKit.h>
+
+NS_ASSUME_NONNULL_BEGIN
+
+@interface MCMusAppDelegate : NSObject <NSApplicationDelegate>
+
+@end
+
+NS_ASSUME_NONNULL_END
+#endif
