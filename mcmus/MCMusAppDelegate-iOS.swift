@@ -18,18 +18,5 @@ final class MCMusAppDelegate: UIResponder, UIApplicationDelegate {
         store.loadInBackground(isDemo: CommandLine.arguments.contains("--demo"))
         return true
     }
-
-    func application(
-        _ application: UIApplication,
-        configurationForConnecting connectingSceneSession: UISceneSession,
-        options: UIScene.ConnectionOptions
-    ) -> UISceneConfiguration {
-        // The generated scene manifest lists no configurations, so UIKit
-        // asks here; a configuration with no name has no delegate class
-        // until one is set.
-        let configuration = UISceneConfiguration(name: nil, sessionRole: connectingSceneSession.role)
-        configuration.delegateClass = MCMusSceneDelegate.self
-        return configuration
-    }
 }
 #endif
