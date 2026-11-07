@@ -18,8 +18,8 @@
         {
           "glass" : false,
           "hidden" : false,
-          "image-name" : "dmus-app-icon-dark.png",
-          "name" : "dmus-app-icon-dark",
+          "image-name" : "mcmus-app-icon-dark.png",
+          "name" : "mcmus-app-icon-dark",
           "opacity-specializations" : [
             {
               "value" : 0
@@ -40,8 +40,8 @@
         {
           "glass" : false,
           "hidden" : false,
-          "image-name" : "dmus-app-icon-light.png",
-          "name" : "dmus-app-icon-light",
+          "image-name" : "mcmus-app-icon-light.png",
+          "name" : "mcmus-app-icon-light",
           "opacity-specializations" : [
             {
               "appearance" : "dark",
