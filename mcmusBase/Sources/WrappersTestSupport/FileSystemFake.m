@@ -1,0 +1,191 @@
+#import "FileSystemFake.h"
+
+NSErrorDomain const FileSystemFakeErrorDomain = @"FileSystemFakeErrorDomain";
+
+static NSError *operationFailed(NSString *path) {
+    return [NSError errorWithDomain:FileSystemFakeErrorDomain
+                               code:FileSystemFakeErrorCodeOperationFailed
+                           userInfo:@{NSFilePathErrorKey: path}];
+}
+
+static void fail(NSString *path, NSError **error) {
+    if (error) {
+        *error = operationFailed(path);
+    }
+}
+
+@implementation FileSystemFakeEntry
+
+- (instancetype)initWithPath:(NSString *)path
+                        kind:(FileSystemFakeKind)kind
+               localizedName:(nullable NSString *)localizedName {
+    self = [super init];
+    if (self) {
+        _path = [path copy];
+        _kind = kind;
+        _localizedName = [localizedName copy];
+    }
+    return self;
+}
+
+@end
+
+@implementation FileSystemFake {
+    NSMutableArray<FileSystemFakeEntry *> *_entries;
+    NSMutableArray<NSString *> *_bookmarked;
+    NSMutableArray<NSString *> *_started;
+    NSMutableArray<NSString *> *_stopped;
+}
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _entries = [NSMutableArray array];
+        _unlistableDirectories = [NSSet set];
+        _unreadableEntries = [NSSet set];
+        _uncreatableDirectories = [NSSet set];
+        _unbookmarkablePaths = [NSSet set];
+        _unresolvableBookmarks = [NSSet set];
+        _staleBookmarks = [NSSet set];
+        _inaccessiblePaths = [NSSet set];
+        _bookmarked = [NSMutableArray array];
+        _started = [NSMutableArray array];
+        _stopped = [NSMutableArray array];
+    }
+    return self;
+}
+
+- (NSArray<FileSystemFakeEntry *> *)entries {
+    return [_entries copy];
+}
+
+- (void)setEntries:(NSArray<FileSystemFakeEntry *> *)entries {
+    _entries = [entries mutableCopy];
+}
+
+- (NSArray<NSString *> *)bookmarked {
+    return [_bookmarked copy];
+}
+
+- (NSArray<NSString *> *)started {
+    return [_started copy];
+}
+
+- (NSArray<NSString *> *)stopped {
+    return [_stopped copy];
+}
+
+- (void)addPath:(NSString *)path {
+    [self addPath:path kind:FileSystemFakeKindFile localizedName:nil];
+}
+
+- (void)addPath:(NSString *)path kind:(FileSystemFakeKind)kind {
+    [self addPath:path kind:kind localizedName:nil];
+}
+
+- (void)addPath:(NSString *)path kind:(FileSystemFakeKind)kind localizedName:(nullable NSString *)localizedName {
+    [_entries addObject:[[FileSystemFakeEntry alloc] initWithPath:path kind:kind localizedName:localizedName]];
+}
+
++ (NSData *)bookmarkForPath:(NSString *)path {
+    return [path dataUsingEncoding:NSUTF8StringEncoding];
+}
+
+- (nullable NSURL *)getMusicDirectoryURLAndReturnError:(NSError **)error {
+    if (!_musicDirectoryURL) {
+        fail(@"getMusicDirectoryURL", error);
+    }
+    return _musicDirectoryURL;
+}
+
+- (nullable NSURL *)getApplicationSupportDirectoryURLAndReturnError:(NSError **)error {
+    fail(@"getApplicationSupportDirectoryURL", error);
+    return nil;
+}
+
+- (BOOL)createDirectoryAt:(NSURL *)url error:(NSError **)error {
+    if ([_uncreatableDirectories containsObject:url.path]) {
+        fail(url.path, error);
+        return NO;
+    }
+    return YES;
+}
+
+- (BOOL)excludeFromBackup:(NSURL *)url error:(NSError **)error {
+    fail(url.path, error);
+    return NO;
+}
+
+// Entries come back in insertion order so tests can see the loader sort.
+- (nullable NSArray<NSURL *> *)listDirectory:(NSURL *)directory error:(NSError **)error {
+    if ([_unlistableDirectories containsObject:directory.path]) {
+        fail(directory.path, error);
+        return nil;
+    }
+    NSMutableArray<NSURL *> *urls = [NSMutableArray array];
+    for (FileSystemFakeEntry *entry in _entries) {
+        if (![entry.path.stringByDeletingLastPathComponent isEqualToString:directory.path]) {
+            continue;
+        }
+        BOOL isDirectory = entry.kind == FileSystemFakeKindDirectory || entry.kind == FileSystemFakeKindPackage;
+        [urls addObject:[NSURL fileURLWithPath:entry.path isDirectory:isDirectory]];
+    }
+    return urls;
+}
+
+- (nullable FileSystemItemInfo *)getFileInfo:(NSURL *)url error:(NSError **)error {
+    FileSystemFakeEntry *entry = [self entryForPath:url.path];
+    if ([_unreadableEntries containsObject:url.path] || !entry) {
+        fail(url.path, error);
+        return nil;
+    }
+    return [[FileSystemItemInfo alloc]
+        initWithIsDirectory:entry.kind == FileSystemFakeKindDirectory || entry.kind == FileSystemFakeKindPackage
+              isRegularFile:entry.kind == FileSystemFakeKindFile
+                  isPackage:entry.kind == FileSystemFakeKindPackage
+              localizedName:entry.localizedName];
+}
+
+- (nullable FileSystemFakeEntry *)entryForPath:(NSString *)path {
+    for (FileSystemFakeEntry *entry in _entries) {
+        if ([entry.path isEqualToString:path]) {
+            return entry;
+        }
+    }
+    return nil;
+}
+
+#if TARGET_OS_OSX
+- (nullable NSData *)makeSecurityScopedBookmarkFor:(NSURL *)url error:(NSError **)error {
+    if ([_unbookmarkablePaths containsObject:url.path]) {
+        fail(url.path, error);
+        return nil;
+    }
+    [_bookmarked addObject:url.path];
+    return [FileSystemFake bookmarkForPath:url.path];
+}
+
+- (nullable ResolvedBookmark *)resolveSecurityScopedBookmark:(NSData *)bookmark error:(NSError **)error {
+    NSString *path = [[NSString alloc] initWithData:bookmark encoding:NSUTF8StringEncoding] ?: @"";
+    if ([_unresolvableBookmarks containsObject:path]) {
+        fail(path, error);
+        return nil;
+    }
+    return [[ResolvedBookmark alloc] initWithURL:[NSURL fileURLWithPath:path isDirectory:YES]
+                                         isStale:[_staleBookmarks containsObject:path]];
+}
+
+- (BOOL)startAccessing:(NSURL *)url {
+    if ([_inaccessiblePaths containsObject:url.path]) {
+        return NO;
+    }
+    [_started addObject:url.path];
+    return YES;
+}
+
+- (void)stopAccessing:(NSURL *)url {
+    [_stopped addObject:url.path];
+}
+#endif
+
+@end

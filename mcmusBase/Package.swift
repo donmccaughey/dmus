@@ -22,7 +22,7 @@ let package = Package(
             publicHeadersPath: ".",
             linkerSettings: [.linkedFramework("AVFoundation")]
         ),
-        .target(name: "WrappersTestSupport", dependencies: ["Wrappers"]),
+        .target(name: "WrappersTestSupport", dependencies: ["Wrappers"], publicHeadersPath: "."),
         .testTarget(
             name: "WrappersTests",
             dependencies: ["Wrappers", "WrappersTestSupport"]
