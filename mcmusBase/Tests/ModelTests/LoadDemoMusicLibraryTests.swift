@@ -13,13 +13,13 @@ struct LoadDemoMusicLibraryTests {
         loadResult(json).library
     }
 
-    func track(_ name: String, album: String? = nil, artist: String? = nil) -> FolderChild {
-        .track(Track(
+    func track(_ name: String, album: String? = nil, artist: String? = nil) -> Track {
+        Track(
             trackName: name,
             albumName: album ?? Track.noAlbum,
             artistName: artist ?? Track.noArtist,
             path: trackPath
-        ))
+        )
     }
 
     @Test func rootDirectoryNameBecomesRootPath() {
@@ -38,7 +38,7 @@ struct LoadDemoMusicLibraryTests {
         """)
 
         #expect(result.library.rootFolder.path == "/")
-        #expect(result.library.rootFolder.children == [track("Song")])
+        #expect(childrenEqual(result.library.rootFolder.children, [track("Song")]))
         #expect(result.errors.isEmpty)
     }
 
@@ -61,7 +61,7 @@ struct LoadDemoMusicLibraryTests {
         """)
 
         #expect(library.rootFolder.path == "/Music")
-        #expect(library.rootFolder.children == [track("Song")])
+        #expect(childrenEqual(library.rootFolder.children, [track("Song")]))
     }
 
     @Test func everyTrackPointsAtTheDemoTrackFile() {
@@ -74,12 +74,12 @@ struct LoadDemoMusicLibraryTests {
         ]}]
         """)
 
-        #expect(library.rootFolder.children == [
-            .folder(Folder(path: "/Music/Album", name: "Album", children: [
+        #expect(childrenEqual(library.rootFolder.children, [
+            Folder(path: "/Music/Album", name: "Album", children: [
                 track("Two", album: "Album"),
-            ])),
+            ]),
             track("One"),
-        ])
+        ]))
     }
 
     @Test func folderNamesBecomeAlbumAndArtist() {
@@ -93,13 +93,13 @@ struct LoadDemoMusicLibraryTests {
         ]}]
         """)
 
-        #expect(library.rootFolder.children == [
-            .folder(Folder(path: "/Music/Artist", name: "Artist", children: [
-                .folder(Folder(path: "/Music/Artist/Album", name: "Album", children: [
+        #expect(childrenEqual(library.rootFolder.children, [
+            Folder(path: "/Music/Artist", name: "Artist", children: [
+                Folder(path: "/Music/Artist/Album", name: "Album", children: [
                     track("01 Song", album: "Album", artist: "Artist"),
-                ])),
-            ])),
-        ])
+                ]),
+            ]),
+        ]))
     }
 
     @Test func deeperFoldersUseNearestTwoAncestors() throws {
@@ -118,7 +118,7 @@ struct LoadDemoMusicLibraryTests {
         let genre = try #require(library.rootFolder.children.first?.children)
         let artist = try #require(genre.first?.children)
         let album = try #require(artist.first?.children)
-        #expect(album == [track("Song", album: "Album", artist: "Artist")])
+        #expect(childrenEqual(album, [track("Song", album: "Album", artist: "Artist")]))
     }
 
     @Test func onlyMusicFilesBecomeTracks() {
@@ -132,10 +132,10 @@ struct LoadDemoMusicLibraryTests {
         ]}]
         """)
 
-        #expect(library.rootFolder.children == [
+        #expect(childrenEqual(library.rootFolder.children, [
             track("Loud"),
             track("Quiet"),
-        ])
+        ]))
     }
 
     @Test func hiddenFilesAndDirectoriesAreSkipped() {
@@ -150,7 +150,7 @@ struct LoadDemoMusicLibraryTests {
         ]}]
         """)
 
-        #expect(library.rootFolder.children == [track("Song")])
+        #expect(childrenEqual(library.rootFolder.children, [track("Song")]))
     }
 
     @Test func iTunesLPPackagesAreSkipped() {
@@ -164,7 +164,7 @@ struct LoadDemoMusicLibraryTests {
         ]}]
         """)
 
-        #expect(library.rootFolder.children == [track("Song")])
+        #expect(childrenEqual(library.rootFolder.children, [track("Song")]))
     }
 
     @Test func entriesWithoutNamesAreSkipped() {
@@ -176,7 +176,7 @@ struct LoadDemoMusicLibraryTests {
         ]}]
         """)
 
-        #expect(library.rootFolder.children == [track("Song")])
+        #expect(childrenEqual(library.rootFolder.children, [track("Song")]))
     }
 
     @Test func entriesThatAreNeitherFilesNorDirectoriesAreSkipped() {
@@ -187,7 +187,7 @@ struct LoadDemoMusicLibraryTests {
         ]}]
         """)
 
-        #expect(library.rootFolder.children == [track("Song")])
+        #expect(childrenEqual(library.rootFolder.children, [track("Song")]))
     }
 
     @Test func childrenAreSortedNaturallyByName() {

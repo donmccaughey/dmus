@@ -70,9 +70,9 @@ final class FilesPanelViewController: UIViewController {
         path: "/Music",
         name: Folder.rootName,
         children: [
-            .folder(Folder(path: "/Music/Artist", name: "Artist", children: [
-                .track(Track(trackName: "Song", albumName: "Artist", artistName: Track.noArtist, path: "/Music/Artist/Song.mp3")),
-            ])),
+            Folder(path: "/Music/Artist", name: "Artist", children: [
+                Track(trackName: "Song", albumName: "Artist", artistName: Track.noArtist, path: "/Music/Artist/Song.mp3"),
+            ]),
         ]
     )), errors: []))
     return FilesPanelViewController(store: store, player: Player())

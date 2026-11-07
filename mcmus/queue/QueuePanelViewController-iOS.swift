@@ -63,17 +63,17 @@ final class QueuePanelViewController: UIViewController {
 #Preview("Filled") {
     let player = Player()
     player.queue.add(Folder(path: "/Music/Artist", name: "Artist", children: [
-        .folder(Folder(path: "/Music/Artist/Album", name: "Album", children: [
-            .track(Track(trackName: "Song", albumName: "Album", artistName: "Artist", path: "/Music/Artist/Album/Song.mp3")),
-            .track(Track(trackName: "Another Song", albumName: "Album", artistName: "Artist", path: "/Music/Artist/Album/Another Song.mp3")),
-        ])),
-        .track(Track(trackName: "Single", albumName: "Artist", artistName: Track.noArtist, path: "/Music/Artist/Single.m4a")),
-        .track(Track(
+        Folder(path: "/Music/Artist/Album", name: "Album", children: [
+            Track(trackName: "Song", albumName: "Album", artistName: "Artist", path: "/Music/Artist/Album/Song.mp3"),
+            Track(trackName: "Another Song", albumName: "Album", artistName: "Artist", path: "/Music/Artist/Album/Another Song.mp3"),
+        ]),
+        Track(trackName: "Single", albumName: "Artist", artistName: Track.noArtist, path: "/Music/Artist/Single.m4a"),
+        Track(
             trackName: "A Track Name Long Enough That It Must Be Elided To Fit The Row",
             albumName: "An Album Name Long Enough That It Must Be Elided To Fit",
             artistName: "An Artist Name Long Enough That It Must Be Elided",
             path: "/Music/Artist/Long.mp3"
-        )),
+        ),
     ]))
     return QueuePanelViewController(player: player)
 }

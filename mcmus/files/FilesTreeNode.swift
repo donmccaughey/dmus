@@ -1,28 +1,23 @@
 #if os(macOS)
 import Model
 
-// NSOutlineView keys expansion state and drags on item identity, so the
-// FolderChild values need stable reference-type stand-ins.
+// NSOutlineView keys expansion state and drags on item identity, but Folder
+// and Track compare by value, so the tree gets identity-only stand-ins.
 nonisolated final class FilesTreeNode {
     let child: FolderChild
     let children: [FilesTreeNode]
 
     init(_ child: FolderChild) {
         self.child = child
-        children = (child.children ?? []).map(FilesTreeNode.init)
+        children = child.children.map(FilesTreeNode.init)
     }
 
     var name: String { child.name }
 
-    var isExpandable: Bool {
-        if case .folder = child { true } else { false }
-    }
+    var isExpandable: Bool { child is Folder }
 
     var systemImage: String {
-        switch child {
-        case .folder: "folder"
-        case .track: "music.note"
-        }
+        child is Folder ? "folder" : "music.note"
     }
 }
 #endif

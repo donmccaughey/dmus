@@ -28,7 +28,7 @@ final class DropTargetView: NSView {
     }
 
     override func performDragOperation(_ sender: any NSDraggingInfo) -> Bool {
-        let children = FolderChild.folderChildren(in: sender.draggingPasteboard)
+        let children = FolderChildPasteboard.children(in: sender.draggingPasteboard)
         guard !children.isEmpty else { return false }
         onDrop?(children)
         return true

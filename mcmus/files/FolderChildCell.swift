@@ -33,12 +33,11 @@ final class FolderChildCell: UITableViewCell {
         var content = defaultContentConfiguration()
         content.text = child.name
         contentConfiguration = content
-        switch child {
-        case .folder:
+        if child is Folder {
             addButton.configuration?.image = UIImage(systemName: "plus.square")
             openButton.isHidden = false
             selectionStyle = .default
-        case .track:
+        } else {
             addButton.configuration?.image = UIImage(systemName: "plus.circle")
             openButton.isHidden = true
             selectionStyle = .none

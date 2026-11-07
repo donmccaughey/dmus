@@ -7,7 +7,7 @@ struct MusicLibraryStoreTests {
     struct SomeError: Error {}
 
     let library = MusicLibrary(rootFolder: Folder(path: "/Music", name: Folder.rootName, children: [
-        .track(Track(trackName: "Song", albumName: Track.noAlbum, artistName: Track.noArtist, path: "/Music/Song.mp3")),
+        Track(trackName: "Song", albumName: Track.noAlbum, artistName: Track.noArtist, path: "/Music/Song.mp3"),
     ]))
 
     @Test func newStoreIsEmptyAndHasNotFailed() {
@@ -46,9 +46,7 @@ struct MusicLibraryStoreTests {
 
     #if os(macOS)
     func trackNames(in store: MusicLibraryStore) -> [String] {
-        store.library.rootFolder.children.compactMap {
-            if case .track(let track) = $0 { track.trackName } else { nil }
-        }
+        store.library.rootFolder.children.compactMap { ($0 as? Track)?.trackName }
     }
 
     @Test func backgroundLoadLocatesRootAndLoadsLibrary() async {

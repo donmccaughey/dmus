@@ -53,7 +53,7 @@ nonisolated private func loadChildren(
                 fileSystem: fileSystem,
                 errors: &errors
             )
-            children.append(.folder(Folder(path: url.path, name: name, children: grandchildren)))
+            children.append(Folder(path: url.path, name: name, children: grandchildren))
         } else if info.isRegularFile,
                   let track = Track(
                     displayName: name,
@@ -62,7 +62,7 @@ nonisolated private func loadChildren(
                     folderName: folderName,
                     parentFolderName: parentFolderName
                   ) {
-            children.append(.track(track))
+            children.append(track)
         }
     }
     return children.sortedByName()

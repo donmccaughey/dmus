@@ -43,10 +43,7 @@ final class FolderTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        switch folder.children[indexPath.row] {
-        case .folder: indexPath
-        case .track: nil
-        }
+        folder.children[indexPath.row] is Folder ? indexPath : nil
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -54,7 +51,7 @@ final class FolderTableViewController: UITableViewController {
     }
 
     private func open(_ child: FolderChild) {
-        guard case .folder(let folder) = child else { return }
+        guard let folder = child as? Folder else { return }
         let folderTable = FolderTableViewController(folder: folder, player: player)
         navigationController?.pushViewController(folderTable, animated: true)
     }
@@ -63,8 +60,8 @@ final class FolderTableViewController: UITableViewController {
 #Preview {
     FolderTableViewController(
         folder: Folder(path: "/Music/Artist", name: "Artist", children: [
-            .folder(Folder(path: "/Music/Artist/Album", name: "Album", children: [])),
-            .track(Track(trackName: "Single", albumName: "Artist", artistName: Track.noArtist, path: "/Music/Artist/Single.m4a")),
+            Folder(path: "/Music/Artist/Album", name: "Album", children: []),
+            Track(trackName: "Single", albumName: "Artist", artistName: Track.noArtist, path: "/Music/Artist/Single.m4a"),
         ]),
         player: Player()
     )

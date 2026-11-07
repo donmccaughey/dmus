@@ -10,7 +10,7 @@ struct FolderTests {
     @Test func directTracksAreDescendantsInOrder() {
         let first = track("A")
         let second = track("B")
-        let folder = Folder(path: "/Music", name: "Music", children: [.track(first), .track(second)])
+        let folder = Folder(path: "/Music", name: "Music", children: [first, second])
 
         #expect(folder.trackDescendants == [first, second])
     }
@@ -21,12 +21,12 @@ struct FolderTests {
         let albumTwo = track("Album Two Song")
         let single = track("Single")
         let folder = Folder(path: "/Music", name: "Music", children: [
-            .folder(Folder(path: "/Music/Artist", name: "Artist", children: [
-                .folder(Folder(path: "/Music/Artist/One", name: "One", children: [.track(albumOne)])),
-                .track(single),
-                .folder(Folder(path: "/Music/Artist/Two", name: "Two", children: [.track(albumTwo)])),
-            ])),
-            .track(loose),
+            Folder(path: "/Music/Artist", name: "Artist", children: [
+                Folder(path: "/Music/Artist/One", name: "One", children: [albumOne]),
+                single,
+                Folder(path: "/Music/Artist/Two", name: "Two", children: [albumTwo]),
+            ]),
+            loose,
         ])
 
         #expect(folder.trackDescendants == [albumOne, single, albumTwo, loose])

@@ -65,7 +65,7 @@ private final class FilesTreeDataSource: NSObject, NSOutlineViewDataSource, NSOu
     }
 
     func outlineView(_ outlineView: NSOutlineView, pasteboardWriterForItem item: Any) -> NSPasteboardWriting? {
-        (item as? FilesTreeNode)?.child.pasteboardItem()
+        (item as? FilesTreeNode).map { FolderChildPasteboard.pasteboardItem(for: $0.child) }
     }
 
     private static func makeCell() -> NSTableCellView {
@@ -102,12 +102,12 @@ private final class FilesTreeDataSource: NSObject, NSOutlineViewDataSource, NSOu
         path: "/Music",
         name: Folder.rootName,
         children: [
-            .folder(Folder(path: "/Music/Artist", name: "Artist", children: [
-                .folder(Folder(path: "/Music/Artist/Album", name: "Album", children: [
-                    .track(Track(trackName: "Song", albumName: "Album", artistName: "Artist", path: "/Music/Artist/Album/Song.mp3")),
-                ])),
-            ])),
-            .track(Track(trackName: "Loose", albumName: "(no album)", artistName: "(no artist)", path: "/Music/Loose.m4a")),
+            Folder(path: "/Music/Artist", name: "Artist", children: [
+                Folder(path: "/Music/Artist/Album", name: "Album", children: [
+                    Track(trackName: "Song", albumName: "Album", artistName: "Artist", path: "/Music/Artist/Album/Song.mp3"),
+                ]),
+            ]),
+            Track(trackName: "Loose", albumName: "(no album)", artistName: "(no artist)", path: "/Music/Loose.m4a"),
         ]
     )))
     treeView.frame = NSRect(x: 0, y: 0, width: 400, height: 300)

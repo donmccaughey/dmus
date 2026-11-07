@@ -30,8 +30,8 @@ struct QueueTests {
 
     @Test func addingFolderAppendsTrackDescendantsInPreorder() {
         let folder = Folder(path: "/Music/Artist", name: "Artist", children: [
-            .folder(Folder(path: "/Music/Artist/Album", name: "Album", children: [.track(song)])),
-            .track(single),
+            Folder(path: "/Music/Artist/Album", name: "Album", children: [song]),
+            single,
         ])
         let queue = Queue()
         queue.add(folder)
@@ -46,9 +46,9 @@ struct QueueTests {
     }
 
     @Test func addingChildrenDispatchesOnKind() {
-        let album = Folder(path: "/Music/Artist/Album", name: "Album", children: [.track(song)])
+        let album = Folder(path: "/Music/Artist/Album", name: "Album", children: [song])
         let queue = Queue()
-        queue.add([.track(single), .folder(album)])
+        queue.add([single, album])
         #expect(queue.tracks == [single, song])
     }
 }
@@ -81,7 +81,7 @@ extension QueueTests {
         var changes = 0
         queue.onChange = { changes += 1 }
         queue.add(song)
-        queue.add(Folder(path: "/Music/Artist", name: "Artist", children: [.track(single)]))
+        queue.add(Folder(path: "/Music/Artist", name: "Artist", children: [single]))
         queue.removeFirst()
         queue.clear()
         #expect(changes == 4)

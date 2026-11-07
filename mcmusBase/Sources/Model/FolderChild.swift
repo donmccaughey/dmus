@@ -1,22 +1,9 @@
 import Foundation
 
-public enum FolderChild: Hashable, Sendable, Codable {
-    case folder(Folder)
-    case track(Track)
-
-    public var name: String {
-        switch self {
-        case .folder(let folder): folder.name
-        case .track(let track): track.trackName
-        }
-    }
-
-    public var children: [FolderChild]? {
-        switch self {
-        case .folder(let folder): folder.children
-        case .track: nil
-        }
-    }
+@objc public protocol FolderChild: NSObjectProtocol, Sendable {
+    var name: String { get }
+    var children: [FolderChild] { get }
+    var trackDescendants: [Track] { get }
 }
 
 public extension Array where Element == FolderChild {

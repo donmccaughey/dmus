@@ -76,7 +76,7 @@ nonisolated private func demoChildren(
                 folderName: name,
                 parentFolderName: folderName
             )
-            children.append(.folder(Folder(path: childPath, name: name, children: grandchildren)))
+            children.append(Folder(path: childPath, name: name, children: grandchildren))
         } else if child.type == "file",
                   let track = Track(
                     displayName: name,
@@ -85,7 +85,7 @@ nonisolated private func demoChildren(
                     folderName: folderName,
                     parentFolderName: parentFolderName
                   ) {
-            children.append(.track(track))
+            children.append(track)
         }
     }
     return children.sortedByName()

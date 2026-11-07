@@ -1,7 +1,7 @@
 import Foundation
 import Wrappers
 
-public struct MusicRootDirectory: Sendable {
+public final class MusicRootDirectory: NSObject, Sendable {
     public let url: URL
     public let isSecurityScoped: Bool
 

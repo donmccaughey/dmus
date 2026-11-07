@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Track: Hashable, Sendable, Codable {
+public final class Track: NSObject, FolderChild, Sendable {
     public let trackName: String
     public let albumName: String
     public let artistName: String
@@ -11,15 +11,15 @@ public struct Track: Hashable, Sendable, Codable {
     public static let noAlbum = "(no album)"
     public static let noArtist = "(no artist)"
     private static let musicFileExtensions: Set<String> = ["mp3", "m4a"]
-    
+
     public init(trackName: String, albumName: String, artistName: String, path: String) {
         self.trackName = trackName
         self.albumName = albumName
         self.artistName = artistName
         self.path = path
     }
-    
-    public init?(
+
+    public convenience init?(
         displayName: String,
         pathExtension: String,
         path: String,
@@ -33,6 +33,33 @@ public struct Track: Hashable, Sendable, Codable {
             artistName: parentFolderName ?? Track.noArtist,
             path: path
         )
+    }
+
+    public var name: String { trackName }
+
+    public var children: [FolderChild] { [] }
+
+    public var trackDescendants: [Track] { [self] }
+
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? Track else { return false }
+        return trackName == other.trackName
+            && albumName == other.albumName
+            && artistName == other.artistName
+            && path == other.path
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(trackName)
+        hasher.combine(albumName)
+        hasher.combine(artistName)
+        hasher.combine(path)
+        return hasher.finalize()
+    }
+
+    public override var description: String {
+        "Track(\(trackName), \(albumName), \(artistName), \(path))"
     }
 
     // The display name already omits the extension when the Finder hides it,

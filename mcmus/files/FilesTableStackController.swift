@@ -42,13 +42,13 @@ final class FilesTableStackController: UINavigationController {
         path: "/Music",
         name: Folder.rootName,
         children: [
-            .folder(Folder(path: "/Music/Artist", name: "Artist", children: [
-                .folder(Folder(path: "/Music/Artist/Album", name: "Album", children: [
-                    .track(Track(trackName: "Song", albumName: "Album", artistName: "Artist", path: "/Music/Artist/Album/Song.mp3")),
-                ])),
-                .folder(Folder(path: "/Music/Artist/Empty", name: "Empty", children: [])),
-            ])),
-            .track(Track(trackName: "Loose", albumName: "(no album)", artistName: "(no artist)", path: "/Music/Loose.m4a")),
+            Folder(path: "/Music/Artist", name: "Artist", children: [
+                Folder(path: "/Music/Artist/Album", name: "Album", children: [
+                    Track(trackName: "Song", albumName: "Album", artistName: "Artist", path: "/Music/Artist/Album/Song.mp3"),
+                ]),
+                Folder(path: "/Music/Artist/Empty", name: "Empty", children: []),
+            ]),
+            Track(trackName: "Loose", albumName: "(no album)", artistName: "(no artist)", path: "/Music/Loose.m4a"),
         ]
     ))
     return filesTableStack
